@@ -208,6 +208,61 @@
 <blockquote>
 <p><strong>答：</strong>这个问题其实有歧义，但是很多公司还特么爱在笔试题里面考察，非要是遇到了就答两个吧（一个是 “xyz”，一个是指向 “xyz” 的引用对象 str）；之所以说有歧义是因为该语句在运行期间只创建了一个对象（堆上的 “abc” 对象），而在类加载过程中在运行时常量池中先创建了一个 “abc” 对象，运行期和类加载又是有区别的，所以这个题目的问法是有些不严谨的。因此这个问题如果换成 String str = new String(“abc”); 涉及到几个 String 对象，则答案就是 2 个了。关于这道题可以参考文章《请别再拿“String s = new String(“xyz”); 创建了多少个 String 实例”来面试了吧》，<strong>链接</strong>：<a href="http://rednaxelafx.iteye.com/blog/774673/" target="_blank" rel="external">http://rednaxelafx.iteye.com/blog/774673/</a></p>
 </blockquote>
+<p>问：下面程序的运行结果是什么？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String stra = &quot;ABC&quot; ; </div><div class="line">String strb = new String ( &quot;ABC&quot; ); </div><div class="line">System .out.println(stra == strb); //1,false </div><div class="line">System .out.println(stra.equals(strb)); //2,true</div></pre></td></tr></table></figure>
+<p>对于 1 和 2 中两个都是显式创建的新对象，使用 == 总是不等，String 的 equals 方法有被重写为值判断，所以 equals 是相等的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String str1 = &quot;123&quot; ; </div><div class="line">System .out.println( &quot;123&quot; == str1.substring( 0 )); //3,true </div><div class="line">System .out.println(&quot;23&quot;==str1.substring(1)); //4,false</div></pre></td></tr></table></figure>
+<p>对于 3 和 4 中 str1 的 substring 方法实现里面有个 index == 0 的判断，当 index 等于 0 就直接返回当前对象，否则新 new 一个 sub 的对象返回，而 == 又是地址比较，所以结果如注释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String str3 = new String ( &quot;ijk&quot; ); </div><div class="line">String str4 = str3.substring( 0 );</div><div class="line">System .out.println(str3 == str4); //5,true</div><div class="line">System .out.println(( new String ( &quot;ijk&quot; ) == str4)); //6,false</div></pre></td></tr></table></figure>
+<p>对于 5 和 6 来说没啥分析的必要了，参见上面对于 3 和 4 的分析结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">String str5 = &quot;NPM&quot; ; </div><div class="line">String str6 = &quot;npm&quot; .toUpperCase(); </div><div class="line">System .out.println(str5 == str6); //7,false </div><div class="line">System .out.println(str5.equals(str6)); //8,true </div><div class="line">String str7 = new String ( &quot;TTT&quot; ); </div><div class="line">String str8 = &quot;ttt&quot; .toUpperCase(); </div><div class="line">System .out.println(str7 == str8); //9,false </div><div class="line">System .out.println(str7.equals(str8)); //10,true</div></pre></td></tr></table></figure>
+<p>对于 7、8、9、10 来说实质都一样，toUpperCase 方法内部创建了新字符串对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">String str9 = &quot;a1&quot; ; </div><div class="line">String str10 = &quot;a&quot; + 1 ; </div><div class="line">System .out.println(str9 == str10); //11,true</div></pre></td></tr></table></figure>
+<p>对于 11 来说当两个字符串常量连接时（相加）得到的新字符串依然是字符串常量且保存在常量池中只有一份。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String str11 = &quot;ab&quot; ; </div><div class="line">String str12 = &quot;b&quot; ; </div><div class="line">String str13 = &quot;a&quot; + str12; </div><div class="line">System .out.println(str11 == str13); //12,false</div></pre></td></tr></table></figure>
+<p>对于 12 来说当字符串常量与 String 类型变量连接时得到的新字符串不再保存在常量池中，而是在堆中新建一个 String 对象来存放，很明显常量池中要求的存放的是常量，有 String 类型变量当然不能存在常量池中了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String str14 = &quot;ab&quot; ; </div><div class="line">final String str15 = &quot;b&quot; ; </div><div class="line">String str16 = &quot;a&quot; + str15; </div><div class="line">System .out.println(str14 == str16); //13,true</div></pre></td></tr></table></figure>
+<p>对于 13 来说此处是字符串常量与 String 类型常量连接，得到的新字符串依然保存在常量池中，因为对 final 变量的访问在编译期间都会直接被替代为真实的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private static String getBB() &#123; </div><div class="line">    return &quot;b&quot; ; </div><div class="line">&#125; </div><div class="line">String str17 = &quot;ab&quot; ; </div><div class="line">final String str18 = getBB(); </div><div class="line">String str19 = &quot;a&quot; + str18; </div><div class="line">System .out.println(str17 == str19); //14,false</div></pre></td></tr></table></figure>
+<p>对于 14 来说 final String str18 = getBB() 其实与 final String str18 = new String(“b”) 是一样的，也就是说 return “b” 会在堆中创建一个 String 对象保存  ”b”，虽然 str18 被定义成了 final，但不代表是常量，因为虽然将 str18 用 final 修饰了，但是由于其赋值是通过方法调用返回的，那么它的值只能在运行期间确定，因此指向的不是同一个对象，所以可见看见并非定义为 final 的就保存在常量池中，很明显此处 str18 常量引用的 String 对象保存在堆中，因为 getBB() 得到的 String 已经保存在堆中了，final 的 String 引用并不会改变 String 已经保存在堆中这个事实；对于 str18 换成 final String str18 = new String(“b”); 一样会返回 false，原因同理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">String str20 = &quot;ab&quot; ;</div><div class="line">String str21 = &quot;a&quot; ; </div><div class="line">String str22 = &quot;b&quot; ; </div><div class="line">String str23 = str21 + str22; </div><div class="line">System .out.println(str23 == str20); //15,false </div><div class="line">System .out.println(str23.intern() == str20); //16,true </div><div class="line">System .out.println(str23 == str20.intern()); //17,false </div><div class="line">System .out.println(str23.intern() == str20.intern()); //18,true</div></pre></td></tr></table></figure>
+<p>对于 15 到 18 来说 str23 == str20 就是上面刚刚分析的，而对于调用 intern 方法如果字符串常量池中已经包含一个等于此 String 对象的字符串（用 equals(Object) 方法确定）则返回字符串常量池中的字符串，否则将此 String 对象添加到字符串常量池中，并返回此 String 对象的引用，所以 str23.intern() == str20 实质是常量比较返回 true，str23 == str20.intern() 中 str23 就是上面说的堆中新对象，相当于一个新对象和一个常量比较，所以返回 false，str23.intern() == str20.intern() 就没啥说的了，指定相等。</p>
+<p>答：结果见题目中注释部分，解析见上面分段说明，基于 JDK 1.7 版本分析。</p>
+<p>注释 11 到 14 深刻的说明了我们在代码中使用 String 时应该留意的优化技巧，你懂得！特别说明 String 的 + 和 += 在编译后实质被自动优化为了 StringBuilder 和 append 调用，但是如果在循环等情况下调用 + 或者 += 就是在不停的 new StringBuilder 对象 append 了，这是及其浪费的。</p>
+<p>通过这道题说明要想玩明白 Java String 对象的核心其实就是玩明白字符串的堆栈和常量池，虚拟机为每个被装载的类型维护一个常量池，常量池就是该类型所用常量的一个有序集合，包括直接常量（String、Integer 和 Floating Point 常量）和对其他类型、字段和方法的符号引用，池中的数据项就像数组一样是通过索引访问的，由于常量池存储了相应类型所用到的所有类型、字段和方法的符号引用，所以它在 Java 程序的动态链接中起着核心的作用。</p>
+<p>问：为什么针对安全保密高的信息，char[] 比 String 更好？</p>
+<p>答：因为 String 是不可变的，一旦创建就不能更改，直到垃圾收集器将它回收才能消失，即使我们修改了原先的变量，实际上也是在内存中新建一个对象，原数据还是保留在内存中等待回收；而字符数组 char[] 中的元素是可以更改的，也就是说像密码等保密信息用完之后我们可以马上修改它的值而不留痕迹，从而相对于 String 有更好的安全性。</p>
+<p>关于这个问题知乎上有个热门的帖子(原谅这个公众号暂时还没有资格添加外部超链接，我会努力的)：<br><a href="https://www.zhihu.com/question/36734157/answer/68767786" target="_blank" rel="external">https://www.zhihu.com/question/36734157/answer/68767786</a></p>
+<p>这个帖子讨论的热火朝天，但是终归总结就下面这点有价值（版权声明，该结论归知乎该问题回答者所有）：</p>
+<ol>
+<li>这种做法意义有多大？</li>
+</ol>
+<p>如果没有及时清空而由 GC 来清除的话暴露窗口大约是秒这个数量级，如果能够在计算 HASH 后立即清除则暴露窗口大约是微秒数量级，如此简单的设计就可以降低如此多的被攻击概率，性价比是非常高的。</p>
+<ol>
+<li>如何使用反射来修改 String？和修改 char[] 相比有何区别和风险？</li>
+</ol>
+<p>通过反射机制可以查看 String 内部的内存成员，从而可以直接修改其中的数据区，但是这样的做法会有问题，内部化的 String 为了提高 HASH 速度、节省空间会保证值相同的字符串通常只有一个实例，而 char[] 的修改是没有任何副作用的，但是 String 源码里面的 char[] 很可能是多个 String 共享的，我们改掉它就会殃及别的 String，譬如有一个密码是 “Password”，而你密码框提示密码输入的文字也是 “Password”，改掉第一个 “Password” 会把后面那个也改掉，所以修改 String 是有副作用的。</p>
+<ol>
+<li>如果一点明文也不想出现应该怎么做？</li>
+</ol>
+<p>为了保证全部处理流程均无明文密码，需要底层 API 在给你密码之前就做了 HASH，并且这个 HASH 算法就是你想要的那种，最好还加盐，不过这只是在用户程序方面无明文，底层获取中会不会有明文就保证不了了。</p>
+<ol>
+<li>有没有绝对安全策略？</li>
+</ol>
+<p>安全往往是相对于攻击成本而言的，攻击收益越高，黑客就越能接受攻击成本高的方案，因此你采取的安全策略应该与这个攻击收益相匹配，对于极其敏感和宝贵的数据来源就需要在安全方面上下很大功夫，目前来看没有绝对的安全，只有相对的安全。</p>
+<p>问：用 java 代码实现字符串的反转？</p>
+<p>答：这道题的答案很多，下面给出两种常见的答案。</p>
+<p>使用 JDK 中 StringBuffer（并发安全）或者 StringBuilder 的反转方法，这是最好的办法，不仅速度快、效率高，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public String reverse ( String str ) &#123; </div><div class="line">if (( null == str ) || ( str . length () &lt;= 1 )) &#123;</div><div class="line"> return str ; </div><div class="line"> &#125; </div><div class="line"> return new StringBuffer ( str ). reverse (). toString (); </div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>炫技能使用递归方案实现，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public String reverse ( String str ) &#123; </div><div class="line">if (( null == str ) || ( str . length () &lt;= 1 )) &#123; </div><div class="line">return str ; </div><div class="line">&#125; </div><div class="line">return reverse ( str . substring ( 1 )) + str . charAt ( 0 ); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>问：用 java 代码来检查输入的字符串是否回文（对称）？</p>
+<p>答：这道题的答案也有很多，下面给出两种常见的答案。</p>
+<p>使用 JDK 现有 API 实现，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">boolean isPalindrome ( String str ) &#123; </div><div class="line">if ( str == null ) &#123; </div><div class="line">    return false ; </div><div class="line">&#125; </div><div class="line">StringBuilder strBuilder = new StringBuilder ( str ); </div><div class="line">strBuilder.reverse (); </div><div class="line"></div><div class="line">return strBuilder.toString().equals (str); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>问：用 java 代码写一个方法从字符串中删除给定字符？</p>
+<p>答：这道题太简单不过了，都有点不好意思放上来，不过为了照顾所有层次还是写下答案。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">String removeChar ( String str , char c ) &#123; </div><div class="line">if ( str == null ) &#123; </div><div class="line">return null ; </div><div class="line">    &#125; </div><div class="line">return str.replaceAll(Character.toString (c), &quot;&quot;);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
