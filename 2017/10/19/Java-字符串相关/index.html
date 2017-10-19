@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Ace的技术客栈">
 <meta property="og:description" content="问：下面程序的运行结果是什么？ 123456String s1 = &amp;quot;abc&amp;quot;;StringBuffer s2 = new StringBuffer(s1);System.out.println(s1.equals(s2));    //1,falseStringBuffer s3 = new StringBuffer (&amp;quot;abc&amp;quot;);System.out.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-19T09:28:02.644Z">
+<meta property="og:updated_time" content="2017-10-19T11:24:47.981Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 字符串相关">
 <meta name="twitter:description" content="问：下面程序的运行结果是什么？ 123456String s1 = &amp;quot;abc&amp;quot;;StringBuffer s2 = new StringBuffer(s1);System.out.println(s1.equals(s2));    //1,falseStringBuffer s3 = new StringBuffer (&amp;quot;abc&amp;quot;);System.out.">
@@ -199,7 +199,7 @@
 <blockquote>
 <p><strong>答：</strong>String 不可变是因为在 JDK 中 String 类被声明为一个 final 类，且类内部的 value 字节数组也是 final 的，只有当字符串是不可变时字符串池才有可能实现，字符串池的实现可以在运行时节约很多 heap 空间，因为不同的字符串变量都指向池中的同一个字符串；如果字符串是可变的则会引起很严重的安全问题，譬如数据库的用户名密码都是以字符串的形式传入来获得数据库的连接，或者在 socket 编程中主机名和端口都是以字符串的形式传入，因为字符串是不可变的，所以它的值是不可改变的，否则黑客们可以钻到空子改变字符串指向的对象的值造成安全漏洞；因为字符串是不可变的，所以是多线程安全的，同一个字符串实例可以被多个线程共享，这样便不用因为线程安全问题而使用同步，字符串自己便是线程安全的；因为字符串是不可变的所以在它创建的时候 hashcode 就被缓存了，不变性也保证了 hash 码的唯一性，不需要重新计算，这就使得字符串很适合作为 Map 的键，字符串的处理速度要快过其它的键对象，这就是 HashMap 中的键往往都使用字符串的原因。</p>
 </blockquote>
-<p><strong>问：说说 String str = “hello world”;<br>和 String str = new String(“hello world”); 的区别？</strong></p>
+<p><strong>问：说说 String str = “hello world”; 和<br>String str = new String(“hello world”); 的区别？</strong></p>
 <blockquote>
 <p><strong>答：</strong>在 java 的 class 文件中有专门的部分用来存储编译期间生成的字面常量和符号引用，这部分叫做 class 文件常量池，在运行期间对应着方法区的运行时常量池，所以 String str = “hello world”; 在编译期间生成了 字面常量和符号引用，运行期间字面常量 “hello world” 被存储在运行时常量池（只保存了一份），而通过 new 关键字来生成对象是在堆区进行的，堆区进行对象生成的过程是不会去检测该对象是否已经存在的，所以通过 new 来创建的一定是不同的对象，即使字符串的内容是相同的。</p>
 </blockquote>
@@ -241,27 +241,33 @@
 <li>如何使用反射来修改 String？和修改 char[] 相比有何区别和风险？</li>
 </ol>
 <p>通过反射机制可以查看 String 内部的内存成员，从而可以直接修改其中的数据区，但是这样的做法会有问题，内部化的 String 为了提高 HASH 速度、节省空间会保证值相同的字符串通常只有一个实例，而 char[] 的修改是没有任何副作用的，但是 String 源码里面的 char[] 很可能是多个 String 共享的，我们改掉它就会殃及别的 String，譬如有一个密码是 “Password”，而你密码框提示密码输入的文字也是 “Password”，改掉第一个 “Password” 会把后面那个也改掉，所以修改 String 是有副作用的。</p>
-<ol>
-<li>如果一点明文也不想出现应该怎么做？</li>
-</ol>
+<p><strong>3. 如果一点明文也不想出现应该怎么做？</strong></p>
+<blockquote>
 <p>为了保证全部处理流程均无明文密码，需要底层 API 在给你密码之前就做了 HASH，并且这个 HASH 算法就是你想要的那种，最好还加盐，不过这只是在用户程序方面无明文，底层获取中会不会有明文就保证不了了。</p>
-<ol>
-<li>有没有绝对安全策略？</li>
-</ol>
+</blockquote>
+<p><strong>4. 有没有绝对安全策略？</strong></p>
+<blockquote>
 <p>安全往往是相对于攻击成本而言的，攻击收益越高，黑客就越能接受攻击成本高的方案，因此你采取的安全策略应该与这个攻击收益相匹配，对于极其敏感和宝贵的数据来源就需要在安全方面上下很大功夫，目前来看没有绝对的安全，只有相对的安全。</p>
-<p>问：用 java 代码实现字符串的反转？</p>
+</blockquote>
+<p><strong>问：用 java 代码实现字符串的反转？</strong></p>
+<blockquote>
 <p>答：这道题的答案很多，下面给出两种常见的答案。</p>
 <p>使用 JDK 中 StringBuffer（并发安全）或者 StringBuilder 的反转方法，这是最好的办法，不仅速度快、效率高，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public String reverse ( String str ) &#123; </div><div class="line">if (( null == str ) || ( str . length () &lt;= 1 )) &#123;</div><div class="line"> return str ; </div><div class="line"> &#125; </div><div class="line"> return new StringBuffer ( str ). reverse (). toString (); </div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public String reverse ( String str ) &#123;</div><div class="line">    if (( null == str ) || ( str . length () &lt;= 1 )) &#123;</div><div class="line">        return str ;</div><div class="line">    &#125;</div><div class="line">    return new StringBuffer ( str ). reverse (). toString ();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>炫技能使用递归方案实现，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public String reverse ( String str ) &#123; </div><div class="line">if (( null == str ) || ( str . length () &lt;= 1 )) &#123; </div><div class="line">return str ; </div><div class="line">&#125; </div><div class="line">return reverse ( str . substring ( 1 )) + str . charAt ( 0 ); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>问：用 java 代码来检查输入的字符串是否回文（对称）？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public String reverse ( String str ) &#123;</div><div class="line">    if (( null == str ) || ( str . length () &lt;= 1 )) &#123;</div><div class="line">        return str ;</div><div class="line">    &#125;</div><div class="line">    return reverse ( str . substring ( 1 )) + str . charAt ( 0 );</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>问：用 java 代码来检查输入的字符串是否回文（对称）？</strong></p>
+<blockquote>
 <p>答：这道题的答案也有很多，下面给出两种常见的答案。</p>
+</blockquote>
 <p>使用 JDK 现有 API 实现，代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">boolean isPalindrome ( String str ) &#123; </div><div class="line">if ( str == null ) &#123; </div><div class="line">    return false ; </div><div class="line">&#125; </div><div class="line">StringBuilder strBuilder = new StringBuilder ( str ); </div><div class="line">strBuilder.reverse (); </div><div class="line"></div><div class="line">return strBuilder.toString().equals (str); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>问：用 java 代码写一个方法从字符串中删除给定字符？</p>
+<p><strong>问：用 java 代码写一个方法从字符串中删除给定字符？</strong></p>
+<blockquote>
 <p>答：这道题太简单不过了，都有点不好意思放上来，不过为了照顾所有层次还是写下答案。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">String removeChar ( String str , char c ) &#123; </div><div class="line">if ( str == null ) &#123; </div><div class="line">return null ; </div><div class="line">    &#125; </div><div class="line">return str.replaceAll(Character.toString (c), &quot;&quot;);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String removeChar(String str, char c) &#123;</div><div class="line">    if (str == null) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    return str.replaceAll(Character.toString(c), &quot;&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
 
