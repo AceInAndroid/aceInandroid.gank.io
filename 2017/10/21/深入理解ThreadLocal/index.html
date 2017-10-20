@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://azhangbing.com">
   <title>深入理解ThreadLocal | Ace的技术客栈</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="toc: true 深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if">
+  <meta name="description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
 <meta name="keywords" content="Java,并发编程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解ThreadLocal">
 <meta property="og:url" content="http://azhangbing.com/2017/10/21/深入理解ThreadLocal/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="toc: true 深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if">
+<meta property="og:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-20T19:56:49.476Z">
+<meta property="og:updated_time" content="2017-10-20T19:59:11.312Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解ThreadLocal">
-<meta name="twitter:description" content="toc: true 深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if">
+<meta name="twitter:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
   
     <link rel="alternative" href="/atom.xml" title="Ace的技术客栈" type="application/atom+xml">
   
@@ -211,8 +211,7 @@
         
     <div class="article-entry" itemprop="articleBody">
       
-        <p>toc: true</p>
-<h4 id="深入理解ThreadLocal"><a href="#深入理解ThreadLocal" class="headerlink" title="深入理解ThreadLocal"></a>深入理解ThreadLocal</h4><p>今天解析了Handler messageQueue Loop三者的关系</p>
+        <h4 id="深入理解ThreadLocal"><a href="#深入理解ThreadLocal" class="headerlink" title="深入理解ThreadLocal"></a>深入理解ThreadLocal</h4><p>今天解析了Handler messageQueue Loop三者的关系</p>
 <p>新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public Handler() &#123;</div><div class="line">    ......</div><div class="line">    mLooper = Looper.myLooper();</div><div class="line">    if (mLooper == null) &#123;</div><div class="line">        throw new RuntimeException(</div><div class="line">            &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</div><div class="line">    &#125;</div><div class="line">    ......</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这里调用了Looper.myLooper()方法,让我们来看一下</p>
@@ -436,7 +435,7 @@
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
-		toc_hide_index: true,
+		toc_hide_index: false,
 		root: "/",
 		innerArchive: true,
 		showTags: false
@@ -497,15 +496,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">感悟</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">并发编程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">感悟</a>
               </li>
             
             <div class="clearfix"></div>
