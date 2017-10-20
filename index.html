@@ -175,8 +175,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="深入理解ThreadLocal"><a href="#深入理解ThreadLocal" class="headerlink" title="深入理解ThreadLocal"></a>深入理解ThreadLocal</h4><p>toc: true</p>
-<p>今天解析了Handler messageQueue Loop三者的关系</p>
+        <p>toc:true</p>
+<h4 id="深入理解ThreadLocal"><a href="#深入理解ThreadLocal" class="headerlink" title="深入理解ThreadLocal"></a>深入理解ThreadLocal</h4><p>今天解析了Handler messageQueue Loop三者的关系</p>
 <p>新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public Handler() &#123;</div><div class="line">    ......</div><div class="line">    mLooper = Looper.myLooper();</div><div class="line">    if (mLooper == null) &#123;</div><div class="line">        throw new RuntimeException(</div><div class="line">            &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</div><div class="line">    &#125;</div><div class="line">    ......</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这里调用了Looper.myLooper()方法,让我们来看一下</p>
@@ -314,7 +314,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>toc: true<br>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
+        <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
 <p>时序图:<br><img src="/images/pasted-1508470499959.png" alt="WX1"></p>
 <p>最后调用到MessageQueue的enqueueMessage方法,来看下这个方法</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">boolean enqueueMessage(Message msg, long when) &#123;</div><div class="line">            .....</div><div class="line">            msg.markInUse();</div><div class="line">            msg.when = when;</div><div class="line">            Message p = mMessages;</div><div class="line">            boolean needWake;</div><div class="line">            if (p == null || when == 0 || when &lt; p.when) &#123;</div><div class="line">                // New head, wake up the event queue if blocked.</div><div class="line">                msg.next = p;</div><div class="line">                mMessages = msg;</div><div class="line">                needWake = mBlocked;</div><div class="line">            &#125; else &#123;</div><div class="line">                Message prev;</div><div class="line">                for (;;) &#123;</div><div class="line">                    prev = p;</div><div class="line">                    p = p.next;</div><div class="line">                    if (p == null || when &lt; p.when) &#123;</div><div class="line">                        break;</div><div class="line">                    &#125;</div><div class="line">                    if (needWake &amp;&amp; p.isAsynchronous()) &#123;</div><div class="line">                        needWake = false;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                msg.next = p;</div><div class="line">                prev.next = msg;</div><div class="line">            &#125;</div><div class="line"></div><div class="line"></div><div class="line">            if (needWake) &#123;</div><div class="line">            nativeWake(mPtr);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return true;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
@@ -400,8 +400,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>toc: true</p>
-<p><strong>问：下面程序的运行结果是什么？</strong></p>
+        <p><strong>问：下面程序的运行结果是什么？</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String s1 = &quot;abc&quot;;</div><div class="line">StringBuffer s2 = new StringBuffer(s1);</div><div class="line">System.out.println(s1.equals(s2));    //1,false</div><div class="line">StringBuffer s3 = new StringBuffer (&quot;abc&quot;);</div><div class="line">System.out.println(s3.equals(&quot;abc&quot;));    //2,false</div><div class="line">System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true</div></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>答：</strong>注释 1 打印为 false，主要考察 String 的 equals 方法，String 源码中 equals 方法有对参数进行 instance of String 判断语句，StringBuffer 的祖先为 CharSequence，所以不相等； 注释 2 打印为 false，因为 StringBuffer 没有重写 Object 的 equals 方法，所以 Object 的 equals 方法实现是 == 判断，故为 false； 注释 3 打印为 true，因为 Object 的 toString 方法返回为 String 类型，String 重写了 equals 方法实现为值比较。</p>
@@ -503,6 +502,7 @@
 <p>答：这道题太简单不过了，都有点不好意思放上来，不过为了照顾所有层次还是写下答案。</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String removeChar(String str, char c) &#123;</div><div class="line">    if (str == null) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    return str.replaceAll(Character.toString(c), &quot;&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
 
       
