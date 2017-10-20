@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Ace的技术客栈">
 <meta property="og:description" content="问：下面程序的运行结果是什么？ 123456String s1 = &amp;quot;abc&amp;quot;;StringBuffer s2 = new StringBuffer(s1);System.out.println(s1.equals(s2));    //1,falseStringBuffer s3 = new StringBuffer (&amp;quot;abc&amp;quot;);System.out.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-19T14:04:52.000Z">
+<meta property="og:updated_time" content="2017-10-20T20:42:37.511Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 字符串相关">
 <meta name="twitter:description" content="问：下面程序的运行结果是什么？ 123456String s1 = &amp;quot;abc&amp;quot;;StringBuffer s2 = new StringBuffer(s1);System.out.println(s1.equals(s2));    //1,falseStringBuffer s3 = new StringBuffer (&amp;quot;abc&amp;quot;);System.out.">
@@ -194,6 +194,7 @@
 </blockquote>
 <p>下面是String equals方法源码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">    public boolean equals(Object anObject) &#123;</div><div class="line">    //如果比较的对象与自身内存地址相等的话</div><div class="line">    //就说明他两指向的是同一个对象</div><div class="line">    //所以此时equals的返回值跟==的结果是一样的。</div><div class="line">    if (this == anObject) &#123;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">    //当比较的对象与自身的内存地址不相等，并且</div><div class="line">    //比较的对象是String类型的时候</div><div class="line">    //将会执行这个分支</div><div class="line">    if (anObject instanceof String) &#123;</div><div class="line">        String anotherString = (String)anObject;</div><div class="line">        int n = value.length;</div><div class="line">        if (n == anotherString.value.length) &#123;</div><div class="line">            char v1[] = value;</div><div class="line">            char v2[] = anotherString.value;</div><div class="line">            int i = 0;</div><div class="line">            //在这里循环遍历两个String中的char</div><div class="line">            while (n-- != 0) &#123;</div><div class="line">                //只要有一个不相等，那么就会返回false</div><div class="line">                if (v1[i] != v2[i])</div><div class="line">                    return false;</div><div class="line">                i++;</div><div class="line">            &#125;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return false;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p><strong>问：怎样将 GB2312 编码的字符串转换为 ISO-8859-1 编码的字符串？</strong></p>
 <blockquote>
 <p><strong>答：</strong>如下代码即可实现，</p>
@@ -289,7 +290,6 @@
 <p>答：这道题太简单不过了，都有点不好意思放上来，不过为了照顾所有层次还是写下答案。</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String removeChar(String str, char c) &#123;</div><div class="line">    if (str == null) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    return str.replaceAll(Character.toString(c), &quot;&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
       
 
       
@@ -501,10 +501,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">感悟</a>
               </li>
              
@@ -514,6 +510,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">并发编程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
             <div class="clearfix"></div>

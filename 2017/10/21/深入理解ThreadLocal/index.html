@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Ace的技术客栈">
 <meta property="og:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-20T19:59:11.312Z">
+<meta property="og:updated_time" content="2017-10-20T20:42:11.300Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解ThreadLocal">
 <meta name="twitter:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
@@ -217,7 +217,8 @@
 <p>这里调用了Looper.myLooper()方法,让我们来看一下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public static final Looper myLooper() &#123;  </div><div class="line">    return (Looper)sThreadLocal.get();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这个方法非常简单，就是从sThreadLocal对象中取出Looper。如果sThreadLocal中有Looper存在就返回Looper.</p>
-<p>这个Looper再哪设置呢?<br>来看Looper.prepare()</p>
+<p>这个Looper再哪设置呢?<br><a id="more"></a></p>
+<p>来看Looper.prepare()</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static final void prepare() &#123;</div><div class="line">        if (sThreadLocal.get() != null) &#123;</div><div class="line">            throw new RuntimeException(&quot;Only one Looper may be created per thread&quot;);</div><div class="line">        &#125;</div><div class="line">        sThreadLocal.set(new Looper());</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <p>首先判断sThreadLocal中是否已经存在Looper了，如果还没有则创建一个新的Looper设置进去。这样也就完全解释了为什么我们要先调用Looper.prepare()方法，才能创建Handler对象。同时也可以看出每个线程中最多只会有一个Looper对象,否则报错。</p>
 <p>因此一个完成的异步消息处理线程应该是这样:</p>
@@ -251,12 +252,8 @@
 <p>总结一下：根据源码我们可以发现，我们存入的对象实际被存储在Thread内部的ThreadLocalMap变量内，以key和value的形式存储，ThreadLocal为key，传入的对象为value，我们可以在initialValue方法中设置默认值。</p>
 <p>这样设计有什么好处呢?</p>
 <blockquote>
-<ol>
-<li><p>每个Map的Entry数量变小了：之前是Thread的数量，现在是ThreadLocal的数量，提高性能。</p>
-</li>
-<li><p>当Thread销毁之后对应的内部变量ThreadLocalMap也就随之销毁，内存可以自动释放，减少内存使用。</p>
-</li>
-</ol>
+<p>1.每个Map的Entry数量变小了：之前是Thread的数量，现在是ThreadLocal的数量，提高性能。</p>
+<p>2.当Thread销毁之后对应的内部变量ThreadLocalMap也就随之销毁，内存可以自动释放，减少内存使用。</p>
 </blockquote>
 <p>接下来看下ThreadLocalMap内部存储的Entry:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">static class Entry extends WeakReference&lt;ThreadLocal&gt; &#123;</div><div class="line">            /** The value associated with this ThreadLocal. */</div><div class="line">            Object value;</div><div class="line"></div><div class="line">            Entry(ThreadLocal k, Object v) &#123;</div><div class="line">                super(k);</div><div class="line">                value = v;</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
@@ -492,10 +489,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">感悟</a>
               </li>
              
@@ -505,6 +498,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">并发编程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
             <div class="clearfix"></div>
