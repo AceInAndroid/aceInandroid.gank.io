@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Ace的技术客栈">
 <meta property="og:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-20T18:59:47.035Z">
+<meta property="og:updated_time" content="2017-10-20T19:08:25.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解ThreadLocal">
 <meta name="twitter:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
@@ -195,21 +195,13 @@
 <p>一大堆看蒙了吧,上面装逼用.</p>
 <p>用白话来说:</p>
 <blockquote>
-<ol>
-<li><p>ThreadLocal使各线程能够保持各自独立初始化的对象。也就是说，通过ThreadLocal.set()方法设置的变量为当前线程的独立对象，可通过ThreadLocal.get()获取与当前线程绑定的独立对象(比如说当前线程的Looper)。</p>
-</li>
-<li><p>当线程结束之后，线程内所存放的变量对象都将被垃圾回收。也就是说，存入的变量对象是在Thread内存放的，这个后面详细介绍。</p>
-</li>
-<li><p>一个ThreadLocal在一个线程中只能对应存储一个对象，如果调用多次set()方法，则最后一个set的对象会覆盖掉之前存入的对象。如果需要存放其他的对象，就再创建一个新的ThreadLocal出来。</p>
-</li>
-<li><p>建议将ThreadLocal变量定义成private static的，原因下面说。</p>
-</li>
-<li><p>ThreadLocal存储的变量对象在线程生命周期内有效，方便我们在当前线程内部，在不同方法不同对象内取出该变量，避免了将这个对象作为参数传递。当然我们也可以要把线程共享的对象通过ThreadLocal放到线程中，但没有必要。</p>
-</li>
-<li><p>我们存入的变量对象实际存放在Thread对象的ThreadLocal.ThreadLocalMap threadLocals变量中，在ThreadLocalMap内以ThreadLocal为key，以存入的变量对象为value。各线程通过自己的内部变量管理自身存储的对象。</p>
-</li>
-</ol>
+<p>1.ThreadLocal使各线程能够保持各自独立初始化的对象。也就是说通过ThreadLocal.set()方法设置的变量为当前线程的独立对象，可通过ThreadLocal.get()获取与当前线程绑定的独立对象(比如说当前线程的Looper)。</p>
+<p>2.当线程结束之后，线程内所存放的变量对象都将被垃圾回收。也就是说，存入的变量对象是在Thread内存放的，这个后面详细介绍。</p>
+<p>3.一个ThreadLocal在一个线程中只能对应存储一个对象，如果调用多次set()方法，则最后一个set的对象会覆盖掉之前存入的对象。如果需要存放其他的对象，就再创建一个新的ThreadLocal出来。<br>4.建议将ThreadLocal变量定义成private static的，原因下面说。</p>
+<p>5.ThreadLocal存储的变量对象在线程生命周期内有效，方便我们在当前线程内部，在不同方法不同对象内取出该变量，避免了将这个对象作为参数传递。当然我们也可以要把线程共享的对象通过ThreadLocal放到线程中，但没有必要。</p>
+<p>6.我们存入的变量对象实际存放在Thread对象的ThreadLocal.ThreadLocalMap threadLocals变量中，在ThreadLocalMap内以ThreadLocal为key，以存入的变量对象为value。各线程通过自己的内部变量管理自身存储的对象。</p>
 </blockquote>
+<p>看不懂不要紧,上面只是结论,跟着下面慢慢来 </p>
 <h4 id="ThreadLocal怎么用"><a href="#ThreadLocal怎么用" class="headerlink" title="ThreadLocal怎么用"></a><strong>ThreadLocal怎么用</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public class ThreadLocalTest &#123;</div><div class="line"></div><div class="line">    private static final ThreadLocal&lt;String&gt; sThreadLocal = new ThreadLocal&lt;String&gt;();</div><div class="line"></div><div class="line">       public static void main(String[] args) throws Exception &#123;</div><div class="line">        sThreadLocal.set(&quot;zhangbing&quot;);</div><div class="line">        System.out.println(Thread.currentThread().getName() + &quot; ----&gt;&quot; + sThreadLocal.get());</div><div class="line"></div><div class="line">        for (int i = 0; i &lt; 2; i++) &#123;</div><div class="line">            final int finalI = i;</div><div class="line">            new Thread(new Runnable() &#123;</div><div class="line">                public void run() &#123;</div><div class="line">                    System.out.println(Thread.currentThread().getName() + &quot; ----&gt;&quot; + sThreadLocal.get());</div><div class="line">                    sThreadLocal.set(&quot; zhangbing &quot; + finalI);</div><div class="line">                    System.out.println(Thread.currentThread().getName() + &quot; ----&gt;&quot; + sThreadLocal.get());</div><div class="line"></div><div class="line">                &#125;</div><div class="line">            &#125;).start();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>输出:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">main ----&gt;zhangbing</div><div class="line">Thread-0 ----&gt;null</div><div class="line">Thread-0 ----&gt; zhangbing 0</div><div class="line">Thread-1 ----&gt;null</div><div class="line">Thread-1 ----&gt; zhangbing 1</div></pre></td></tr></table></figure>
