@@ -9,7 +9,7 @@
   <title>Handler.postDelayed()的原理 | Ace的技术客栈</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Handler.postDelayed()的原理今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？ 时序图: 最后调用到MessageQueue的enqueueMess">
-<meta name="keywords" content="前端,js,jquery,javascript,html5,开发者,程序猿,程序媛,极客,编程,代码,开源,IT网站,Developer,Programmer,Coder,Geek,html,css,css3,用户体验">
+<meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Handler.postDelayed()的原理">
 <meta property="og:url" content="http://azhangbing.com/2017/10/20/Handler-postDelayed-的原理/index.html">
@@ -17,7 +17,7 @@
 <meta property="og:description" content="Handler.postDelayed()的原理今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？ 时序图: 最后调用到MessageQueue的enqueueMess">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://azhangbing.com/images/pasted-1508470499959.png">
-<meta property="og:updated_time" content="2017-10-20T03:39:16.103Z">
+<meta property="og:updated_time" content="2017-10-20T03:44:43.408Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Handler.postDelayed()的原理">
 <meta name="twitter:description" content="Handler.postDelayed()的原理今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？ 时序图: 最后调用到MessageQueue的enqueueMess">
@@ -172,7 +172,7 @@
 
         
         <a href="/2017/10/20/Handler-postDelayed-的原理/" class="archive-article-date">
-  	<time datetime="2017-10-20T03:34:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-20</time>
+  	<time datetime="2017-10-20T03:34:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-20</time>
 </a>
         
       </header>
@@ -221,6 +221,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -410,6 +421,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">感悟</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
             
             <div class="clearfix"></div>
