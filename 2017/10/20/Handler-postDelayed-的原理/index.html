@@ -76,10 +76,6 @@ var _hmt = _hmt || [];
 	        
 				<li><a href="/archives">所有文章</a></li>
 	        
-				<li><a href="/categories/">分类</a></li>
-	        
-				<li><a href="/tags/">标签</a></li>
-	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -138,10 +134,6 @@ var _hmt = _hmt || [];
 			
 				
 			
-				
-			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -163,16 +155,12 @@ var _hmt = _hmt || [];
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 70%">
+				<ul style="width: 50%">
 				
 				
-					<li style="width: 25%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
 		        
-					<li style="width: 25%"><a href="/archives">所有文章</a></li>
-		        
-					<li style="width: 25%"><a href="/categories/">分类</a></li>
-		        
-					<li style="width: 25%"><a href="/tags/">标签</a></li>
+					<li style="width: 50%"><a href="/archives">所有文章</a></li>
 		        
 				</ul>
 			</nav>
@@ -216,10 +204,8 @@ var _hmt = _hmt || [];
 
         
     <div class="article-entry" itemprop="articleBody">
-    
       
-  
-    <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
+        <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
 <a id="more"></a>
 <p>时序图:<br><img src="/images/pasted-1508470499959.png" alt="WX1"></p>
 <p>最后调用到MessageQueue的enqueueMessage方法,来看下这个方法</p>
@@ -234,13 +220,10 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">Message next() &#123;</div><div class="line">        ......</div><div class="line">        int pendingIdleHandlerCount = -1; </div><div class="line">        int nextPollTimeoutMillis = 0; //下个任务的执行时间</div><div class="line">        for (;;) &#123;</div><div class="line">            nativePollOnce(ptr, nextPollTimeoutMillis);</div><div class="line"></div><div class="line">            synchronized (this) &#123;</div><div class="line">                // Try to retrieve the next message.  Return if found.</div><div class="line">                final long now = SystemClock.uptimeMillis();</div><div class="line">                Message prevMsg = null;</div><div class="line">                Message msg = mMessages;</div><div class="line"></div><div class="line">                if (msg != null) &#123;</div><div class="line">                    if (now &lt; msg.when) &#123;</div><div class="line">                        // Next message is not ready.  Set a timeout to wake up when it is ready.</div><div class="line">                        nextPollTimeoutMillis = (int) Math.min(msg.when - now, Integer.MAX_VALUE);//更新下次任务时间</div><div class="line">                    &#125; else &#123;</div><div class="line">                        // 执行消息</div><div class="line">                        mBlocked = false;</div><div class="line">                        if (prevMsg != null) &#123;</div><div class="line">                            prevMsg.next = msg.next;</div><div class="line">                        &#125; else &#123;</div><div class="line">                            mMessages = msg.next;</div><div class="line">                        &#125;</div><div class="line">                        return msg;</div><div class="line">                    &#125;</div><div class="line">                &#125; else &#123;</div><div class="line">                    // No more messages.</div><div class="line">                    nextPollTimeoutMillis = -1;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (pendingIdleHandlerCount &lt;= 0) &#123;</div><div class="line">                    // No idle handlers to run.  Loop and wait some more.</div><div class="line">                    mBlocked = true;//true则进入阻塞等待任务</div><div class="line">                    continue;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <p>所以MessageQueue会根据postDelay的时间排序放入到链表中，链表头的时间小，尾部时间最大。因此能保证时间Delay最长的不会block住时间短的。当每次post message的时候会进入到MessageQueue的next()方法，会根据其delay时间和链表头的比较，如果更短则，放入链表头，并且看时间是否有delay，如果有，则block，等待时间到来唤醒执行，否则将唤醒立即执行。</p>
 
-  
+      
 
-
-
+      
     </div>
-
-
     <div class="article-info article-info-index">
       
       
@@ -452,15 +435,15 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">感悟</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">并发编程</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">感悟</a>
               </li>
             
             <div class="clearfix"></div>
