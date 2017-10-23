@@ -187,7 +187,180 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-Handler-postDelayed-的原理" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Handler.postDelayed()的原理
+    </h1>
+  
+
+        
+        <a href="/2017/10/20/Handler-postDelayed-的原理/" class="archive-article-date">
+  	<time datetime="2017-10-20T03:34:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-20</time>
+</a>
+        
+
+        
+
+        
+      </header>
+    
+
+     <!-- 目录内容 -->
+             
+        <!-- 目录内容结束 -->
+
+        
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
+<a id="more"></a>
+<p>时序图:<br><img src="/images/pasted-1508470499959.png" alt="WX1"></p>
+<p>最后调用到MessageQueue的enqueueMessage方法,来看下这个方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">boolean enqueueMessage(Message msg, long when) &#123;</div><div class="line">            .....</div><div class="line">            msg.markInUse();</div><div class="line">            msg.when = when;</div><div class="line">            Message p = mMessages;</div><div class="line">            boolean needWake;</div><div class="line">            if (p == null || when == 0 || when &lt; p.when) &#123;</div><div class="line">                // New head, wake up the event queue if blocked.</div><div class="line">                msg.next = p;</div><div class="line">                mMessages = msg;</div><div class="line">                needWake = mBlocked;</div><div class="line">            &#125; else &#123;</div><div class="line">                Message prev;</div><div class="line">                for (;;) &#123;</div><div class="line">                    prev = p;</div><div class="line">                    p = p.next;</div><div class="line">                    if (p == null || when &lt; p.when) &#123;</div><div class="line">                        break;</div><div class="line">                    &#125;</div><div class="line">                    if (needWake &amp;&amp; p.isAsynchronous()) &#123;</div><div class="line">                        needWake = false;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                msg.next = p;</div><div class="line">                prev.next = msg;</div><div class="line">            &#125;</div><div class="line"></div><div class="line"></div><div class="line">            if (needWake) &#123;</div><div class="line">            nativeWake(mPtr);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return true;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>通过上面遍历等next操作可以看出来，MessageQueue消息队列对于消息排队是通过类似C语言的链表来存储这些有序的消息的。其中的mMessages对象表示当前待处理的消息；具体的操作方法就根据时间的顺序调用msg.next，从而为每一个消息指定它的当前消息和下一个消息是什么<strong>消息插入队列的实质就是将所有的消息按时间（uptimeMillis参数）进行排序</strong>。</p>
+<p>比如:</p>
+<p>  Handler.sendMessageAtFrontOfQueue方法,它的实质就是把消息添加到MessageQueue消息队列的头部（uptimeMillis为0）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public final boolean sendMessageAtFrontOfQueue(Message msg) &#123;</div><div class="line">    MessageQueue queue = mQueue;</div><div class="line">    ...</div><div class="line">    &#125;</div><div class="line">    return enqueueMessage(queue, msg, 0);//uptimeMillis=0</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>到此消息入队方法已经完毕.那么具体执行在哪里呢?<br>我们知道Loop里维护着MessageQueue,通过Looper.loop()不断遍历MessageQueue,先来看下这个方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public static final void loop() &#123;  </div><div class="line">    Looper me = myLooper();  </div><div class="line">    MessageQueue queue = me.mQueue;  </div><div class="line">    while (true) &#123;  </div><div class="line">        Message msg = queue.next(); // might block  </div><div class="line">        if (msg != null) &#123;  </div><div class="line">            if (msg.target == null) &#123;  </div><div class="line">                return;  </div><div class="line">            &#125;  </div><div class="line">            if (me.mLogging!= null) me.mLogging.println(  </div><div class="line">                    &quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot;  </div><div class="line">                    + msg.callback + &quot;: &quot; + msg.what  </div><div class="line">                    );  </div><div class="line">            msg.target.dispatchMessage(msg);  </div><div class="line">            if (me.mLogging!= null) me.mLogging.println(  </div><div class="line">                    &quot;&lt;&lt;&lt;&lt;&lt; Finished to    &quot; + msg.target + &quot; &quot;  </div><div class="line">                    + msg.callback);  </div><div class="line">            msg.recycle();  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在死循环里不断调用了MessageQueue.next()方法我们来看一下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">Message next() &#123;</div><div class="line">        ......</div><div class="line">        int pendingIdleHandlerCount = -1; </div><div class="line">        int nextPollTimeoutMillis = 0; //下个任务的执行时间</div><div class="line">        for (;;) &#123;</div><div class="line">            nativePollOnce(ptr, nextPollTimeoutMillis);</div><div class="line"></div><div class="line">            synchronized (this) &#123;</div><div class="line">                // Try to retrieve the next message.  Return if found.</div><div class="line">                final long now = SystemClock.uptimeMillis();</div><div class="line">                Message prevMsg = null;</div><div class="line">                Message msg = mMessages;</div><div class="line"></div><div class="line">                if (msg != null) &#123;</div><div class="line">                    if (now &lt; msg.when) &#123;</div><div class="line">                        // Next message is not ready.  Set a timeout to wake up when it is ready.</div><div class="line">                        nextPollTimeoutMillis = (int) Math.min(msg.when - now, Integer.MAX_VALUE);//更新下次任务时间</div><div class="line">                    &#125; else &#123;</div><div class="line">                        // 执行消息</div><div class="line">                        mBlocked = false;</div><div class="line">                        if (prevMsg != null) &#123;</div><div class="line">                            prevMsg.next = msg.next;</div><div class="line">                        &#125; else &#123;</div><div class="line">                            mMessages = msg.next;</div><div class="line">                        &#125;</div><div class="line">                        return msg;</div><div class="line">                    &#125;</div><div class="line">                &#125; else &#123;</div><div class="line">                    // No more messages.</div><div class="line">                    nextPollTimeoutMillis = -1;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (pendingIdleHandlerCount &lt;= 0) &#123;</div><div class="line">                    // No idle handlers to run.  Loop and wait some more.</div><div class="line">                    mBlocked = true;//true则进入阻塞等待任务</div><div class="line">                    continue;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>所以MessageQueue会根据postDelay的时间排序放入到链表中，链表头的时间小，尾部时间最大。因此能保证时间Delay最长的不会block住时间短的。当每次post message的时候会进入到MessageQueue的next()方法，会根据其delay时间和链表头的比较，如果更短则，放入链表头，并且看时间是否有delay，如果有，则block，等待时间到来唤醒执行，否则将唤醒立即执行。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://azhangbing.com/2017/10/20/Handler-postDelayed-的原理/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2017/10/21/深入理解ThreadLocal/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          深入理解ThreadLocal
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/10/19/Java-字符串相关/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java 字符串相关</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
+  
+
+  
+
+  
+
+  
+
+
           </div>
         </div>
       </div>
@@ -270,11 +443,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
