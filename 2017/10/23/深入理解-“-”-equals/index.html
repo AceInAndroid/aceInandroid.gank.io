@@ -6,20 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://azhangbing.com">
-  <title>深入理解ThreadLocal | Ace的技术客栈</title>
+  <title>深入理解 &#34;==&#34; &amp; equals()  | Ace的技术客栈</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
-<meta name="keywords" content="Java,并发编程">
+  <meta name="description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils, ####1.基础知识 ######JAVA中分为基本数据类型及引用数据类型  基本数据类型：byte，short, int, long, float, double, char, boolean; 引用数据类型：Stri">
+<meta name="keywords" content="前端,js,jquery,javascript,html5,开发者,程序猿,程序媛,极客,编程,代码,开源,IT网站,Developer,Programmer,Coder,Geek,html,css,css3,用户体验">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解ThreadLocal">
-<meta property="og:url" content="http://azhangbing.com/2017/10/21/深入理解ThreadLocal/index.html">
+<meta property="og:title" content="深入理解 &quot;==&quot; &amp; equals() ">
+<meta property="og:url" content="http://azhangbing.com/2017/10/23/深入理解-“-”-equals/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
+<meta property="og:description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils, ####1.基础知识 ######JAVA中分为基本数据类型及引用数据类型  基本数据类型：byte，short, int, long, float, double, char, boolean; 引用数据类型：Stri">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-10-20T20:42:11.300Z">
+<meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-23-20161105125822857.jpg">
+<meta property="og:updated_time" content="2017-10-23T06:27:16.220Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解ThreadLocal">
-<meta name="twitter:description" content="深入理解ThreadLocal今天解析了Handler messageQueue Loop三者的关系 新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错. 123456789public Handler() &amp;#123;    ......    mLooper = Looper.myLooper();    if (mLooper">
+<meta name="twitter:title" content="深入理解 &quot;==&quot; &amp; equals() ">
+<meta name="twitter:description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils, ####1.基础知识 ######JAVA中分为基本数据类型及引用数据类型  基本数据类型：byte，short, int, long, float, double, char, boolean; 引用数据类型：Stri">
+<meta name="twitter:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-23-20161105125822857.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Ace的技术客栈" type="application/atom+xml">
   
@@ -157,20 +159,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-深入理解ThreadLocal" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-深入理解-“-”-equals" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      深入理解ThreadLocal
+      深入理解 &#34;==&#34; &amp; equals() 
     </h1>
   
 
         
-        <a href="/2017/10/21/深入理解ThreadLocal/" class="archive-article-date">
-  	<time datetime="2017-10-20T19:47:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-21</time>
+        <a href="/2017/10/23/深入理解-“-”-equals/" class="archive-article-date">
+  	<time datetime="2017-10-23T05:15:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-23</time>
 </a>
         
 
@@ -189,7 +191,7 @@
             <div id="toc-article" class="toc-article">
                 <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
                 <strong class="toc-title">文章目录</strong>
-                <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#深入理解ThreadLocal"><span class="toc-number">1.</span> <span class="toc-text">深入理解ThreadLocal</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#那么这个ThreadLocal到底是什么呢"><span class="toc-number">2.</span> <span class="toc-text">那么这个ThreadLocal到底是什么呢?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ThreadLocal怎么用"><span class="toc-number">3.</span> <span class="toc-text">ThreadLocal怎么用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ThreadLocal源码"><span class="toc-number">4.</span> <span class="toc-text">ThreadLocal源码:</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#深入理解-“-”-amp-equals"><span class="toc-number">1.</span> <span class="toc-text">深入理解 “==”& equals()</span></a></li></ol>
            </div>
            <script type="text/javascript">
             function showToc(){
@@ -211,53 +213,41 @@
         
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="深入理解ThreadLocal"><a href="#深入理解ThreadLocal" class="headerlink" title="深入理解ThreadLocal"></a>深入理解ThreadLocal</h4><p>今天解析了Handler messageQueue Loop三者的关系</p>
-<p>新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public Handler() &#123;</div><div class="line">    ......</div><div class="line">    mLooper = Looper.myLooper();</div><div class="line">    if (mLooper == null) &#123;</div><div class="line">        throw new RuntimeException(</div><div class="line">            &quot;Can&apos;t create handler inside thread that has not called Looper.prepare()&quot;);</div><div class="line">    &#125;</div><div class="line">    ......</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里调用了Looper.myLooper()方法,让我们来看一下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public static final Looper myLooper() &#123;  </div><div class="line">    return (Looper)sThreadLocal.get();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个方法非常简单，就是从sThreadLocal对象中取出Looper。如果sThreadLocal中有Looper存在就返回Looper.</p>
-<p>这个Looper再哪设置呢?<br><a id="more"></a></p>
-<p>来看Looper.prepare()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public static final void prepare() &#123;</div><div class="line">        if (sThreadLocal.get() != null) &#123;</div><div class="line">            throw new RuntimeException(&quot;Only one Looper may be created per thread&quot;);</div><div class="line">        &#125;</div><div class="line">        sThreadLocal.set(new Looper());</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>首先判断sThreadLocal中是否已经存在Looper了，如果还没有则创建一个新的Looper设置进去。这样也就完全解释了为什么我们要先调用Looper.prepare()方法，才能创建Handler对象。同时也可以看出每个线程中最多只会有一个Looper对象,否则报错。</p>
-<p>因此一个完成的异步消息处理线程应该是这样:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">class LooperThread extends Thread &#123;  </div><div class="line">      public Handler mHandler;  </div><div class="line">  </div><div class="line">      public void run() &#123;  </div><div class="line">          Looper.prepare();  </div><div class="line">  </div><div class="line">          mHandler = new Handler() &#123;  </div><div class="line">              public void handleMessage(Message msg) &#123;  </div><div class="line">                  // process incoming messages here  </div><div class="line">              &#125;  </div><div class="line">          &#125;;  </div><div class="line">  </div><div class="line">          Looper.loop();  </div><div class="line">      &#125;  </div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<h4 id="那么这个ThreadLocal到底是什么呢"><a href="#那么这个ThreadLocal到底是什么呢" class="headerlink" title="那么这个ThreadLocal到底是什么呢?"></a><strong>那么这个ThreadLocal到底是什么呢?</strong></h4><p>先看JDK源码中对ThreadLocal的解释：</p>
+        <h3 id="深入理解-“-”-amp-equals"><a href="#深入理解-“-”-amp-equals" class="headerlink" title="深入理解 “==”&amp; equals()"></a>深入理解 “==”&amp; equals()</h3><p>继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils,</p>
+<p>####1.基础知识</p>
+<p>######JAVA中分为基本数据类型及引用数据类型</p>
+<ul>
+<li>基本数据类型：byte，short, int, long, float, double, char, boolean;</li>
+<li>引用数据类型：String，引用变量；</li>
+<li>基本数据类型的存储原理：所有的简单数据类型不存在“引用”的概念，基本数据类型都是直接存储在内存中的内存栈上的，数据本身的值就是存储在栈空间里面，而Java语言里面八种数据类型是这种存储模型；</li>
+<li><p>引用类型的存储原理：引用类型继承于Object类（也是引用类型）都是按照Java里面存储对象的内存模型来进行数据存储的，使用Java内存堆和内存栈来进行这种类型的数据存储，简单地讲，“引用”是存储在有序的内存栈上的，而对象本身的值存储在内存堆上的；</p>
+</li>
+<li><p>常常有引用变量或是String类型变量设置为null，那么null指的是什么？我们看：A a = new A();那么这里a指向堆内存中实例化的A对象。当a=null,a指向空！我们可以这样理解，null是没有地址，” “是有地址，但里面的内容为空。</p>
+</li>
+</ul>
+<p>####2.==和.equals()的区别</p>
+<p>结论:==指的是内存引用一样。equals是指的是逻辑相等。逻辑相等具体的意思由编写者决定(比如String 重写的equals,根据逻辑重写的)。</p>
+<p>默认情况下(继承自Object类,如:int,long等基本类型)，equals和==是一样的，没有区别，即俩个对象的比较是比较他们的栈内存中存储的内存地址。，除非被覆写(override)了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public boolean equals(Object obj) &#123;</div><div class="line">     return (this == obj);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>最典型equals已经被覆写(override)的例子是String； String中的字符串文本相等则视为逻辑相等（s1.equals(s2)==true）</p>
+<p>String.equals()：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public boolean equals(Object anObject) &#123;</div><div class="line">        if (this == anObject) &#123;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        if (anObject instanceof String) &#123;</div><div class="line">            String anotherString = (String) anObject;</div><div class="line">            int n = value.length;</div><div class="line">            if (n == anotherString.value.length) &#123;</div><div class="line">                char v1[] = value;</div><div class="line">                char v2[] = anotherString.value;</div><div class="line">                int i = 0;</div><div class="line">                while (n-- != 0) &#123;</div><div class="line">                    if (v1[i] != v2[i])</div><div class="line">                            return false;</div><div class="line">                    i++;</div><div class="line">                &#125;</div><div class="line">                return true;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>来个栗子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//对于对象变量，&quot;==&quot;和&quot;equal&quot;的区别</div><div class="line"></div><div class="line">      String st1=&quot;zhangbing &quot;;</div><div class="line">      String st2=&quot;is so cool&quot;;</div><div class="line">      String st3=&quot;zhangbing is so cool&quot;;</div><div class="line">      String st4=&quot;zhangbing is so cool&quot;;</div><div class="line"></div><div class="line">      Boolean b1=(st1==st2);</div><div class="line">      Boolean b2=(st1+st2)==st3;</div><div class="line">      Boolean b3=(st3==st4);</div><div class="line"></div><div class="line">      System.out.println(&quot;/n/n-----【st1==st2】&quot;+b1+&quot;/n-----【(st1+st2)==st3】&quot;+b2+&quot;/n-----【st3==st4】&quot;+b3);</div></pre></td></tr></table></figure>
+<p>打印:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">-----【st1==st2】false/n-----</div><div class="line">-----【(st1+st2)==st3】false/n-----</div><div class="line">-----【st3==st4】true-----</div></pre></td></tr></table></figure>
+<p>四个字符串都放到了常量池,==是比较引用,st1,st2常量池中引用不同,st3和st4相同, 而st1+st2是在heap中创建了新的对象,st3是在常量池中,所以引用地址不一样.</p>
 <blockquote>
-<p>This class provides thread-local variables. These variables differ from their normal counterparts in that each thread that accesses one (via its get or set method) has its own, independently initialized copy of the variable. ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).<br>这个类提供线程局部变量。这些变量与普通的变量不同，因为每个访问的线程(通过其get或set方法)都有自己的独立初始化的变量副本。ThreadLocal实例通常是希望将状态与线程关联的类中的私有静态(private static)字段(例如:一个用户ID或事务ID)。<br>Each thread holds an implicit reference to its copy of a thread-local variable as long as the thread is alive and the ThreadLocal instance is accessible; after a thread goes away, all of its copies of thread-local instances are subject to garbage collection (unless other references to these copies exist).<br>只要线程存活并且ThreadLocal实例可以访问，每个线程都保存对其线程局部变量副本的隐含引用; 线程结束之后，线程本地实例的所有副本都将被垃圾回收（除非存在对这些副本的其他引用）。</p>
+<p>常量池的基本概念：Java是一种动态连接的语言，常量池的作用非常重要，常量池中除了包含代码中所定义的各种基本类型（如int、long等等）和对象型（如String及数组）的常量值还，还包含一些以文本形式出现的符号引用.</p>
 </blockquote>
-<p>一大堆看蒙了吧,上面装逼用.</p>
-<p>用白话来说:</p>
+<p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-23-20161105125822857.jpg" alt="20161105125822857"></p>
+<p>“china”直接量和new String（”china”）区别在于：前者，JVM将会使用常量池来管理这些字符串，当使用new String(“China”),JVM会先使用常量池来管理”china”，再调用String类构造器创建一个新的String对象，新建对象被保存在堆内存中。</p>
+<p>####3.equals()和HashCode()</p>
+<p>Java 中规定equals(str) 方法时尽量要重写 hashCode() 方法,hashCode()的主要作用是为了配合基于散列的集合一起正常运行，这样的散列集合包括HashSet、HashMap以及HashTable.<br>HashSet不允许有重复的数据,那么如何判别在集合中是否已经存在该对象了？</p>
 <blockquote>
-<p>1.ThreadLocal使各线程能够保持各自独立初始化的对象。也就是说通过ThreadLocal.set()方法设置的变量为当前线程的独立对象，可通过ThreadLocal.get()获取与当前线程绑定的独立对象(比如说当前线程的Looper)。</p>
-<p>2.当线程结束之后，线程内所存放的变量对象都将被垃圾回收。也就是说，存入的变量对象是在Thread内存放的，这个后面详细介绍。</p>
-<p>3.一个ThreadLocal在一个线程中只能对应存储一个对象，如果调用多次set()方法，则最后一个set的对象会覆盖掉之前存入的对象。如果需要存放其他的对象，就再创建一个新的ThreadLocal出来。<br>4.建议将ThreadLocal变量定义成private static的，原因下面说。</p>
-<p>5.ThreadLocal存储的变量对象在线程生命周期内有效，方便我们在当前线程内部，在不同方法不同对象内取出该变量，避免了将这个对象作为参数传递。当然我们也可以要把线程共享的对象通过ThreadLocal放到线程中，但没有必要。</p>
-<p>6.我们存入的变量对象实际存放在Thread对象的ThreadLocal.ThreadLocalMap threadLocals变量中，在ThreadLocalMap内以ThreadLocal为key，以存入的变量对象为value。各线程通过自己的内部变量管理自身存储的对象。</p>
+<p>也许大多数人都会想到调用equals方法来逐个进行比较，这个方法确实可行。但是如果集合中已经存在一万条数据或者更多的数据，如果采用equals方法去逐一比较，效率必然是一个问题。此时hashCode方法的作用就体现出来了，当集合要添加新的对象时，先调用这个对象的hashCode方法，得到对应的hashcode值，实际上在HashMap的具体实现中会用一个table保存已经存进去的对象的hashcode值，如果table中没有该hashcode值，它就可以直接存进去，不用再进行任何比较了；如果存在该hashcode值， 就调用它的equals方法与新元素进行比较，相同的话就不存了，不相同就散列其它的地址，所以这里存在一个冲突解决的问题，这样一来实际调用equals方法的次数就大大降低了.</p>
 </blockquote>
-<p>看不懂不要紧,上面只是结论,跟着下面慢慢来 </p>
-<h4 id="ThreadLocal怎么用"><a href="#ThreadLocal怎么用" class="headerlink" title="ThreadLocal怎么用"></a><strong>ThreadLocal怎么用</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">public class ThreadLocalTest &#123;</div><div class="line"></div><div class="line">    private static final ThreadLocal&lt;String&gt; sThreadLocal = new ThreadLocal&lt;String&gt;();</div><div class="line"></div><div class="line">       public static void main(String[] args) throws Exception &#123;</div><div class="line">        sThreadLocal.set(&quot;zhangbing&quot;);</div><div class="line">        System.out.println(Thread.currentThread().getName() + &quot; ----&gt;&quot; + sThreadLocal.get());</div><div class="line"></div><div class="line">        for (int i = 0; i &lt; 2; i++) &#123;</div><div class="line">            final int finalI = i;</div><div class="line">            new Thread(new Runnable() &#123;</div><div class="line">                public void run() &#123;</div><div class="line">                    System.out.println(Thread.currentThread().getName() + &quot; ----&gt;&quot; + sThreadLocal.get());</div><div class="line">                    sThreadLocal.set(&quot; zhangbing &quot; + finalI);</div><div class="line">                    System.out.println(Thread.currentThread().getName() + &quot; ----&gt;&quot; + sThreadLocal.get());</div><div class="line"></div><div class="line">                &#125;</div><div class="line">            &#125;).start();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>输出:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">main ----&gt;zhangbing</div><div class="line">Thread-0 ----&gt;null</div><div class="line">Thread-0 ----&gt; zhangbing 0</div><div class="line">Thread-1 ----&gt;null</div><div class="line">Thread-1 ----&gt; zhangbing 1</div></pre></td></tr></table></figure>
-<p>可以看到sThreadLocal在主线程存入变量zhangbing，在开启的子线程中是无法获取主线程存入的对象的，也就是说明了在当前线程存入的对象只在当前线程是有效的，不同线程间存入的数据得到隔离。</p>
-<p>那么,ThreadLocal是怎么做到的呢?来看源码分析</p>
-<h4 id="ThreadLocal源码"><a href="#ThreadLocal源码" class="headerlink" title="ThreadLocal源码:"></a>ThreadLocal源码:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">public T get() &#123;</div><div class="line">       //获取当前线程</div><div class="line">       Thread t = Thread.currentThread();</div><div class="line">       //取出线程内部的ThreadLocalMap类型变量</div><div class="line">       ThreadLocalMap map = getMap(t);</div><div class="line">       if (map != null) &#123;</div><div class="line">           //根据当前ThreadLocal  查找对应的ThreadLocalMap.Entry</div><div class="line">           //后面我们继续看下getEntry(this)</div><div class="line">           ThreadLocalMap.Entry e = map.getEntry(this);</div><div class="line">           //如果ThreadLocalMap.Entry不为空，返回内部存放的对象值</div><div class="line">           if (e != null) &#123;</div><div class="line">               @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">               T result = (T)e.value;</div><div class="line">               return result;</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       //如果get之前没有存入任何值，调用该方法</div><div class="line">       return setInitialValue();</div><div class="line">   &#125;</div><div class="line"> //</div><div class="line"></div><div class="line">   ThreadLocalMap getMap(Thread t) &#123;</div><div class="line">       return t.threadLocals;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   private T setInitialValue() &#123;</div><div class="line">       //初始化变量的值   我们可以重写initialValue()方法设置默认初始值</div><div class="line">       T value = initialValue();</div><div class="line">       Thread t = Thread.currentThread();</div><div class="line">       ThreadLocalMap map = getMap(t);</div><div class="line">       if (map != null)</div><div class="line">           map.set(this, value);</div><div class="line">       else</div><div class="line">           createMap(t, value);</div><div class="line">       return value;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>可以看到getMap方法获取到了每个Thread中的ThreadLocalMap对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class Thread implements Runnable &#123;</div><div class="line">  </div><div class="line">    /* ThreadLocal values pertaining to this thread. This map is maintained</div><div class="line">     * by the ThreadLocal class. */</div><div class="line">    ThreadLocal.ThreadLocalMap threadLocals = null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后根据ThreadLocalMap类中的getEntry()方法获取存储的值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// table数组中存储了所有的存储对象的Entry内部存储了所有变量</div><div class="line"> private Entry getEntry(ThreadLocal key) &#123;</div><div class="line">            //根据哈希码求出所在数组下标</div><div class="line">            int i = key.threadLocalHashCode &amp; (table.length - 1);</div><div class="line">            Entry e = table[i];</div><div class="line">            if (e != null &amp;&amp; e.get() == key)</div><div class="line">                return e;</div><div class="line">            else//如果为空</div><div class="line">                return getEntryAfterMiss(key, i, e);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-<p>那么ThreadLocal怎么存值呢?</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public void set(T value) &#123;</div><div class="line">    Thread t = Thread.currentThread();</div><div class="line">    ThreadLocalMap map = getMap(t);</div><div class="line">    if (map != null)//向ThreadLocalMap存入对应的值</div><div class="line">        map.set(this, value);</div><div class="line">    else</div><div class="line">        createMap(t, value);</div><div class="line">&#125;</div><div class="line"></div><div class="line">void createMap(Thread t, T firstValue) &#123;</div><div class="line">    t.threadLocals = new ThreadLocalMap(this, firstValue);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>总结一下：根据源码我们可以发现，我们存入的对象实际被存储在Thread内部的ThreadLocalMap变量内，以key和value的形式存储，ThreadLocal为key，传入的对象为value，我们可以在initialValue方法中设置默认值。</p>
-<p>这样设计有什么好处呢?</p>
-<blockquote>
-<p>1.每个Map的Entry数量变小了：之前是Thread的数量，现在是ThreadLocal的数量，提高性能。</p>
-<p>2.当Thread销毁之后对应的内部变量ThreadLocalMap也就随之销毁，内存可以自动释放，减少内存使用。</p>
-</blockquote>
-<p>接下来看下ThreadLocalMap内部存储的Entry:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">static class Entry extends WeakReference&lt;ThreadLocal&gt; &#123;</div><div class="line">            /** The value associated with this ThreadLocal. */</div><div class="line">            Object value;</div><div class="line"></div><div class="line">            Entry(ThreadLocal k, Object v) &#123;</div><div class="line">                super(k);</div><div class="line">                value = v;</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-<p>注意，这里的Entry是将ThreadLocal作为弱引用来存储的，这可能会出现问题：如果一个ThreadLocal没有外部强引用引用它，那么系统GC的时候，这个ThreadLocal会被回收掉，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程不结束，那这些无用的强引用就始终无法回收，从而造成内存泄漏。<br>所以之前说到，建议将ThreadLocal变量定义成private static的，这样的话ThreadLocal的生命周期就更长，由于一直存在ThreadLocal的强引用，所以ThreadLocal也就不会被回收，也就能保证任何时候都能根据ThreadLocal的弱引用访问到Entry中的value值。</p>
+<p>简单理解，hashCode方法实际上返回的就是对象存储位置的映像。</p>
 
       
 
@@ -266,33 +256,7 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">并发编程</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
 
       
 
@@ -342,7 +306,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://azhangbing.com/2017/10/21/深入理解ThreadLocal/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://azhangbing.com/2017/10/23/深入理解-“-”-equals/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -356,18 +320,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/10/23/深入理解-“-”-equals/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          深入理解 &#34;==&#34; &amp; equals() 
-        
-      </div>
-    </a>
   
-  
-    <a href="/2017/10/20/Handler-postDelayed-的原理/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Handler.postDelayed()的原理</div>
+    <a href="/2017/10/21/深入理解ThreadLocal/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">深入理解ThreadLocal</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -394,7 +349,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#深入理解ThreadLocal"><span class="toc-number">1.</span> <span class="toc-text">深入理解ThreadLocal</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#那么这个ThreadLocal到底是什么呢"><span class="toc-number">2.</span> <span class="toc-text">那么这个ThreadLocal到底是什么呢?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ThreadLocal怎么用"><span class="toc-number">3.</span> <span class="toc-text">ThreadLocal怎么用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ThreadLocal源码"><span class="toc-number">4.</span> <span class="toc-text">ThreadLocal源码:</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#深入理解-“-”-amp-equals"><span class="toc-number">1.</span> <span class="toc-text">深入理解 “==”& equals()</span></a></li></ol>
                     </div>
                 </span>
             </div>
