@@ -62,6 +62,12 @@
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/archives">archives</a></li>
+	        
+				<li><a href="/categories">categories</a></li>
+	        
+				<li><a href="/tags">tags</a></li>
+	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -118,6 +124,12 @@
 			
 				
 			
+				
+			
+				
+			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -139,10 +151,16 @@
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 50%">
+				<ul style="width: 70%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 25%"><a href="/">主页</a></li>
+		        
+					<li style="width: 25%"><a href="/archives">archives</a></li>
+		        
+					<li style="width: 25%"><a href="/categories">categories</a></li>
+		        
+					<li style="width: 25%"><a href="/tags">tags</a></li>
 		        
 				</ul>
 			</nav>
@@ -187,7 +205,8 @@
         
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>问：下面程序的运行结果是什么？</strong></p>
+  
+    <p><strong>问：下面程序的运行结果是什么？</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String s1 = &quot;abc&quot;;</div><div class="line">StringBuffer s2 = new StringBuffer(s1);</div><div class="line">System.out.println(s1.equals(s2));    //1,false</div><div class="line">StringBuffer s3 = new StringBuffer (&quot;abc&quot;);</div><div class="line">System.out.println(s3.equals(&quot;abc&quot;));    //2,false</div><div class="line">System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true</div></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>答：</strong>注释 1 打印为 false，主要考察 String 的 equals 方法，String 源码中 equals 方法有对参数进行 instance of String 判断语句，StringBuffer 的祖先为 CharSequence，所以不相等； 注释 2 打印为 false，因为 StringBuffer 没有重写 Object 的 equals 方法，所以 Object 的 equals 方法实现是 == 判断，故为 false； 注释 3 打印为 true，因为 Object 的 toString 方法返回为 String 类型，String 重写了 equals 方法实现为值比较。</p>
@@ -290,9 +309,8 @@
 <p>答：这道题太简单不过了，都有点不好意思放上来，不过为了照顾所有层次还是写下答案。</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String removeChar(String str, char c) &#123;</div><div class="line">    if (str == null) &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    return str.replaceAll(Character.toString(c), &quot;&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-      
+  
 
-      
     </div>
     <div class="article-info article-info-index">
       
@@ -505,11 +523,11 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">感悟</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">感悟</a>
               </li>
              
               <li class="article-tag-list-item">
