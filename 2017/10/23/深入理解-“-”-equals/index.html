@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://azhangbing.com">
   <title>深入理解 &#34;==&#34; &amp; equals()  | Ace的技术客栈</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils, ####1.基础知识 ######JAVA中分为基本数据类型及引用数据类型  基本数据类型：byte，short, int, long, float, double, char, boolean; 引用数据类型：Stri">
+  <meta name="description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下">
 <meta name="keywords" content="前端,js,jquery,javascript,html5,开发者,程序猿,程序媛,极客,编程,代码,开源,IT网站,Developer,Programmer,Coder,Geek,html,css,css3,用户体验">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解 &quot;==&quot; &amp; equals() ">
 <meta property="og:url" content="http://azhangbing.com/2017/10/23/深入理解-“-”-equals/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils, ####1.基础知识 ######JAVA中分为基本数据类型及引用数据类型  基本数据类型：byte，short, int, long, float, double, char, boolean; 引用数据类型：Stri">
+<meta property="og:description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-23-20161105125822857.jpg">
-<meta property="og:updated_time" content="2017-10-23T06:27:16.220Z">
+<meta property="og:updated_time" content="2017-10-23T06:29:42.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解 &quot;==&quot; &amp; equals() ">
-<meta name="twitter:description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils, ####1.基础知识 ######JAVA中分为基本数据类型及引用数据类型  基本数据类型：byte，short, int, long, float, double, char, boolean; 引用数据类型：Stri">
+<meta name="twitter:description" content="深入理解 “==”&amp;amp; equals()继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下">
 <meta name="twitter:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-23-20161105125822857.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Ace的技术客栈" type="application/atom+xml">
@@ -213,7 +213,8 @@
         
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="深入理解-“-”-amp-equals"><a href="#深入理解-“-”-amp-equals" class="headerlink" title="深入理解 “==”&amp; equals()"></a>深入理解 “==”&amp; equals()</h3><p>继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下,顺便讲一下android里的TextUtils,</p>
+        <h3 id="深入理解-“-”-amp-equals"><a href="#深入理解-“-”-amp-equals" class="headerlink" title="深入理解 “==”&amp; equals()"></a>深入理解 “==”&amp; equals()</h3><p>继上一片讲了String  里面涉及到了== 和 equals,这里来详细讲一下</p>
+<a id="more"></a>
 <p>####1.基础知识</p>
 <p>######JAVA中分为基本数据类型及引用数据类型</p>
 <ul>
