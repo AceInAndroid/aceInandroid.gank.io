@@ -165,6 +165,141 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java-到底是值传递还是引用传递" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/24/Java-到底是值传递还是引用传递/">Java 到底是值传递还是引用传递?</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/24/Java-到底是值传递还是引用传递/" class="archive-article-date">
+  	<time datetime="2017-10-24T07:06:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-24</time>
+</a>
+        
+
+        
+
+        
+      </header>
+    
+
+     <!-- 目录内容 -->
+             
+        <!-- 目录内容结束 -->
+
+        
+    <div class="article-entry" itemprop="articleBody">
+      
+
+   <!-- 插入标签云 -->
+
+
+
+        <h4 id="Java-到底是值传递还是引用传递？"><a href="#Java-到底是值传递还是引用传递？" class="headerlink" title="Java 到底是值传递还是引用传递？"></a>Java 到底是值传递还是引用传递？</h4><ul>
+<li><strong>= 是赋值操作</strong>（任何包含=的如+=、-=、 /=等等，都内含了赋值操作）。不再是你以前理解的数学含义了，而+ - <em> /和 = 在java中更不是一个级别，换句话说， = 是一个动作，一个可以改变内存状态的操作，一个可以改变变量的符号，而+ - </em> /却不会。这里的赋值操作其实是包含了两个意思：</li>
+</ul>
+<blockquote>
+<ul>
+<li><p>1、放弃了原有的值或引用；</p>
+</li>
+<li><p>2、得到了 = 右侧变量的值或引用。Java中对 = 的理解很重要</p>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li><p><strong>对于基本数据类型变量，= 操作是完整地复制了变量的值。</strong>换句话说，“=之后，你我已无关联”；</p>
+</li>
+<li><p><strong>对于非基本数据类型变量，= 操作是复制了变量的引用。</strong>换句话说，“嘿，= 左侧的变量，你丫别给我瞎动！咱俩现在是一根绳上的蚂蚱，除非你再被 = 一次放弃现有的引用！！上面说了 = 是一个动作，所以我把 = 当作动词用啦！！”。</p>
+</li>
+</ul>
+<ul>
+<li><strong>参数本身是变量，参数传递本质就是一种 = 操作。</strong>参数是变量，所有我们对变量的操作、变量能有的行为，参数都有。所以把C语言里参数是传值啊、传指针啊的那套理论全忘掉，参数传递就是 = 操作。</li>
+</ul>
+<p>举个例子</p>
+<h4 id="搞清楚-基本类型-和-引用类型的不同之处"><a href="#搞清楚-基本类型-和-引用类型的不同之处" class="headerlink" title="搞清楚 基本类型 和 引用类型的不同之处"></a>搞清楚 基本类型 和 引用类型的不同之处</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int num = 10;</div><div class="line">String str = &quot;ace&quot;;</div></pre></td></tr></table></figure>
+<p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-24-WX20171024-144300@2x.png" alt="WX20171024-144300@2x"></p>
+<p>如图所示，num是基本类型，值就直接保存在变量中。而str是引用类型，变量中保存的只是实际对象的地址。一般称这种变量为”引用”，引用指向实际对象，实际对象中保存着内容。</p>
+<h4 id="搞清楚赋值运算符（-）的作用"><a href="#搞清楚赋值运算符（-）的作用" class="headerlink" title="搞清楚赋值运算符（=）的作用"></a>搞清楚赋值运算符（=）的作用</h4><p>接着上面的栗子,现在我把num改成20 str改成”Java”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">num = 20;</div><div class="line">str = &quot;Java&quot;;</div></pre></td></tr></table></figure>
+<p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-24-333.png" alt="333"></p>
+<p>对于基本类型 num ，赋值运算符会直接覆盖掉原来的值。对于引用类型 str，赋值运算符会改变引用中所保存的地址，原来的地址被覆盖掉。但是原来的对象不会被改变（重要）。如上图所示，”ace” 字符串对象没有被改变。（没有被任何引用所指向的对象是垃圾，会被垃圾回收器回收）</p>
+<h4 id="调用方法时发生了什么？参数传递基本上就是赋值操作。"><a href="#调用方法时发生了什么？参数传递基本上就是赋值操作。" class="headerlink" title="调用方法时发生了什么？参数传递基本上就是赋值操作。"></a>调用方法时发生了什么？参数传递基本上就是赋值操作。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">第一个例子：基本类型</div><div class="line">void change(int value) &#123;</div><div class="line">    value = 100;</div><div class="line">&#125;</div><div class="line">change(num); // num 没有被改变</div><div class="line"></div><div class="line">第二个例子：没有提供改变自身方法的引用类型</div><div class="line">void change(String text) &#123;</div><div class="line">    text = &quot;windows&quot;;</div><div class="line">&#125;</div><div class="line">change(str); // str 也没有被改变 同上面所说</div><div class="line"></div><div class="line">第三个例子：提供了改变自身方法的引用类型</div><div class="line">StringBuilder sb = new StringBuilder(&quot;iphone&quot;);</div><div class="line">void change(StringBuilder builder) &#123;</div><div class="line">    builder.append(&quot;8&quot;);</div><div class="line">&#125;</div><div class="line">change(sb); // sb 被改变了，内存地址变成了新的&quot;iphone8&quot;地址。赋值运算符只能让引用指向一个新的对象，而不会改变对象本身,所以iPhone地址还在</div><div class="line"></div><div class="line">第四个例子：提供了改变自身方法的引用类型，但是不使用，而是使用赋值运算符。</div><div class="line">StringBuilder sb = new StringBuilder(&quot;iphone&quot;);</div><div class="line">void change(StringBuilder builder) &#123;</div><div class="line">    builder = new StringBuilder(&quot;ipad&quot;);</div><div class="line">&#125;</div><div class="line">change(sb); // sb 没有被改变还是 内存地址还是指向了&quot;iphone&quot;所在,builder内存地址指向了&quot;ipad&quot;所在的内存。</div></pre></td></tr></table></figure>
+<p>注意对比3 ,4 append还是原来的对象,是new了一个新的对象</p>
+
+      
+
+      <!--添加版权声明-->
+      
+
+
+
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Java//" class="article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/24/Java-到底是值传递还是引用传递/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-1024快乐-如何成为一个程序员-程序员入门进阶书籍推荐" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -716,101 +851,10 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-今天开始写博客" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/19/今天开始写博客/">今天开始写博客</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/19/今天开始写博客/" class="archive-article-date">
-  	<time datetime="2017-10-19T06:16:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-19</time>
-</a>
-        
-
-        
-
-        
-      </header>
-    
-
-     <!-- 目录内容 -->
-             
-        <!-- 目录内容结束 -->
-
-        
-    <div class="article-entry" itemprop="articleBody">
-      
-
-   <!-- 插入标签云 -->
-
-
-
-        <p>一天时间终于搭建好了博客并且把域名解析过来了,写博客才是对知识最好的梳理和巩固,纸上得来终觉浅,今天开始每周最少一篇原创,偶尔可能谈一谈人生和理想</p>
-
-      
-
-      <!--添加版权声明-->
-      
-
-
-
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">感悟</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/19/今天开始写博客/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 
 
