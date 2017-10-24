@@ -72,6 +72,8 @@ var _hmt = _hmt || [];
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/tags">标签</a></li>
+	        
 				<li><a href="/archives">所有文章</a></li>
 	        
 			</ul>
@@ -132,6 +134,8 @@ var _hmt = _hmt || [];
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -153,12 +157,14 @@ var _hmt = _hmt || [];
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 50%">
+				<ul style="width: 70%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
+					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/archives">所有文章</a></li>
+					<li style="width: 33.333333333333336%"><a href="/tags">标签</a></li>
+		        
+					<li style="width: 33.333333333333336%"><a href="/archives">所有文章</a></li>
 		        
 				</ul>
 			</nav>
@@ -203,6 +209,11 @@ var _hmt = _hmt || [];
         
     <div class="article-entry" itemprop="articleBody">
       
+
+   <!-- 插入标签云 -->
+
+
+
         <p><strong>问：下面程序的运行结果是什么？</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String s1 = &quot;abc&quot;;</div><div class="line">StringBuffer s2 = new StringBuffer(s1);</div><div class="line">System.out.println(s1.equals(s2));    //1,false</div><div class="line">StringBuffer s3 = new StringBuffer (&quot;abc&quot;);</div><div class="line">System.out.println(s3.equals(&quot;abc&quot;));    //2,false</div><div class="line">System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true</div></pre></td></tr></table></figure>
 <blockquote>

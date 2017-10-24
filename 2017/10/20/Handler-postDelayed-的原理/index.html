@@ -74,6 +74,8 @@ var _hmt = _hmt || [];
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/tags">标签</a></li>
+	        
 				<li><a href="/archives">所有文章</a></li>
 	        
 			</ul>
@@ -134,6 +136,8 @@ var _hmt = _hmt || [];
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -155,12 +159,14 @@ var _hmt = _hmt || [];
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 50%">
+				<ul style="width: 70%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
+					<li style="width: 33.333333333333336%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/archives">所有文章</a></li>
+					<li style="width: 33.333333333333336%"><a href="/tags">标签</a></li>
+		        
+					<li style="width: 33.333333333333336%"><a href="/archives">所有文章</a></li>
 		        
 				</ul>
 			</nav>
@@ -205,6 +211,11 @@ var _hmt = _hmt || [];
         
     <div class="article-entry" itemprop="articleBody">
       
+
+   <!-- 插入标签云 -->
+
+
+
         <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
 <a id="more"></a>
 <p>时序图:<br><img src="/images/pasted-1508470499959.png" alt="WX1"></p>
