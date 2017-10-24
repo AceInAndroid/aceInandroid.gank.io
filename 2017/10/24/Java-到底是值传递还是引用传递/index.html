@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="http://azhangbing.com">
   <title>Java 到底是值传递还是引用传递? | Ace的技术客栈</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Java 到底是值传递还是引用传递？ = 是赋值操作（任何包含=的如+=、-=、 /=等等，都内含了赋值操作）。不再是你以前理解的数学含义了，而+ -  /和 = 在java中更不是一个级别，换句话说， = 是一个动作，一个可以改变内存状态的操作，一个可以改变变量的符号，而+ -  /却不会。这里的赋值操作其实是包含了两个意思：    1、放弃了原有的值或引用；  2、得到了 = 右侧变量的值或引">
+  <meta name="description" content="Java 到底是值传递还是引用传递？不知道就进来看看吧~">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 到底是值传递还是引用传递?">
 <meta property="og:url" content="http://azhangbing.com/2017/10/24/Java-到底是值传递还是引用传递/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="Java 到底是值传递还是引用传递？ = 是赋值操作（任何包含=的如+=、-=、 /=等等，都内含了赋值操作）。不再是你以前理解的数学含义了，而+ -  /和 = 在java中更不是一个级别，换句话说， = 是一个动作，一个可以改变内存状态的操作，一个可以改变变量的符号，而+ -  /却不会。这里的赋值操作其实是包含了两个意思：    1、放弃了原有的值或引用；  2、得到了 = 右侧变量的值或引">
+<meta property="og:description" content="Java 到底是值传递还是引用传递？不知道就进来看看吧~">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-24-WX20171024-144300@2x.png">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-24-333.png">
-<meta property="og:updated_time" content="2017-10-24T07:13:10.353Z">
+<meta property="og:updated_time" content="2017-10-24T07:15:43.262Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 到底是值传递还是引用传递?">
-<meta name="twitter:description" content="Java 到底是值传递还是引用传递？ = 是赋值操作（任何包含=的如+=、-=、 /=等等，都内含了赋值操作）。不再是你以前理解的数学含义了，而+ -  /和 = 在java中更不是一个级别，换句话说， = 是一个动作，一个可以改变内存状态的操作，一个可以改变变量的符号，而+ -  /却不会。这里的赋值操作其实是包含了两个意思：    1、放弃了原有的值或引用；  2、得到了 = 右侧变量的值或引">
+<meta name="twitter:description" content="Java 到底是值传递还是引用传递？不知道就进来看看吧~">
 <meta name="twitter:image" content="http://oy261wvqm.bkt.clouddn.com/2017-10-24-WX20171024-144300@2x.png">
   
     <link rel="alternative" href="/atom.xml" title="Ace的技术客栈" type="application/atom+xml">
@@ -202,7 +202,7 @@ var _hmt = _hmt || [];
             <div id="toc-article" class="toc-article">
                 <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
                 <strong class="toc-title">文章目录</strong>
-                <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java-到底是值传递还是引用传递？"><span class="toc-number">1.</span> <span class="toc-text">Java 到底是值传递还是引用传递？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚-基本类型-和-引用类型的不同之处"><span class="toc-number">2.</span> <span class="toc-text">搞清楚 基本类型 和 引用类型的不同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚赋值运算符（-）的作用"><span class="toc-number">3.</span> <span class="toc-text">搞清楚赋值运算符（=）的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调用方法时发生了什么？参数传递基本上就是赋值操作。"><span class="toc-number">4.</span> <span class="toc-text">调用方法时发生了什么？参数传递基本上就是赋值操作。</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚-基本类型-和-引用类型的不同之处"><span class="toc-number">1.</span> <span class="toc-text">搞清楚 基本类型 和 引用类型的不同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚赋值运算符（-）的作用"><span class="toc-number">2.</span> <span class="toc-text">搞清楚赋值运算符（=）的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调用方法时发生了什么？参数传递基本上就是赋值操作。"><span class="toc-number">3.</span> <span class="toc-text">调用方法时发生了什么？参数传递基本上就是赋值操作。</span></a></li></ol>
            </div>
            <script type="text/javascript">
             function showToc(){
@@ -229,7 +229,8 @@ var _hmt = _hmt || [];
 
 
 
-        <h4 id="Java-到底是值传递还是引用传递？"><a href="#Java-到底是值传递还是引用传递？" class="headerlink" title="Java 到底是值传递还是引用传递？"></a>Java 到底是值传递还是引用传递？</h4><ul>
+        <p> Java 到底是值传递还是引用传递？不知道就进来看看吧~<br><a id="more"></a></p>
+<ul>
 <li><strong>= 是赋值操作</strong>（任何包含=的如+=、-=、 /=等等，都内含了赋值操作）。不再是你以前理解的数学含义了，而+ - <em> /和 = 在java中更不是一个级别，换句话说， = 是一个动作，一个可以改变内存状态的操作，一个可以改变变量的符号，而+ - </em> /却不会。这里的赋值操作其实是包含了两个意思：</li>
 </ul>
 <blockquote>
@@ -388,7 +389,7 @@ var _hmt = _hmt || [];
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java-到底是值传递还是引用传递？"><span class="toc-number">1.</span> <span class="toc-text">Java 到底是值传递还是引用传递？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚-基本类型-和-引用类型的不同之处"><span class="toc-number">2.</span> <span class="toc-text">搞清楚 基本类型 和 引用类型的不同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚赋值运算符（-）的作用"><span class="toc-number">3.</span> <span class="toc-text">搞清楚赋值运算符（=）的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调用方法时发生了什么？参数传递基本上就是赋值操作。"><span class="toc-number">4.</span> <span class="toc-text">调用方法时发生了什么？参数传递基本上就是赋值操作。</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚-基本类型-和-引用类型的不同之处"><span class="toc-number">1.</span> <span class="toc-text">搞清楚 基本类型 和 引用类型的不同之处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#搞清楚赋值运算符（-）的作用"><span class="toc-number">2.</span> <span class="toc-text">搞清楚赋值运算符（=）的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调用方法时发生了什么？参数传递基本上就是赋值操作。"><span class="toc-number">3.</span> <span class="toc-text">调用方法时发生了什么？参数传递基本上就是赋值操作。</span></a></li></ol>
                     </div>
                 </span>
             </div>
