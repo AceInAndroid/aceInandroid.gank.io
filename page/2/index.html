@@ -165,6 +165,104 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Java-字符串相关" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/19/Java-字符串相关/">Java 字符串相关</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/19/Java-字符串相关/" class="archive-article-date">
+  	<time datetime="2017-10-19T08:05:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-19</time>
+</a>
+        
+
+        
+
+        
+      </header>
+    
+
+     <!-- 目录内容 -->
+             
+        <!-- 目录内容结束 -->
+
+        
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>问：下面程序的运行结果是什么？</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String s1 = &quot;abc&quot;;</div><div class="line">StringBuffer s2 = new StringBuffer(s1);</div><div class="line">System.out.println(s1.equals(s2));    //1,false</div><div class="line">StringBuffer s3 = new StringBuffer (&quot;abc&quot;);</div><div class="line">System.out.println(s3.equals(&quot;abc&quot;));    //2,false</div><div class="line">System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>答：</strong>注释 1 打印为 false，主要考察 String 的 equals 方法，String 源码中 equals 方法有对参数进行 instance of String 判断语句，StringBuffer 的祖先为 CharSequence，所以不相等； 注释 2 打印为 false，因为 StringBuffer 没有重写 Object 的 equals 方法，所以 Object 的 equals 方法实现是 == 判断，故为 false； 注释 3 打印为 true，因为 Object 的 toString 方法返回为 String 类型，String 重写了 equals 方法实现为值比较。</p>
+</blockquote>
+<p>下面是String equals方法源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">    public boolean equals(Object anObject) &#123;</div><div class="line">    //如果比较的对象与自身内存地址相等的话</div><div class="line">    //就说明他两指向的是同一个对象</div><div class="line">    //所以此时equals的返回值跟==的结果是一样的。</div><div class="line">    if (this == anObject) &#123;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">    //当比较的对象与自身的内存地址不相等，并且</div><div class="line">    //比较的对象是String类型的时候</div><div class="line">    //将会执行这个分支</div><div class="line">    if (anObject instanceof String) &#123;</div><div class="line">        String anotherString = (String)anObject;</div><div class="line">        int n = value.length;</div><div class="line">        if (n == anotherString.value.length) &#123;</div><div class="line">            char v1[] = value;</div><div class="line">            char v2[] = anotherString.value;</div><div class="line">            int i = 0;</div><div class="line">            //在这里循环遍历两个String中的char</div><div class="line">            while (n-- != 0) &#123;</div><div class="line">                //只要有一个不相等，那么就会返回false</div><div class="line">                if (v1[i] != v2[i])</div><div class="line">                    return false;</div><div class="line">                i++;</div><div class="line">            &#125;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return false;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        
+          <a class="article-more-a" href="/2017/10/19/Java-字符串相关/#more">more >></a>
+        
+      
+
+      <!--添加版权声明-->
+      
+
+
+
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/19/Java-字符串相关/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-今天开始写博客" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
