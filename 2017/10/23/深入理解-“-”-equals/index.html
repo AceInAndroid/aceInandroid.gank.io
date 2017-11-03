@@ -100,6 +100,11 @@
         <style id="style_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("style_css","/css/style.min.css?MKetZV3cUTfDxvMffaOezg==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
 
         
+            
+                <style id="prettify_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("prettify_css","/css/prettify.min.css?zp8STOU9v89XWFEnN+6YmQ==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+                <style id="prettify_theme"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("prettify_theme","/css/prettify/github-v2.min.css?AfzKxt++K+/lhZBlSjnxwg==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+            
+        
 
     
 
@@ -528,15 +533,50 @@
 </ul>
 <h4 id="2-和-equals-的区别"><a href="#2-和-equals-的区别" class="headerlink" title="2.==和.equals()的区别"></a>2.==和.equals()的区别</h4><p>结论:==指的是内存引用一样。equals是指的是逻辑相等。逻辑相等具体的意思由编写者决定(比如String 重写的equals,根据逻辑重写的)。</p>
 <p>默认情况下(继承自Object类,如:int,long等基本类型)，equals和==是一样的，没有区别，即俩个对象的比较是比较他们的栈内存中存储的内存地址。，除非被覆写(override)了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public boolean equals(Object obj) &#123;</div><div class="line">     return (this == obj);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>最典型equals已经被覆写(override)的例子是String； String中的字符串文本相等则视为逻辑相等（s1.equals(s2)==true）</p>
+<pre><code>   public boolean equals(Object obj) {
+        return (this == obj);
+    }
+</code></pre><p>最典型equals已经被覆写(override)的例子是String； String中的字符串文本相等则视为逻辑相等（s1.equals(s2)==true）</p>
 <p>String.equals()：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public boolean equals(Object anObject) &#123;</div><div class="line">        if (this == anObject) &#123;</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line">        if (anObject instanceof String) &#123;</div><div class="line">            String anotherString = (String) anObject;</div><div class="line">            int n = value.length;</div><div class="line">            if (n == anotherString.value.length) &#123;</div><div class="line">                char v1[] = value;</div><div class="line">                char v2[] = anotherString.value;</div><div class="line">                int i = 0;</div><div class="line">                while (n-- != 0) &#123;</div><div class="line">                    if (v1[i] != v2[i])</div><div class="line">                            return false;</div><div class="line">                    i++;</div><div class="line">                &#125;</div><div class="line">                return true;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>来个栗子:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//对于对象变量，&quot;==&quot;和&quot;equal&quot;的区别</div><div class="line"></div><div class="line">      String st1=&quot;zhangbing &quot;;</div><div class="line">      String st2=&quot;is so cool&quot;;</div><div class="line">      String st3=&quot;zhangbing is so cool&quot;;</div><div class="line">      String st4=&quot;zhangbing is so cool&quot;;</div><div class="line"></div><div class="line">      Boolean b1=(st1==st2);</div><div class="line">      Boolean b2=(st1+st2)==st3;</div><div class="line">      Boolean b3=(st3==st4);</div><div class="line"></div><div class="line">      System.out.println(&quot;/n/n-----【st1==st2】&quot;+b1+&quot;/n-----【(st1+st2)==st3】&quot;+b2+&quot;/n-----【st3==st4】&quot;+b3);</div></pre></td></tr></table></figure>
-<p>打印:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">-----【st1==st2】false/n-----</div><div class="line">-----【(st1+st2)==st3】false/n-----</div><div class="line">-----【st3==st4】true-----</div></pre></td></tr></table></figure>
-<p>四个字符串都放到了常量池,==是比较引用,st1,st2常量池中引用不同,st3和st4相同, 而st1+st2是在heap中创建了新的对象,st3是在常量池中,所以引用地址不一样.</p>
+<pre><code>public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof String) {
+            String anotherString = (String) anObject;
+            int n = value.length;
+            if (n == anotherString.value.length) {
+                char v1[] = value;
+                char v2[] = anotherString.value;
+                int i = 0;
+                while (n-- != 0) {
+                    if (v1[i] != v2[i])
+                            return false;
+                    i++;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+</code></pre><p>来个栗子:</p>
+<pre><code>  //对于对象变量，&quot;==&quot;和&quot;equal&quot;的区别
+
+        String st1=&quot;zhangbing &quot;;
+        String st2=&quot;is so cool&quot;;
+        String st3=&quot;zhangbing is so cool&quot;;
+        String st4=&quot;zhangbing is so cool&quot;;
+
+        Boolean b1=(st1==st2);
+        Boolean b2=(st1+st2)==st3;
+        Boolean b3=(st3==st4);
+
+        System.out.println(&quot;/n/n-----【st1==st2】&quot;+b1+&quot;/n-----【(st1+st2)==st3】&quot;+b2+&quot;/n-----【st3==st4】&quot;+b3);
+</code></pre><p>打印:</p>
+<pre><code>-----【st1==st2】false/n-----
+-----【(st1+st2)==st3】false/n-----
+-----【st3==st4】true-----
+</code></pre><p>四个字符串都放到了常量池,==是比较引用,st1,st2常量池中引用不同,st3和st4相同, 而st1+st2是在heap中创建了新的对象,st3是在常量池中,所以引用地址不一样.</p>
 <blockquote>
 <p>常量池的基本概念：Java是一种动态连接的语言，常量池的作用非常重要，常量池中除了包含代码中所定义的各种基本类型（如int、long等等）和对象型（如String及数组）的常量值还，还包含一些以文本形式出现的符号引用.</p>
 </blockquote>
@@ -920,10 +960,12 @@ It will not impact the appearance and can give developers a lot of support :)
 
 <!-- Import prettify js  -->
 
+    
+        
+            <script>lsloader.load("prettify_js","/js/prettify.min.js?WN07fivHQSMKWy7BmHBB6w==", true)</script>
+        
+    
 
-    
-        <script>lsloader.load("hanabi","/js/hanabi-browser-bundle.js?Pki5+pzkluqu53g+ouMWpA==", true)</script>
-    
 
 
 <!-- Window Load -->
@@ -935,10 +977,13 @@ It will not impact the appearance and can give developers a lot of support :)
     });
 
     
+        
+            $(function() {
+                $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+                prettyPrint();
+                })
+        
     
-        
-        
-        HanabiBrowser.start('pre code',true);
     
 </script>
 

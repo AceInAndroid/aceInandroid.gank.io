@@ -98,6 +98,8 @@
         <style id="style_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("style_css","/css/style.min.css?MKetZV3cUTfDxvMffaOezg==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
 
         
+            
+        
 
     
 
@@ -328,12 +330,46 @@
     <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
         
             问：下面程序的运行结果是什么？
-123456String s1 = &quot;abc&quot;;StringBuffer s2 = new StringBuffer(s1);System.out.println(s1.equals(s2));    //1,falseStringBuffer s3 = new StringBuffer (&quot;abc&quot;);System.out.println(s3.equals(&quot;abc&quot;));    //2,falseSystem.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true
+String s1 = &quot;abc&quot;;
+StringBuffer s2 = new StringBuffer(s1);
+System.out.println(s1.equals(s2));    //1,false
+StringBuffer s3 = new StringBuffer (&quot;abc&quot;);
+System.out.println(s3.equals(&quot;abc&quot;));    //2,false
+System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true
 
 答：注释 1 打印为 false，主要考察 String 的 equals 方法，String 源码中 equals 方法有对参数进行 instance of String 判断语句，StringBuffer 的祖先为 CharSequence，所以不相等； 注释 2 打印为 false，因为 StringBuffer 没有重写 Object 的 equals 方法，所以 Object 的 equals 方法实现是 == 判断，故为 false； 注释 3 打印为 true，因为 Object 的 toString 方法返回为 String 类型，String 重写了 equals 方法实现为值比较。
 
 下面是String equals方法源码
-1234567891011121314151617181920212223242526272829    public boolean equals(Object anObject) &#123;    //如果比较的对象与自身内存地址相等的话    //就说明他两指向的是同一个对象    //所以此时equals的返回值跟==的结果是一样的。    if (this == anObject) &#123;        return true;    &#125;    //当比较的对象与自身的内存地址不相等，并且    //比较的对象是String类型的时候    //将会执行这个分支    if (anObject instanceof String) &#123;        String anotherString = (String)anObject;        int n = value.length;        if (n == anotherString.value.length) &#123;            char v1[] = value;            char v2[] = anotherString.value;            int i = 0;            //在这里循环遍历两个String中的char            while (n-- != 0) &#123;                //只要有一个不相等，那么就会返回false                if (v1[i] != v2[i])                    return false;                i++;            &#125;            return true;        &#125;    &#125;    return false;&#125;
+    public boolean equals(Object anObject) {
+    //如果比较的对象与自身内存地址相等的话
+    //就说明他两指向的是同一个对象
+    //所以此时equals的返回值跟==的结果是一样的。
+    if (this == anObject) {
+        return true;
+    }
+    //当比较的对象与自身的内存地址不相等，并且
+    //比较的对象是String类型的时候
+    //将会执行这个分支
+    if (anObject instanceof String) {
+        String anotherString = (String)anObject;
+        int n = value.length;
+        if (n == anotherString.value.length) {
+            char v1[] = value;
+            char v2[] = anotherString.value;
+            int i = 0;
+            //在这里循环遍历两个String中的char
+            while (n-- != 0) {
+                //只要有一个不相等，那么就会返回false
+                if (v1[i] != v2[i])
+                    return false;
+                i++;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
         
         &nbsp;&nbsp;&nbsp;
         <span>
@@ -766,10 +802,8 @@ It will not impact the appearance and can give developers a lot of support :)
 
 <!-- Import prettify js  -->
 
+    
 
-    
-        <script>lsloader.load("hanabi","/js/hanabi-browser-bundle.js?Pki5+pzkluqu53g+ouMWpA==", true)</script>
-    
 
 
 <!-- Window Load -->
@@ -781,10 +815,8 @@ It will not impact the appearance and can give developers a lot of support :)
     });
 
     
+        
     
-        
-        
-        HanabiBrowser.start('pre code',true);
     
 </script>
 
