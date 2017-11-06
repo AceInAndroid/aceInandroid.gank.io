@@ -325,6 +325,67 @@
     
 
         <!-- Post Title -->
+        <p class="article-headline-p"><a href="/2017/11/07/JVM基本原理/">JVM基本原理</a></p>
+    </div>
+
+    <!-- Post Excerpt -->
+    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
+        
+            前言JVM一直是java知识里面进阶阶段的重要部分，如果希望在java领域研究的更深入，则JVM则是如论如何也避开不了的话题，本系列试图通过简洁易读的方式，讲解JVM必要的知识点。
+        
+        &nbsp;&nbsp;&nbsp;
+        <span>
+            <a href="/2017/11/07/JVM基本原理/" target="_self">阅读全文</a>
+        </span>
+    </div>
+    <!-- Post_entry Info-->
+    <div id="post_entry-info">
+        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
+            <!-- Author Avatar -->
+            <div id="author-avatar">
+                <img src="/img/head.jpg" width="44px" height="44px" alt="Ace's avatar">
+            </div>
+            <div>
+                <strong>Ace</strong>
+                <span>11月 07, 2017</span>
+            </div>
+        </div>
+        <div id="post_entry-right-info">
+          
+              <!-- Category -->
+              <span class="post_entry-category">
+                  <a class="post_category-link" href="/categories/Java/">Java</a>
+              </span>
+            
+
+            
+
+            
+
+            <!-- Post Views -->
+            <span class="post_entry-views">
+            </span>
+        </div>
+    </div>
+</div>
+
+            
+            
+        
+    
+        
+            
+                <!-- Paradox Thumbnail -->
+                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
+    <!-- Post Thumbnail -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+        
+    
+
+        <!-- Post Title -->
         <p class="article-headline-p"><a href="/2017/11/06/Java虚拟机类加载机制/">Java虚拟机类加载机制</a></p>
     </div>
 
@@ -637,103 +698,12 @@ public static final Looper myLooper() {
             
         
     
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
+
     
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/2017/10/19/Java-字符串相关/">Java 字符串相关</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            问：下面程序的运行结果是什么？
-String s1 = &quot;abc&quot;;
-StringBuffer s2 = new StringBuffer(s1);
-System.out.println(s1.equals(s2));    //1,false
-StringBuffer s3 = new StringBuffer (&quot;abc&quot;);
-System.out.println(s3.equals(&quot;abc&quot;));    //2,false
-System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true
-
-答：注释 1 打印为 false，主要考察 String 的 equals 方法，String 源码中 equals 方法有对参数进行 instance of String 判断语句，StringBuffer 的祖先为 CharSequence，所以不相等； 注释 2 打印为 false，因为 StringBuffer 没有重写 Object 的 equals 方法，所以 Object 的 equals 方法实现是 == 判断，故为 false； 注释 3 打印为 true，因为 Object 的 toString 方法返回为 String 类型，String 重写了 equals 方法实现为值比较。
-
-下面是String equals方法源码
-    public boolean equals(Object anObject) {
-    //如果比较的对象与自身内存地址相等的话
-    //就说明他两指向的是同一个对象
-    //所以此时equals的返回值跟==的结果是一样的。
-    if (this == anObject) {
-        return true;
-    }
-    //当比较的对象与自身的内存地址不相等，并且
-    //比较的对象是String类型的时候
-    //将会执行这个分支
-    if (anObject instanceof String) {
-        String anotherString = (String)anObject;
-        int n = value.length;
-        if (n == anotherString.value.length) {
-            char v1[] = value;
-            char v2[] = anotherString.value;
-            int i = 0;
-            //在这里循环遍历两个String中的char
-            while (n-- != 0) {
-                //只要有一个不相等，那么就会返回false
-                if (v1[i] != v2[i])
-                    return false;
-                i++;
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/2017/10/19/Java-字符串相关/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/img/head.jpg" width="44px" height="44px" alt="Ace's avatar">
-            </div>
-            <div>
-                <strong>Ace</strong>
-                <span>10月 19, 2017</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-          
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-
+    <!-- Index nav -->
+        <nav class="material-nav mdl-cell mdl-cell--12-col">
+            <span class="page-number current">1</span><a class="page-number" href="/tags/Java/page/2/">2</a><a class="extend next" rel="next" href="/tags/Java/page/2/"><button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons" role="presentation">arrow_forward</i></button></a>
+        </nav>
     
 
     
@@ -833,7 +803,7 @@ System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true
             </a>
             <ul class="dropdown-menu">
             <li>
-                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">8</span></a>
+                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">8</span></a>
             </ul>
         </li>
         
@@ -851,7 +821,7 @@ System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true
             </a>
             <ul class="dropdown-menu">
                 <li>
-                <a class="sidebar_archives-link" href="/categories/Java/">Java<span class="sidebar_archives-count">5</span></a>
+                <a class="sidebar_archives-link" href="/categories/Java/">Java<span class="sidebar_archives-count">6</span></a>
             </ul>
         </li>
         
@@ -867,7 +837,7 @@ System.out.println(s3.toString().equals(&quot;abc&quot;));    //3,true
         <li>
             <a href="/archives">
                 文章总数
-                <span class="sidebar-badge">9</span>
+                <span class="sidebar-badge">10</span>
             </a>
         </li>
         
