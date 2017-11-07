@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://www.azhangbing.com/2017/11/07/JVM%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2017-11-07T18:02:24.004Z</lastmod>
+    <data>
+        <display>
+        <title>JVM基本原理</title>
+        <pubTime>2017-11-06T17:17:00.000Z</pubTime>
+        
+        <tag>Java</tag>
+         
+        <tag>Java虚拟机</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java" url="http://www.azhangbing.com/categories/Java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.azhangbing.com/2017/10/19/%E4%BB%8A%E5%A4%A9%E5%BC%80%E5%A7%8B%E5%86%99%E5%8D%9A%E5%AE%A2/</loc>
     <lastmod>2017-11-07T08:53:28.873Z</lastmod>
     <data>
@@ -74,28 +96,6 @@
         <display>
         <title>Java虚拟机类加载机制</title>
         <pubTime>2017-11-06T09:22:00.000Z</pubTime>
-        
-        <tag>Java</tag>
-         
-        <tag>Java虚拟机</tag>
-         
-         
-           
-             
-              <breadCrumb title="Java" url="http://www.azhangbing.com/categories/Java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.azhangbing.com/2017/11/07/JVM%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/</loc>
-    <lastmod>2017-11-06T17:18:39.554Z</lastmod>
-    <data>
-        <display>
-        <title>JVM基本原理</title>
-        <pubTime>2017-11-06T17:17:00.000Z</pubTime>
         
         <tag>Java</tag>
          

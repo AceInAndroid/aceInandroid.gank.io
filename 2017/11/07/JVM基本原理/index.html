@@ -98,7 +98,8 @@
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-06-2.jpg">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-06-3.png">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-06-4.jpg">
-<meta property="og:updated_time" content="2017-11-06T17:18:39.554Z">
+<meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-08-5.png">
+<meta property="og:updated_time" content="2017-11-07T18:02:24.004Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM基本原理">
 <meta name="twitter:description" content="前言JVM一直是java知识里面进阶阶段的重要部分，如果希望在java领域研究的更深入，则JVM则是如论如何也避开不了的话题，本系列试图通过简洁易读的方式，讲解JVM必要的知识点。">
@@ -374,7 +375,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,373
+                  2,046
                 </span>
               
 
@@ -390,7 +391,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  7
                 </span>
               
             </div>
@@ -413,6 +414,7 @@
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>JVM一直是java知识里面进阶阶段的重要部分，如果希望在java领域研究的更深入，则JVM则是如论如何也避开不了的话题，本系列试图通过简洁易读的方式，讲解JVM必要的知识点。</p>
 <a id="more"></a>
+<p>JVM一直是java知识里面进阶阶段的重要部分，如果希望在java领域研究的更深入，则JVM则是如论如何也避开不了的话题，本系列试图通过简洁易读的方式，讲解JVM必要的知识点。</p>
 <h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>我们都知道java一直宣传的口号是：一次编译，到处运行。那么它如何实现的呢？我们看下图：</p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-06-1.jpg" alt="1"></p>
 <p>java程序经过一次编译之后，将java代码编译为字节码也就是class文件，然后在不同的操作系统上依靠不同的java虚拟机进行解释，最后再转换为不同平台的机器码，最终得到执行。这样我们是不是可以推演，如果要在mac系统上运行，是不是只需要安装mac java虚拟机就行了。那么了解了这个基本原理后，我们尝试去做更深的研究，一个普通的java程序它的执行流程到底是怎样的呢？例如我们写了一段这样的代码：</p>
@@ -426,12 +428,18 @@
 <h2 id="JVM基本结构"><a href="#JVM基本结构" class="headerlink" title="JVM基本结构"></a>JVM基本结构</h2><p>可能通过上面的描述，大家对JVM运行流程有了一个粗略的认识，那么JVM内部到底是怎么执行一个class文件的呢，也就是上图中最后一步第6步的内部细节是怎样的呢？要了解这个问题，我们首先得看一下JVM的内部结构：</p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-06-4.jpg" alt="4"></p>
 <p>从这个结构不难看出，class文件被jvm装载以后，经过jvm的内存空间调配，最终是由执行引擎完成class文件的执行。当然这个过程还有其他角色模块的协助，这些模块协同配合才能让一个java程序成功的运行，下面就详细介绍这些模板，它们也是后面学习jvm最重要的部分。</p>
-<h2 id="内存空间："><a href="#内存空间：" class="headerlink" title="内存空间："></a>内存空间：</h2><p>JVM内存空间包含：方法区、java堆、java栈、本地方法栈。</p>
+<h2 id="内存空间："><a href="#内存空间：" class="headerlink" title="内存空间："></a>内存空间：</h2><p>JVM内存空间包含：方法区(静态区)、java堆、java栈、本地方法栈 还有一个程序计数器。</p>
 <p>方法区是各个线程共享的区域，存放类信息、常量、静态变量。</p>
-<p>java堆也是线程共享的区域，我们的类的实例就放在这个区域，可以想象你的一个系统会产生很多实例，因此java堆的空间也是最大的。如果java堆空间不足了，程序会抛出OutOfMemoryError异常。</p>
-<p>java栈是每个线程私有的区域，它的生命周期与线程相同，一个线程对应一个java栈，每执行一个方法就会往栈中压入一个元素，这个元素叫“栈帧”，而栈帧中包括了方法中的局部变量、用于存放中间状态值的操作栈，这里面有很多细节，我们以后再讲。如果java栈空间不足了，程序会抛出StackOverflowError异常，想一想什么情况下会容易产生这个错误，对，递归，递归如果深度很深，就会执行大量的方法，方法越多java栈的占用空间越大。</p>
-<p>本地方法栈角色和java栈类似，只不过它是用来表示执行本地方法的，本地方法栈存放的方法调用本地方法接口，最终调用本地方法库，实现与操作系统、硬件交互的目的。</p>
-<p>PC寄存器，说到这里我们的类已经加载了，实例对象、方法、静态变量都去了自己改去的地方，那么问题来了，程序该怎么执行，哪个方法先执行，哪个方法后执行，这些指令执行的顺序就是PC寄存器在管，它的作用就是控制程序指令的执行顺序。</p>
+<p><strong>Java堆</strong>也是线程共享的区域，Heap是伴随着JVM的启动而创建，负责存储所有对象实例和数组的,可以想象你的一个系统会产生很多实例，因此java堆的空间也是最大的。如果java堆空间不足了，程序会抛出OutOfMemoryError异常。</p>
+<p><strong>Java栈</strong>是每个线程私有的区域，它的生命周期与线程相同，一个线程对应一个java栈，每执行一个方法就会往栈中压入一个元素，这个元素叫<strong>栈帧(StackFrame)</strong>，StackFrame包含三类信息：<strong>局部变量，执行环境，操作数栈</strong>。<strong>局部变量</strong>用来存储一个类的方法中所用到的局部变量。<strong>执行环境</strong>用于保存解析器对于java字节码进行解释过程中需要的信息，包括：上次调用的方法、局部变量指针和 操作数栈的栈顶和栈底指针。<strong>操作数栈</strong>用于存储运算所需要的操作数和结果。StackFrame在方法被调用时创建，在某个线程中，某个时间点上，<strong>只有一个Frame</strong>是活跃的，该框架被称为<strong>Current Frame</strong>，而框架中的方法被称为<strong>Current Method</strong>，其中定义的类为<strong>Current Class</strong>。局部变量和操作数栈上的操作总是引用当前框架。当Stack Frame中方法被执行完之后，或者调用别的StackFrame中的方法时，则当前栈变为另外一个StackFrame。Stack的大小是由两种类 型，固定和动态的，动态类型的栈可以按照线程的需要分配。 如果java栈空间不足了，程序会抛出StackOverflowError异常，想一想什么情况下会容易产生这个错误，对，递归，递归如果深度很深，就会执行大量的方法，方法越多java栈的占用空间越大。</p>
+<p><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-08-5.png" alt="5"></p>
+<p><strong>方法区域（Method Area）</strong>，在Sun JDK中这块区域对应的为PermanetGeneration，又称为持久代。方法区域存放了所加载的类的信息（名称、修饰符等）、类中的<strong>静态static变量</strong>、类中定义为<strong>final类型的常量</strong>、类中的Field信息、类中的方法信息，当开发人员在程序中通过Class对象中的getName、isInterface等方法来获取信息时，这些数据都来源于方法区域，同时方法区域也是全局共享的，在一定的条件下它也会被GC，当方法区域需要使用的内存超过其允许的大小时，会抛出<strong>OutOfMemory</strong>的错误信息。<br><strong>方法区内还有</strong>:</p>
+<blockquote>
+<p><strong>运行时常量池  （Runtime Constant Pool）</strong>，存放的为类中的固定的常量信息、方法和Field的引用信息等，其空间从方法区域中分配</p>
+</blockquote>
+<p><strong>运行时常量池（Runtime Constant Pool）</strong>，存放的为类中的固定的常量信息、方法和Field的引用信息等，其空间从方法区域中分配。 </p>
+<p><strong>程序计数寄存器</strong>，程序计数器（Program Counter Register）是一块较小的内存空间，它的作用可以看做是当前线程所执行的字节码的行号指示器。在虚拟机的概念模型里（仅是概念模型，各种虚拟机可能会通过一些更高效的方式去实现），字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<p><strong>PC寄存器</strong>，说到这里我们的类已经加载了，实例对象、方法、静态变量都去了自己改去的地方，那么问题来了，程序该怎么执行，哪个方法先执行，哪个方法后执行，这些指令执行的顺序就是PC寄存器在管，它的作用就是控制程序指令的执行顺序。</p>
 <p>执行引擎当然就是根据PC寄存器调配的指令顺序，依次执行程序指令。</p>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文主要介绍了java虚拟机运行的基本流程，以及java虚拟机内部结构。下一篇我们将学习java内存模型以及探索java变量的可见性、有序性、指令重排等问题。</p>
 
