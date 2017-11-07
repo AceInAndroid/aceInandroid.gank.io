@@ -364,14 +364,92 @@
 <a id="more"></a>
 <p>(1) 定义自己的 UpnpService 类，继承自 AndroidUpnpServiceImpl<br>(2) 启动该 Service,同时启动jetty资源服务器<br>(3) 从 UpnpService 中获取 ControlPoint，并搜索设备</p>
 <p>搜索注册在同局域网的所有设备。</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">    <span class="keyword">private</span> ServiceConnection serviceConnection = <span class="literal">new</span> ServiceConnection() &#123;</div><div class="line"></div><div class="line">        <span class="keyword">public</span> <span class="literal">void</span> onServiceConnected(ComponentName className, IBinder service) &#123;</div><div class="line">            isBind = <span class="literal">true</span>;</div><div class="line">            upnpService = (AndroidUpnpService) service;</div><div class="line">            <span class="params">...</span>.</div><div class="line">upnpService.getRegistry().addListener(registryListener);</div><div class="line">            <span class="params">...</span>.</div><div class="line">            <span class="comment">// 搜索局域网内设备</span></div><div class="line">upnpService.getControlPoint().search();</div><div class="line">        &#125;</div><div class="line">      <span class="params">...</span></div><div class="line">    &#125;;</div><div class="line">    </div><div class="line"> <span class="keyword">private</span> RegistryListener registryListener = <span class="literal">new</span> RegistryListener() &#123;</div><div class="line">    <span class="params">...</span>.</div><div class="line">            @Override</div><div class="line">        <span class="keyword">public</span> <span class="literal">void</span> localDeviceAdded(Registry registry, LocalDevice localDevice) &#123;</div><div class="line">           <span class="params">...</span>.</div><div class="line">           <span class="comment">//注册接收TV设备消息的回调</span></div><div class="line">           localService.getManager().getImplementation().setiControlCallback(innerCallback);</div><div class="line">              <span class="params">...</span>.</div><div class="line">        &#125;</div><div class="line">        </div><div class="line"></div><div class="line">        @Override</div><div class="line">        <span class="keyword">public</span> <span class="literal">void</span> remoteDeviceAdded(Registry registry, RemoteDevice remoteDevice) &#123;</div><div class="line">            <span class="comment">//添加搜索到的设备到remoteDevices</span></div><div class="line">            remoteDevices.add(remoteDevice);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">      <span class="params">...</span><span class="params">...</span></div><div class="line">       &#125;;</div></pre></td></tr></table></figure>
-<p>然后根据和家相册TV独有的字段过滤</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 过滤感兴趣的设备</span></div><div class="line"><span class="comment"> * @return </span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> List&lt;Device&gt; <span class="title">getDmrDevices</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    List&lt;Device&gt; devices = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    List&lt;Device&gt; mdevices = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    devices.addAll(remoteDevices);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; devices.size(); i++) &#123;</div><div class="line">        <span class="keyword">if</span> (!dmrDeviceType.<span class="keyword">equals</span>(devices.<span class="keyword">get</span>(i).getType())) &#123;</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div><div class="line">        String devices_uuid = devices.<span class="keyword">get</span>(i).getIdentity().getUdn().toString();</div><div class="line">        String localuuid = LocalDeviceFactoty.uniqueSystemIdentifier(LocalDeviceFactoty.DMR_KEY).toString();</div><div class="line">        <span class="keyword">if</span> (!devices_uuid.<span class="keyword">equals</span>(localuuid)) &#123;</div><div class="line">        <span class="comment">//过滤我们感兴趣的设备</span></div><div class="line">            <span class="keyword">if</span> (devices_uuid.contains(<span class="string">"-dmp"</span>))</div><div class="line">                mdevices.<span class="keyword">add</span>(devices.<span class="keyword">get</span>(i));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> mdevices;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>连接电视</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public void connecttotv(Device device, Handler handler) &#123;</div><div class="line">    String data = <span class="string">""</span><span class="comment">;</span></div><div class="line">    <span class="keyword">JSONObject </span><span class="keyword">jsonObject </span>= new <span class="keyword">JSONObject();</span></div><div class="line"><span class="keyword"></span></div><div class="line"><span class="keyword"> </span>       try &#123;</div><div class="line">            <span class="keyword">jsonObject.put("tv_uuid", </span>device.getIdentity().getUdn().getIdentifierString())<span class="comment">;</span></div><div class="line">            <span class="keyword">jsonObject.put("phone_uuid", </span>DevicesManager.getInstance().getDmsDeviceIdentifierString())<span class="comment">;</span></div><div class="line">            <span class="keyword">jsonObject.put("phone_model", </span>Utils.getDevName())<span class="comment">;</span></div><div class="line">            <span class="keyword">jsonObject.put("phone_ip", </span>getPhoneIP())<span class="comment">;</span></div><div class="line">            data = <span class="keyword">jsonObject.toString();</span></div><div class="line"><span class="keyword"> </span>       &#125; catch (<span class="keyword">JSONException </span>e) &#123;</div><div class="line">            e.printStackTrace()<span class="comment">;</span></div><div class="line">        &#125;</div><div class="line">        sendtoTV(device.getIdentity().getUdn().getIdentifierString(), Constants.TYPE_CONNECT, data, handler)<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>sendtoTV()方法</p>
-<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//查找设备的方法</span></div><div class="line">           <span class="type">Service</span> service = device.findService(simpleParamServiceId);</div><div class="line">           <span class="keyword">if</span> (service != null) &#123;</div><div class="line">               targetService = service;</div><div class="line">               <span class="keyword">break</span>;</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">       </div><div class="line">       <span class="type">SendSimpleParamActionCallback</span> callback = <span class="function"><span class="keyword">new</span> <span class="title">SendSimpleParamActionCallback</span>(targetService, str);</span></div><div class="line"><span class="function">       <span class="title">callback</span>.<span class="title">setiServiceResult</span>(iServiceResult);</span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function">       <span class="title">upnpService</span>().<span class="title">getControlPoint</span>().<span class="title">execute</span>(callback)</span></div></pre></td></tr></table></figure>
-<h2 id="2-源码解析"><a href="#2-源码解析" class="headerlink" title="2.源码解析"></a>2.源码解析</h2><h3 id="2-1-总体设计"><a href="#2-1-总体设计" class="headerlink" title="2.1 总体设计"></a>2.1 总体设计</h3><h4 id="2-1-1-概述"><a href="#2-1-1-概述" class="headerlink" title="2.1.1 概述"></a>2.1.1 概述</h4><p>Cling 作为 UPnP 协议栈，其主旨即是在设备的发现，控制等过程中对不同的协议及内容进行处理。UPnP 协议栈由多个层组成，Cling 只关心底层的 TCP/IP 协议以及包含 SSDP（设备发现），SOAP（设备控制），GENA（设备事件）协议的层。</p>
+<pre><code>    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            isBind = true;
+            upnpService = (AndroidUpnpService) service;
+            ....
+upnpService.getRegistry().addListener(registryListener);
+            ....
+            // 搜索局域网内设备
+upnpService.getControlPoint().search();
+        }
+      ...
+    };
+
+ private RegistryListener registryListener = new RegistryListener() {
+    ....
+            @Override
+        public void localDeviceAdded(Registry registry, LocalDevice localDevice) {
+           ....
+           //注册接收TV设备消息的回调
+           localService.getManager().getImplementation().setiControlCallback(innerCallback);
+              ....
+        }
+
+
+        @Override
+        public void remoteDeviceAdded(Registry registry, RemoteDevice remoteDevice) {
+            //添加搜索到的设备到remoteDevices
+            remoteDevices.add(remoteDevice);
+        }
+
+      ......
+       };
+</code></pre><p>然后根据和家相册TV独有的字段过滤</p>
+<pre><code>    /**
+     * 过滤感兴趣的设备
+     * @return 
+     */
+    public List&lt;Device&gt; getDmrDevices() {
+        List&lt;Device&gt; devices = new ArrayList&lt;&gt;();
+        List&lt;Device&gt; mdevices = new ArrayList&lt;&gt;();
+        devices.addAll(remoteDevices);
+        for (int i = 0; i &lt; devices.size(); i++) {
+            if (!dmrDeviceType.equals(devices.get(i).getType())) {
+                continue;
+            }
+            String devices_uuid = devices.get(i).getIdentity().getUdn().toString();
+            String localuuid = LocalDeviceFactoty.uniqueSystemIdentifier(LocalDeviceFactoty.DMR_KEY).toString();
+            if (!devices_uuid.equals(localuuid)) {
+            //过滤我们感兴趣的设备
+                if (devices_uuid.contains(&quot;-dmp&quot;))
+                    mdevices.add(devices.get(i));
+            }
+        }
+        return mdevices;
+    }
+</code></pre><p>连接电视</p>
+<pre><code>    public void connecttotv(Device device, Handler handler) {
+        String data = &quot;&quot;;
+        JSONObject jsonObject = new JSONObject();
+
+            try {
+                jsonObject.put(&quot;tv_uuid&quot;, device.getIdentity().getUdn().getIdentifierString());
+                jsonObject.put(&quot;phone_uuid&quot;, DevicesManager.getInstance().getDmsDeviceIdentifierString());
+                jsonObject.put(&quot;phone_model&quot;, Utils.getDevName());
+                jsonObject.put(&quot;phone_ip&quot;, getPhoneIP());
+                data = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            sendtoTV(device.getIdentity().getUdn().getIdentifierString(), Constants.TYPE_CONNECT, data, handler);
+    }
+</code></pre><p>sendtoTV()方法</p>
+<pre><code> //查找设备的方法
+            Service service = device.findService(simpleParamServiceId);
+            if (service != null) {
+                targetService = service;
+                break;
+            }
+        }
+
+        SendSimpleParamActionCallback callback = new SendSimpleParamActionCallback(targetService, str);
+        callback.setiServiceResult(iServiceResult);
+
+        upnpService().getControlPoint().execute(callback)
+</code></pre><h2 id="2-源码解析"><a href="#2-源码解析" class="headerlink" title="2.源码解析"></a>2.源码解析</h2><h3 id="2-1-总体设计"><a href="#2-1-总体设计" class="headerlink" title="2.1 总体设计"></a>2.1 总体设计</h3><h4 id="2-1-1-概述"><a href="#2-1-1-概述" class="headerlink" title="2.1.1 概述"></a>2.1.1 概述</h4><p>Cling 作为 UPnP 协议栈，其主旨即是在设备的发现，控制等过程中对不同的协议及内容进行处理。UPnP 协议栈由多个层组成，Cling 只关心底层的 TCP/IP 协议以及包含 SSDP（设备发现），SOAP（设备控制），GENA（设备事件）协议的层。</p>
 <h4 id="2-1-2-使用场景"><a href="#2-1-2-使用场景" class="headerlink" title="2.1.2 使用场景"></a>2.1.2 使用场景</h4><blockquote>
 <ul>
 <li>手机加入到局域网中，建立 MulticastSocket 监听局域网中设备</li>
@@ -386,18 +464,18 @@
 <h4 id="2-1-5-类功能详细介绍"><a href="#2-1-5-类功能详细介绍" class="headerlink" title="2.1.5 类功能详细介绍"></a>2.1.5 类功能详细介绍</h4><blockquote>
 <p>由类图可知，Cling 的一切都是从 UpnpService 开始的，其中包含了 ControlPoint，ProtocolFactory，Registry，Router 四个核心模块，以及一个配置信息类 UpnpServiceConfiguration。<br>ControlPoint<br>控制点的接口，主要功能是异步执行搜索，设备控制订阅等指令。<br>此接口定义了查找设备，向设备发送指令，订阅设备变更，其实现类只有一个为 ControlPointImpl。</p>
 </blockquote>
-<h5 id="2-1-5-1-ControlPoint"><a href="#2-1-5-1-ControlPoint" class="headerlink" title="2.1.5.1 ControlPoint"></a>2.1.5.1 ControlPoint</h5><h6 id="1-查找"><a href="#1-查找" class="headerlink" title="(1) 查找"></a>(1) 查找</h6><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">search</span><span class="params">(UpnpHeader searchType, <span class="keyword">int</span> mxSeconds)</span></span>;</div></pre></td></tr></table></figure>
-<p>第一个参数UpnpHeader表示查询条件，第二个参数表示最大超时时间，以秒为单位。<br>UpnpHeader 是一个抽象类，其中定义了包含每个过程请求中的 Header 信息的枚举类型Type以及泛型 value，查询时常用的实现类有：DeviceTypeHeader，UDNHeader 等，可根据设备类型、UDN、服务类型等多种方式。</p>
-<h6 id="2-执行控制指令"><a href="#2-执行控制指令" class="headerlink" title="(2) 执行控制指令"></a>(2) 执行控制指令</h6><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Future <span class="title">execute</span><span class="params">(ActionCallback callback)</span></span>;</div></pre></td></tr></table></figure>
-<p>将 ActionCallback 放入 DefaultUpnpServiceConfiguration 中定义的线程池 <strong>ClingExecutor</strong> 执行，执行完毕回调 ActionCallback 中定义的 success 或 failure 函数。<br>ActionCallback 是命令执行的回调接口，在其 run 方法内会根据是本地命令还是远程命令进行执行，执行结束后回调成功或失败接口。</p>
-<h6 id="3-执行事件订阅指令"><a href="#3-执行事件订阅指令" class="headerlink" title="(3) 执行事件订阅指令"></a>(3) 执行事件订阅指令</h6><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(SubscriptionCallback callback)</span></span>;</div></pre></td></tr></table></figure>
-<p>将 SubscriptionCallback 放入 DefaultUpnpServiceConfiguration 中定义的线程池 ClingExecutor 执行，执行完毕回调 ActionCallback 中定义的 established、failed、ended 等函数。</p>
+<h5 id="2-1-5-1-ControlPoint"><a href="#2-1-5-1-ControlPoint" class="headerlink" title="2.1.5.1 ControlPoint"></a>2.1.5.1 ControlPoint</h5><h6 id="1-查找"><a href="#1-查找" class="headerlink" title="(1) 查找"></a>(1) 查找</h6><pre><code>public void search(UpnpHeader searchType, int mxSeconds);
+</code></pre><p>第一个参数UpnpHeader表示查询条件，第二个参数表示最大超时时间，以秒为单位。<br>UpnpHeader 是一个抽象类，其中定义了包含每个过程请求中的 Header 信息的枚举类型Type以及泛型 value，查询时常用的实现类有：DeviceTypeHeader，UDNHeader 等，可根据设备类型、UDN、服务类型等多种方式。</p>
+<h6 id="2-执行控制指令"><a href="#2-执行控制指令" class="headerlink" title="(2) 执行控制指令"></a>(2) 执行控制指令</h6><pre><code>public Future execute(ActionCallback callback);
+</code></pre><p>将 ActionCallback 放入 DefaultUpnpServiceConfiguration 中定义的线程池 <strong>ClingExecutor</strong> 执行，执行完毕回调 ActionCallback 中定义的 success 或 failure 函数。<br>ActionCallback 是命令执行的回调接口，在其 run 方法内会根据是本地命令还是远程命令进行执行，执行结束后回调成功或失败接口。</p>
+<h6 id="3-执行事件订阅指令"><a href="#3-执行事件订阅指令" class="headerlink" title="(3) 执行事件订阅指令"></a>(3) 执行事件订阅指令</h6><pre><code>public void execute(SubscriptionCallback callback);
+</code></pre><p>将 SubscriptionCallback 放入 DefaultUpnpServiceConfiguration 中定义的线程池 ClingExecutor 执行，执行完毕回调 ActionCallback 中定义的 established、failed、ended 等函数。</p>
 <h5 id="2-1-5-2-ProtocolFactory"><a href="#2-1-5-2-ProtocolFactory" class="headerlink" title="2.1.5.2 ProtocolFactory"></a>2.1.5.2 ProtocolFactory</h5><p>UPnP 协议的工厂类，用于根据收到的 UPnP 协议或是本地设备的 meta 信息，创建一个可执行的协议。<br>使用简单工厂模式封装协议内容的处理，实现类为 ProtocolFactoryImpl，主要根据接收报文和发送报文两大类创建不同协议。</p>
 <p>在该类中 UDP 包通过 createReceivingAsync() 方法对传递来的 IncomingDatagramMessage 进行处理，如 NOTIFY–ReceivingNotification，MSEARCH–ReceivingSearch。<br>TCP 包通过 createReceivingSync 进行分发处理，并通过 ReceivingSync 的子类进行处理，子类中调用 executeSync 方法等待并返回 response。</p>
-<h6 id="1-处理接收到的报文"><a href="#1-处理接收到的报文" class="headerlink" title="(1) 处理接收到的报文"></a>(1) 处理接收到的报文</h6><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> ReceivingAsync <span class="title">createReceivingAsync</span><span class="params">(IncomingDatagramMessage message)</span></span>;</div></pre></td></tr></table></figure>
-<p>IncomingDatagramMessage 封装了 UDP 包的信息，在 createReceivingAsync 中根据消息的操作类型及方法创建不同的 ReceivingAsync 子类对象，ReceivingAsync 子类通过重写 execute 方法定义具体实现。如请求的 NOTIFY 信息创建 ReceivingNotification，请求的 MSEARCH 创建 ReceivingSearch。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> ReceivingSync <span class="title">createReceivingSync</span><span class="params">(StreamRequestMessage message)</span></span>;</div></pre></td></tr></table></figure>
-<p>StreamRequestMessage 封装 TCP 报文，在 createReceivingSync 中根据消息的操作类型方法及 UPnP 服务 NameSpace 等的配置创建不同的 ReceivingSync 的子类对象，ReceivingSync 子类通过重写 executeSync 方法定义具体实现。</p>
+<h6 id="1-处理接收到的报文"><a href="#1-处理接收到的报文" class="headerlink" title="(1) 处理接收到的报文"></a>(1) 处理接收到的报文</h6><pre><code>public ReceivingAsync createReceivingAsync(IncomingDatagramMessage message);
+</code></pre><p>IncomingDatagramMessage 封装了 UDP 包的信息，在 createReceivingAsync 中根据消息的操作类型及方法创建不同的 ReceivingAsync 子类对象，ReceivingAsync 子类通过重写 execute 方法定义具体实现。如请求的 NOTIFY 信息创建 ReceivingNotification，请求的 MSEARCH 创建 ReceivingSearch。</p>
+<pre><code>public ReceivingSync createReceivingSync(StreamRequestMessage message);
+</code></pre><p>StreamRequestMessage 封装 TCP 报文，在 createReceivingSync 中根据消息的操作类型方法及 UPnP 服务 NameSpace 等的配置创建不同的 ReceivingSync 的子类对象，ReceivingSync 子类通过重写 executeSync 方法定义具体实现。</p>
 <h6 id="2-组装发送的报文"><a href="#2-组装发送的报文" class="headerlink" title="(2) 组装发送的报文"></a>(2) 组装发送的报文</h6><p>有若干功能类似的方法，返回不同的 SendingAsync 子类对象，通过重写 executeSync 方法定义具体实现。如：</p>
 <blockquote>
 <ol>
@@ -405,8 +483,8 @@
 <li>生产 SendingSearch 实例的工厂方法，SendingSearch 中定义了查询条件以及请求超时时间，在重写的 execute 函数中，在线程启动后创建 OutgoingSearchRequest 对象并通过 Router 发送。</li>
 </ol>
 </blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> SendingSearch <span class="title">createSendingSearch</span><span class="params">(UpnpHeader searchTarget, <span class="keyword">int</span> mxSeconds)</span></span>;</div></pre></td></tr></table></figure>
-<h5 id="2-1-5-3-Registry"><a href="#2-1-5-3-Registry" class="headerlink" title="2.1.5.3 Registry"></a>2.1.5.3 Registry</h5><p>设备资源管理器，用于设备、资源、订阅消息的管理，包括添加、更新、移除、查询。可将新设备时加入 Registry 中，在设备失效后从 Registry 中移除。目前实现类为 RegistryImpl。<br>关联类包括：RegistryListener、Resource、RegistryItem、RegistryItems、LocalItems、RemoteItems、ExpirationDetails、RegistryMaintainer。</p>
+<pre><code>public SendingSearch createSendingSearch(UpnpHeader searchTarget, int mxSeconds);
+</code></pre><h5 id="2-1-5-3-Registry"><a href="#2-1-5-3-Registry" class="headerlink" title="2.1.5.3 Registry"></a>2.1.5.3 Registry</h5><p>设备资源管理器，用于设备、资源、订阅消息的管理，包括添加、更新、移除、查询。可将新设备时加入 Registry 中，在设备失效后从 Registry 中移除。目前实现类为 RegistryImpl。<br>关联类包括：RegistryListener、Resource、RegistryItem、RegistryItems、LocalItems、RemoteItems、ExpirationDetails、RegistryMaintainer。</p>
 <h5 id="2-1-5-4-RegistryListener"><a href="#2-1-5-4-RegistryListener" class="headerlink" title="2.1.5.4 RegistryListener"></a>2.1.5.4 RegistryListener</h5><p>设备状态监听类，包含本地/远程设备的发现、添加、更新、移除等回调函数。可通过<br>addListener(RegistryListener listener)<br>添加，保存在RegistryListener的 Set\ registryListener 参数内。<br>实现类有空实现的 DefaultRegistryListener 以及通过注入属性实现的 RegistryListenerAdapter。</p>
 <h5 id="2-1-5-5-Resource"><a href="#2-1-5-5-Resource" class="headerlink" title="2.1.5.5 Resource"></a>2.1.5.5 Resource</h5><p>资源的父类。该类中定义资源的 URI，model 等属性。</p>
 <h5 id="2-1-5-6-RegistryItem"><a href="#2-1-5-6-RegistryItem" class="headerlink" title="2.1.5.6 RegistryItem"></a>2.1.5.6 RegistryItem</h5><p>KV 形式的数据项，在 RegistryImpl 中用于包装设备、资源、订阅消息等。</p>
@@ -423,23 +501,31 @@
 <h6 id="5-发送数据"><a href="#5-发送数据" class="headerlink" title="(5) 发送数据"></a>(5) 发送数据</h6><p>send(StreamRequestMessage msg) 通过 StreamClient 发送 TCP 包。<br>send(OutgoingDatagramMessage msg) 向所有 datagramIO 发送 UDP 包。<br>broadcast(byte[] bytes) 向所有 datagramIO 广播发送数据。</p>
 <h5 id="2-1-5-13-StreamClient"><a href="#2-1-5-13-StreamClient" class="headerlink" title="2.1.5.13 StreamClient"></a>2.1.5.13 StreamClient</h5><p>StreamClient 具体实现类为 AbstractStreamClient 以及其子类 StreamClientImpl。<br>在 Android 系统下使用的 Jetty 实现。在该类中具体的 http 协议处理由 HttpClient 实现，核心方法 sendRequest 用于创建请求并获取返回 response，请求及返回值通过 HttpContentExchange 封装，每一个 StreamRequestMessage 及其对应的 HttpContentExchange 通过 createCallable 方法封装为 Callable 对象，并将其压入 DefaultUpnpServiceConfiguration 中的 defaultExecutorService。在 call() 中调用 client.send(exchange) 发送 request 并获取 response。</p>
 <h5 id="2-1-5-14-StreamServer"><a href="#2-1-5-14-StreamServer" class="headerlink" title="2.1.5.14 StreamServer"></a>2.1.5.14 StreamServer</h5><p>StreamServer 用来接收 HTTP 请求并进行处理。在 AndroidUpnpServiceConfiguration 中进行初始化：</p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">public StreamServer createStreamServer(NetworkAddressFactory networkAddressFactory) &#123;</div><div class="line">        // Use Jetty, start/stop a<span class="built_in"> new </span>shared<span class="built_in"> instance </span>of JettyServletContainer</div><div class="line">       <span class="built_in"> return </span>new AsyncServletStreamServerImpl(</div><div class="line">           <span class="built_in"> new </span>AsyncServletStreamServerConfigurationImpl(</div><div class="line">                JettyServletContainer.INSTANCE,</div><div class="line">                networkAddressFactory.getStreamListenPort()</div><div class="line">            )</div><div class="line">        );</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>本质上是由 Jetty 实现的 servlet 容器。从 HttpServletRequest 中获取数据流并传递给 Router 的 received(UpnpStream stream) 进行处理。JettyServletContainer 使用了单例模式，其中定义 Server 的具体实现，并使用 synchronized 同步 Server 属性变更操作。</p>
+<pre><code>public StreamServer createStreamServer(NetworkAddressFactory networkAddressFactory) {
+        // Use Jetty, start/stop a new shared instance of JettyServletContainer
+        return new AsyncServletStreamServerImpl(
+            new AsyncServletStreamServerConfigurationImpl(
+                JettyServletContainer.INSTANCE,
+                networkAddressFactory.getStreamListenPort()
+            )
+        );
+    }
+</code></pre><p>本质上是由 Jetty 实现的 servlet 容器。从 HttpServletRequest 中获取数据流并传递给 Router 的 received(UpnpStream stream) 进行处理。JettyServletContainer 使用了单例模式，其中定义 Server 的具体实现，并使用 synchronized 同步 Server 属性变更操作。</p>
 <h5 id="2-1-5-15-ReceivingNotification"><a href="#2-1-5-15-ReceivingNotification" class="headerlink" title="2.1.5.15 ReceivingNotification"></a>2.1.5.15 ReceivingNotification</h5><p>处理接收到的 notification 消息。如 ALIVE，BYEBYE。当接收到 ALIVE 消息后，会在后台启动一个线程执行 RetrieveRemoteDescriptors 获取该设备的信息。</p>
 <h5 id="2-1-5-16-RetrieveRemoteDescriptors"><a href="#2-1-5-16-RetrieveRemoteDescriptors" class="headerlink" title="2.1.5.16 RetrieveRemoteDescriptors"></a>2.1.5.16 RetrieveRemoteDescriptors</h5><p>用来主动获取远端介绍详情，并返回 RemoteService 加入到 Registry 中。</p>
 <h5 id="额外补充-MulticastSocket多播协议"><a href="#额外补充-MulticastSocket多播协议" class="headerlink" title="额外补充 MulticastSocket多播协议"></a>额外补充 MulticastSocket多播协议</h5><p>前面说过设备开启之后 启动MulticastSocket多播协议，<br>先来复习一下网络通讯中的三种模式：</p>
 <p>在当前网络通信中（TCP/IP也不例外）有三种通信模式：<strong>单播、广播、组播(又叫多播, 个人感觉叫多播描述的有点不恰当)</strong>，其中多播出现的时间最晚，但同时具备单播和广播的优点，最具有发展前景。<br>通信方式分类：<br>    1.单播：单台主机与单台主机之间的通信；<br>    2.广播：单台主机与网络中所有主机的通信；<br>    3.组播：单台主机与选定的一组主机的通信；</p>
 <h6 id="单播："><a href="#单播：" class="headerlink" title="单播："></a>单播：</h6><blockquote>
-<pre><code>单播是网络通信中最常见的，网络节点之间的通信 就好像是人们之间的对话一样。如果一个人对另外一个人说话，
-那么用网络技术的术语来描述就是“单播”，此时信息的接收和传递只在两个节点之间进行。
-1. 单播的优点：
-    (1)服务器以及响应客户端的请求；
-    (2)服务器能针对每个客户端的不同请求发送不同的响应，容易显示个性化服务；
-2. 单播的缺点：
-    (1)服务器针对每个客户机发送数据流，服务器流量＝客户机数量×客户机流量；在客户数量大、每个客户机流量大的流媒体应用中服务器不堪重负；
-3. 应用场景：
-   单播在网络中得到了广泛的应用，网络上绝大部分的数据都 是以单播的形式传输的。例如：收发电子邮件、游览网页时，必须与邮件服务器、
-   服务器建立连接，此时使用的就是单播通信方式；
+<pre><code> 单播是网络通信中最常见的，网络节点之间的通信 就好像是人们之间的对话一样。如果一个人对另外一个人说话，
+ 那么用网络技术的术语来描述就是“单播”，此时信息的接收和传递只在两个节点之间进行。
+ 1. 单播的优点：
+     (1)服务器以及响应客户端的请求；
+     (2)服务器能针对每个客户端的不同请求发送不同的响应，容易显示个性化服务；
+ 2. 单播的缺点：
+     (1)服务器针对每个客户机发送数据流，服务器流量＝客户机数量×客户机流量；在客户数量大、每个客户机流量大的流媒体应用中服务器不堪重负；
+ 3. 应用场景：
+    单播在网络中得到了广泛的应用，网络上绝大部分的数据都 是以单播的形式传输的。例如：收发电子邮件、游览网页时，必须与邮件服务器、
+    服务器建立连接，此时使用的就是单播通信方式；
 </code></pre></blockquote>
 <h6 id="广播："><a href="#广播：" class="headerlink" title="广播："></a>广播：</h6><blockquote>
 <pre><code>“广播”可以比方为：一个人通过广播喇叭对在场的全体说话(他才不管你是否乐意听)。换句话说: 广播是一台主机对某一个网络上的所有主机发送数据报包。
@@ -469,9 +555,179 @@
 (1)与单播协议相比没有纠错机制，发生丢包错包后难以弥补，但可以通过一定的容错机制和QOS加以弥补；
 </code></pre></blockquote>
 <p>没有代码bb个毛线，来实现一下：</p>
-<h6 id="UDP单播的例子"><a href="#UDP单播的例子" class="headerlink" title="UDP单播的例子"></a>UDP单播的例子</h6><figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  </div><div class="line"><span class="comment">// 客户端  </span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientTest</span>  </span></div><div class="line"><span class="class"></span>&#123;  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXRECEIVED = <span class="number">255</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        <span class="keyword">byte</span>[] msg = <span class="keyword">new</span> String(<span class="string">"connect test successfully!!!"</span>).getBytes();  </div><div class="line">  </div><div class="line">        DatagramSocket <span class="keyword">client</span> = <span class="keyword">new</span> DatagramSocket();  </div><div class="line">  </div><div class="line">        InetAddress inetAddr = InetAddress.getLocalHost();  </div><div class="line">        SocketAddress socketAddr = <span class="keyword">new</span> InetSocketAddress(inetAddr, <span class="number">8888</span>);  </div><div class="line">  </div><div class="line">        DatagramPacket sendPacket = <span class="keyword">new</span> DatagramPacket(msg, msg.length,  </div><div class="line">                socketAddr);  </div><div class="line">  </div><div class="line">        <span class="keyword">client</span>.send(sendPacket);  </div><div class="line">  </div><div class="line">        <span class="keyword">client</span>.close();  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">  </div><div class="line"><span class="comment">//服务端  </span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerTest</span>  </span></div><div class="line"><span class="class"></span>&#123;  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXREV = <span class="number">255</span>;  </div><div class="line">  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        DatagramSocket <span class="keyword">server</span> = <span class="keyword">new</span> DatagramSocket(<span class="number">8888</span>);  </div><div class="line">        DatagramPacket recvPacket = <span class="keyword">new</span> DatagramPacket(<span class="keyword">new</span> <span class="keyword">byte</span>[MAXREV], MAXREV);  </div><div class="line">  </div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>)  </div><div class="line">        &#123;  </div><div class="line">            <span class="keyword">server</span>.receive(recvPacket);  </div><div class="line">  </div><div class="line">            <span class="keyword">byte</span>[] receiveMsg = Arrays.copyOfRange(recvPacket.getData(),  </div><div class="line">                    recvPacket.getOffset(),  </div><div class="line">                    recvPacket.getOffset() + recvPacket.getLength());  </div><div class="line">  </div><div class="line">            System.out.println(<span class="string">"Handing at client "</span>  </div><div class="line">                    + recvPacket.getAddress().getHostName() + <span class="string">" ip "</span>  </div><div class="line">                    + recvPacket.getAddress().getHostAddress());  </div><div class="line">  </div><div class="line">            System.out.println(<span class="string">"Server Receive Data:"</span> + <span class="keyword">new</span> String(receiveMsg));  </div><div class="line">  </div><div class="line">            <span class="keyword">server</span>.send(recvPacket);  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h6 id="UDP广播的例子"><a href="#UDP广播的例子" class="headerlink" title="UDP广播的例子"></a>UDP广播的例子</h6><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//客户端  </span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BroadcastSender</span>  </div><div class="line">&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws IOException  </span></div><div class="line"><span class="function">    </span>&#123;  </div><div class="line">        <span class="keyword">byte</span>[] msg = <span class="keyword">new</span> String(<span class="string">"connection successfully!!!"</span>).getBytes();  </div><div class="line">        <span class="comment">/* </span></div><div class="line"><span class="comment">         * 在Java UDP中单播与广播的代码是相同的,要实现具有广播功能的程序只需要使用广播地址即可, 例如：这里使用了本地的广播地址 </span></div><div class="line"><span class="comment">         */</span>  </div><div class="line">        InetAddress inetAddr = InetAddress.getByName(<span class="string">"255.255.255.255"</span>);  </div><div class="line">        DatagramSocket client = <span class="keyword">new</span> DatagramSocket();  </div><div class="line">  </div><div class="line">        DatagramPacket sendPack = <span class="keyword">new</span> DatagramPacket(msg, msg.length, inetAddr,  </div><div class="line">                <span class="number">8888</span>);  </div><div class="line">  </div><div class="line">        client.send(sendPack);  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"Client send msg complete"</span>);  </div><div class="line">        client.close();  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">  </div><div class="line"><span class="comment">//服务端  </span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BroadcastReceive</span>  </div><div class="line">&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws IOException  </span></div><div class="line"><span class="function">    </span>&#123;  </div><div class="line">  </div><div class="line">        DatagramPacket receive = <span class="keyword">new</span> DatagramPacket(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>], <span class="number">1024</span>);  </div><div class="line">        DatagramSocket server = <span class="keyword">new</span> DatagramSocket(<span class="number">8888</span>);  </div><div class="line">  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"---------------------------------"</span>);  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"Server current start......"</span>);  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"---------------------------------"</span>);  </div><div class="line">  </div><div class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)  </div><div class="line">        &#123;  </div><div class="line">            server.receive(receive);  </div><div class="line">  </div><div class="line">            <span class="keyword">byte</span>[] recvByte = Arrays.copyOfRange(receive.getData(), <span class="number">0</span>,  </div><div class="line">                    receive.getLength());  </div><div class="line">  </div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"Server receive msg:"</span> + <span class="keyword">new</span> String(recvByte));  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h6 id="UDP组播的例子"><a href="#UDP组播的例子" class="headerlink" title="UDP组播的例子"></a>UDP组播的例子</h6><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//客户端  </span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MulticastSender</span>  </div><div class="line">&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws IOException  </span></div><div class="line"><span class="function">    </span>&#123;  </div><div class="line">        <span class="keyword">int</span> port = <span class="number">8888</span>;  </div><div class="line">        <span class="keyword">byte</span>[] msg = <span class="string">"Connection successfully!!!"</span>.getBytes();  </div><div class="line">  </div><div class="line">        InetAddress inetRemoteAddr = InetAddress.getByName(<span class="string">"224.0.0.5"</span>);  </div><div class="line">  </div><div class="line">        <span class="comment">/* </span></div><div class="line"><span class="comment">         * Java UDP组播应用程序主要通过MulticastSocket实例进行通信,它是DatagramSocket的是一个子类, </span></div><div class="line"><span class="comment">         * 其中包含了一些额外的可以控制多播的属性. </span></div><div class="line"><span class="comment">         *  </span></div><div class="line"><span class="comment">         * 注意： </span></div><div class="line"><span class="comment">         *  </span></div><div class="line"><span class="comment">         * 多播数据报包实际上可以通过DatagramSocket发送,只需要简单地指定一个多播地址。 </span></div><div class="line"><span class="comment">         * 我们这里使用MulticastSocket,是因为它具有DatagramSocket没有的能力 </span></div><div class="line"><span class="comment">         */</span>  </div><div class="line">        MulticastSocket client = <span class="keyword">new</span> MulticastSocket();  </div><div class="line">  </div><div class="line">        DatagramPacket sendPack = <span class="keyword">new</span> DatagramPacket(msg, msg.length,  </div><div class="line">                inetRemoteAddr, port);  </div><div class="line">  </div><div class="line">        client.send(sendPack);  </div><div class="line">  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"Client send msg complete"</span>);  </div><div class="line">  </div><div class="line">        client.close();  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">  </div><div class="line"><span class="comment">//服务端  </span></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MulticastReceive</span>  </div><div class="line">&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws IOException  </span></div><div class="line"><span class="function">    </span>&#123;  </div><div class="line">        InetAddress inetRemoteAddr = InetAddress.getByName(<span class="string">"224.0.0.5"</span>);  </div><div class="line">  </div><div class="line">        DatagramPacket recvPack = <span class="keyword">new</span> DatagramPacket(<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>], <span class="number">1024</span>);  </div><div class="line">  </div><div class="line">        MulticastSocket server = <span class="keyword">new</span> MulticastSocket(<span class="number">8888</span>);  </div><div class="line">  </div><div class="line">        <span class="comment">/* </span></div><div class="line"><span class="comment">         * 如果是发送数据报包,可以不加入多播组; 如果是接收数据报包,必须加入多播组; 这里是接收数据报包,所以必须加入多播组; </span></div><div class="line"><span class="comment">         */</span>  </div><div class="line">        server.joinGroup(inetRemoteAddr);  </div><div class="line">  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"---------------------------------"</span>);  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"Server current start......"</span>);  </div><div class="line">        System.<span class="keyword">out</span>.println(<span class="string">"---------------------------------"</span>);  </div><div class="line">  </div><div class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)  </div><div class="line">        &#123;  </div><div class="line">            server.receive(recvPack);  </div><div class="line">  </div><div class="line">            <span class="keyword">byte</span>[] recvByte = Arrays.copyOfRange(recvPack.getData(), <span class="number">0</span>,  </div><div class="line">                    recvPack.getLength());  </div><div class="line">  </div><div class="line">            System.<span class="keyword">out</span>.println(<span class="string">"Server receive msg:"</span> + <span class="keyword">new</span> String(recvByte));  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="UDP单播的例子"><a href="#UDP单播的例子" class="headerlink" title="UDP单播的例子"></a>UDP单播的例子</h6><pre><code>
+
+// 客户端  
+public class ClientTest  
+{  
+    private static final int MAXRECEIVED = 255;  
+
+    public static void main(String[] args) throws IOException  
+    {  
+        byte[] msg = new String(&quot;connect test successfully!!!&quot;).getBytes();  
+
+        DatagramSocket client = new DatagramSocket();  
+
+        InetAddress inetAddr = InetAddress.getLocalHost();  
+        SocketAddress socketAddr = new InetSocketAddress(inetAddr, 8888);  
+
+        DatagramPacket sendPacket = new DatagramPacket(msg, msg.length,  
+                socketAddr);  
+
+        client.send(sendPacket);  
+
+        client.close();  
+    }  
+}  
+
+
+
+//服务端  
+public class ServerTest  
+{  
+    private static final int MAXREV = 255;  
+
+    public static void main(String[] args) throws IOException  
+    {  
+        DatagramSocket server = new DatagramSocket(8888);  
+        DatagramPacket recvPacket = new DatagramPacket(new byte[MAXREV], MAXREV);  
+
+        while (true)  
+        {  
+            server.receive(recvPacket);  
+
+            byte[] receiveMsg = Arrays.copyOfRange(recvPacket.getData(),  
+                    recvPacket.getOffset(),  
+                    recvPacket.getOffset() + recvPacket.getLength());  
+
+            System.out.println(&quot;Handing at client &quot;  
+                    + recvPacket.getAddress().getHostName() + &quot; ip &quot;  
+                    + recvPacket.getAddress().getHostAddress());  
+
+            System.out.println(&quot;Server Receive Data:&quot; + new String(receiveMsg));  
+
+            server.send(recvPacket);  
+
+        }  
+
+    }  
+}
+</code></pre><h6 id="UDP广播的例子"><a href="#UDP广播的例子" class="headerlink" title="UDP广播的例子"></a>UDP广播的例子</h6><pre><code>//客户端  
+public class BroadcastSender  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+        byte[] msg = new String(&quot;connection successfully!!!&quot;).getBytes();  
+        /* 
+         * 在Java UDP中单播与广播的代码是相同的,要实现具有广播功能的程序只需要使用广播地址即可, 例如：这里使用了本地的广播地址 
+         */  
+        InetAddress inetAddr = InetAddress.getByName(&quot;255.255.255.255&quot;);  
+        DatagramSocket client = new DatagramSocket();  
+
+        DatagramPacket sendPack = new DatagramPacket(msg, msg.length, inetAddr,  
+                8888);  
+
+        client.send(sendPack);  
+        System.out.println(&quot;Client send msg complete&quot;);  
+        client.close();  
+    }  
+}  
+
+
+//服务端  
+public class BroadcastReceive  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+
+        DatagramPacket receive = new DatagramPacket(new byte[1024], 1024);  
+        DatagramSocket server = new DatagramSocket(8888);  
+
+        System.out.println(&quot;---------------------------------&quot;);  
+        System.out.println(&quot;Server current start......&quot;);  
+        System.out.println(&quot;---------------------------------&quot;);  
+
+        while (true)  
+        {  
+            server.receive(receive);  
+
+            byte[] recvByte = Arrays.copyOfRange(receive.getData(), 0,  
+                    receive.getLength());  
+
+            System.out.println(&quot;Server receive msg:&quot; + new String(recvByte));  
+        }  
+
+    }  
+}
+</code></pre><h6 id="UDP组播的例子"><a href="#UDP组播的例子" class="headerlink" title="UDP组播的例子"></a>UDP组播的例子</h6><pre><code>
+//客户端  
+public class MulticastSender  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+        int port = 8888;  
+        byte[] msg = &quot;Connection successfully!!!&quot;.getBytes();  
+
+        InetAddress inetRemoteAddr = InetAddress.getByName(&quot;224.0.0.5&quot;);  
+
+        /* 
+         * Java UDP组播应用程序主要通过MulticastSocket实例进行通信,它是DatagramSocket的是一个子类, 
+         * 其中包含了一些额外的可以控制多播的属性. 
+         *  
+         * 注意： 
+         *  
+         * 多播数据报包实际上可以通过DatagramSocket发送,只需要简单地指定一个多播地址。 
+         * 我们这里使用MulticastSocket,是因为它具有DatagramSocket没有的能力 
+         */  
+        MulticastSocket client = new MulticastSocket();  
+
+        DatagramPacket sendPack = new DatagramPacket(msg, msg.length,  
+                inetRemoteAddr, port);  
+
+        client.send(sendPack);  
+
+        System.out.println(&quot;Client send msg complete&quot;);  
+
+        client.close();  
+
+    }  
+}  
+
+
+
+//服务端  
+public class MulticastReceive  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+        InetAddress inetRemoteAddr = InetAddress.getByName(&quot;224.0.0.5&quot;);  
+
+        DatagramPacket recvPack = new DatagramPacket(new byte[1024], 1024);  
+
+        MulticastSocket server = new MulticastSocket(8888);  
+
+        /* 
+         * 如果是发送数据报包,可以不加入多播组; 如果是接收数据报包,必须加入多播组; 这里是接收数据报包,所以必须加入多播组; 
+         */  
+        server.joinGroup(inetRemoteAddr);  
+
+        System.out.println(&quot;---------------------------------&quot;);  
+        System.out.println(&quot;Server current start......&quot;);  
+        System.out.println(&quot;---------------------------------&quot;);  
+
+        while (true)  
+        {  
+            server.receive(recvPack);  
+
+            byte[] recvByte = Arrays.copyOfRange(recvPack.getData(), 0,  
+                    recvPack.getLength());  
+
+            System.out.println(&quot;Server receive msg:&quot; + new String(recvByte));  
+        }  
+
+    }  
+}
+</code></pre>
       
     </div>
     

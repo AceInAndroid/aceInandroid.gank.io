@@ -363,16 +363,114 @@
 <a id="more"></a>
 <p>时序图:<br><img src="/images/pasted-1508470499959.png" alt="WX1"></p>
 <p>最后调用到MessageQueue的enqueueMessage方法,来看下这个方法</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">boolean enqueueMessage(Message msg, long <span class="keyword">when</span>) &#123;</div><div class="line">            .....</div><div class="line">            msg.markInUse();</div><div class="line">            msg.<span class="keyword">when</span> = <span class="keyword">when</span>;</div><div class="line">            Message p = mMessages;</div><div class="line">            boolean needWake;</div><div class="line">            <span class="keyword">if</span> (p == null <span class="params">||</span> <span class="keyword">when</span> == <span class="number">0</span> <span class="params">||</span> <span class="keyword">when</span> &lt; p.<span class="keyword">when</span>) &#123;</div><div class="line">                /<span class="regexp">/ New head, wake up the event queue if blocked.</span></div><div class="line"><span class="regexp">                msg.next = p;</span></div><div class="line"><span class="regexp">                mMessages = msg;</span></div><div class="line"><span class="regexp">                needWake = mBlocked;</span></div><div class="line"><span class="regexp">            &#125; else &#123;</span></div><div class="line"><span class="regexp">                Message prev;</span></div><div class="line"><span class="regexp">                for (;;) &#123;</span></div><div class="line"><span class="regexp">                    prev = p;</span></div><div class="line"><span class="regexp">                    p = p.next;</span></div><div class="line"><span class="regexp">                    if (p == null || when &lt; p.when) &#123;</span></div><div class="line"><span class="regexp">                        break;</span></div><div class="line"><span class="regexp">                    &#125;</span></div><div class="line"><span class="regexp">                    if (needWake &amp;&amp; p.isAsynchronous()) &#123;</span></div><div class="line"><span class="regexp">                        needWake = false;</span></div><div class="line"><span class="regexp">                    &#125;</span></div><div class="line"><span class="regexp">                &#125;</span></div><div class="line"><span class="regexp">                msg.next = p;</span></div><div class="line"><span class="regexp">                prev.next = msg;</span></div><div class="line"><span class="regexp">            &#125;</span></div><div class="line"><span class="regexp"></span></div><div class="line"><span class="regexp"></span></div><div class="line"><span class="regexp">            if (needWake) &#123;</span></div><div class="line"><span class="regexp">            nativeWake(mPtr);</span></div><div class="line"><span class="regexp">            &#125;</span></div><div class="line"><span class="regexp">        &#125;</span></div><div class="line"><span class="regexp">        return true;</span></div><div class="line"><span class="regexp">    &#125;</span></div></pre></td></tr></table></figure>
-<p>通过上面遍历等next操作可以看出来，MessageQueue消息队列对于消息排队是通过类似C语言的链表来存储这些有序的消息的。其中的mMessages对象表示当前待处理的消息；具体的操作方法就根据时间的顺序调用msg.next，从而为每一个消息指定它的当前消息和下一个消息是什么<strong>消息插入队列的实质就是将所有的消息按时间（uptimeMillis参数）进行排序</strong>。</p>
+<pre><code>boolean enqueueMessage(Message msg, long when) {
+            .....
+            msg.markInUse();
+            msg.when = when;
+            Message p = mMessages;
+            boolean needWake;
+            if (p == null || when == 0 || when &lt; p.when) {
+                // New head, wake up the event queue if blocked.
+                msg.next = p;
+                mMessages = msg;
+                needWake = mBlocked;
+            } else {
+                Message prev;
+                for (;;) {
+                    prev = p;
+                    p = p.next;
+                    if (p == null || when &lt; p.when) {
+                        break;
+                    }
+                    if (needWake &amp;&amp; p.isAsynchronous()) {
+                        needWake = false;
+                    }
+                }
+                msg.next = p;
+                prev.next = msg;
+            }
+
+
+            if (needWake) {
+            nativeWake(mPtr);
+            }
+        }
+        return true;
+    }
+</code></pre><p>通过上面遍历等next操作可以看出来，MessageQueue消息队列对于消息排队是通过类似C语言的链表来存储这些有序的消息的。其中的mMessages对象表示当前待处理的消息；具体的操作方法就根据时间的顺序调用msg.next，从而为每一个消息指定它的当前消息和下一个消息是什么<strong>消息插入队列的实质就是将所有的消息按时间（uptimeMillis参数）进行排序</strong>。</p>
 <p>比如:</p>
 <p>  Handler.sendMessageAtFrontOfQueue方法,它的实质就是把消息添加到MessageQueue消息队列的头部（uptimeMillis为0）。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="function"><span class="keyword">boolean</span> <span class="title">sendMessageAtFrontOfQueue</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">    MessageQueue queue = mQueue;</div><div class="line">    ...</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">return</span> <span class="title">enqueueMessage</span><span class="params">(queue, msg, <span class="number">0</span>)</span></span>;<span class="comment">//uptimeMillis=0</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>到此消息入队方法已经完毕.那么具体执行在哪里呢?<br>我们知道Loop里维护着MessageQueue,通过Looper.loop()不断遍历MessageQueue,先来看下这个方法:</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;  </div><div class="line">    Looper me = myLooper();  </div><div class="line">    MessageQueue queue = me.mQueue;  </div><div class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;  </div><div class="line">        Message msg = queue.next(); <span class="comment">// might block  </span></div><div class="line">        <span class="keyword">if</span> (msg != <span class="keyword">null</span>) &#123;  </div><div class="line">            <span class="keyword">if</span> (msg.<span class="keyword">target</span> == <span class="keyword">null</span>) &#123;  </div><div class="line">                <span class="keyword">return</span>;  </div><div class="line">            &#125;  </div><div class="line">            <span class="keyword">if</span> (me.mLogging!= <span class="keyword">null</span>) me.mLogging.println(  </div><div class="line">                    <span class="string">"&gt;&gt;&gt;&gt;&gt; Dispatching to "</span> + msg.<span class="keyword">target</span> + <span class="string">" "</span>  </div><div class="line">                    + msg.callback + <span class="string">": "</span> + msg.what  </div><div class="line">                    );  </div><div class="line">            msg.<span class="keyword">target</span>.dispatchMessage(msg);  </div><div class="line">            <span class="keyword">if</span> (me.mLogging!= <span class="keyword">null</span>) me.mLogging.println(  </div><div class="line">                    <span class="string">"&lt;&lt;&lt;&lt;&lt; Finished to    "</span> + msg.<span class="keyword">target</span> + <span class="string">" "</span>  </div><div class="line">                    + msg.callback);  </div><div class="line">            msg.recycle();  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在死循环里不断调用了MessageQueue.next()方法我们来看一下:</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">Message <span class="keyword">next</span>() &#123;</div><div class="line">        ......</div><div class="line">        <span class="keyword">int</span> pendingIdleHandlerCount = -<span class="number">1</span>; </div><div class="line">        <span class="keyword">int</span> nextPollTimeoutMillis = <span class="number">0</span>; <span class="comment">//下个任务的执行时间</span></div><div class="line">        <span class="keyword">for</span> (;;) &#123;</div><div class="line">            nativePollOnce(ptr, nextPollTimeoutMillis);</div><div class="line"></div><div class="line">            <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">                <span class="comment">// Try to retrieve the next message.  Return if found.</span></div><div class="line">                <span class="keyword">final</span> <span class="keyword">long</span> now = SystemClock.uptimeMillis();</div><div class="line">                Message prevMsg = <span class="keyword">null</span>;</div><div class="line">                Message msg = mMessages;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (msg != <span class="keyword">null</span>) &#123;</div><div class="line">                    <span class="keyword">if</span> (now &lt; msg.when) &#123;</div><div class="line">                        <span class="comment">// Next message is not ready.  Set a timeout to wake up when it is ready.</span></div><div class="line">                        nextPollTimeoutMillis = (<span class="keyword">int</span>) Math.min(msg.when - now, Integer.MAX_VALUE);<span class="comment">//更新下次任务时间</span></div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="comment">// 执行消息</span></div><div class="line">                        mBlocked = <span class="keyword">false</span>;</div><div class="line">                        <span class="keyword">if</span> (prevMsg != <span class="keyword">null</span>) &#123;</div><div class="line">                            prevMsg.<span class="keyword">next</span> = msg.<span class="keyword">next</span>;</div><div class="line">                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                            mMessages = msg.<span class="keyword">next</span>;</div><div class="line">                        &#125;</div><div class="line">                        <span class="keyword">return</span> msg;</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="comment">// No more messages.</span></div><div class="line">                    nextPollTimeoutMillis = -<span class="number">1</span>;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (pendingIdleHandlerCount &lt;= <span class="number">0</span>) &#123;</div><div class="line">                    <span class="comment">// No idle handlers to run.  Loop and wait some more.</span></div><div class="line">                    mBlocked = <span class="keyword">true</span>;<span class="comment">//true则进入阻塞等待任务</span></div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>所以MessageQueue会根据postDelay的时间排序放入到链表中，链表头的时间小，尾部时间最大。因此能保证时间Delay最长的不会block住时间短的。当每次post message的时候会进入到MessageQueue的next()方法，会根据其delay时间和链表头的比较，如果更短则，放入链表头，并且看时间是否有delay，如果有，则block，等待时间到来唤醒执行，否则将唤醒立即执行。</p>
+<pre><code>    public final boolean sendMessageAtFrontOfQueue(Message msg) {
+        MessageQueue queue = mQueue;
+        ...
+        }
+        return enqueueMessage(queue, msg, 0);//uptimeMillis=0
+    }
+</code></pre><p>到此消息入队方法已经完毕.那么具体执行在哪里呢?<br>我们知道Loop里维护着MessageQueue,通过Looper.loop()不断遍历MessageQueue,先来看下这个方法:</p>
+<pre><code>public static final void loop() {  
+    Looper me = myLooper();  
+    MessageQueue queue = me.mQueue;  
+    while (true) {  
+        Message msg = queue.next(); // might block  
+        if (msg != null) {  
+            if (msg.target == null) {  
+                return;  
+            }  
+            if (me.mLogging!= null) me.mLogging.println(  
+                    &quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot;  
+                    + msg.callback + &quot;: &quot; + msg.what  
+                    );  
+            msg.target.dispatchMessage(msg);  
+            if (me.mLogging!= null) me.mLogging.println(  
+                    &quot;&lt;&lt;&lt;&lt;&lt; Finished to    &quot; + msg.target + &quot; &quot;  
+                    + msg.callback);  
+            msg.recycle();  
+        }  
+    }  
+}
+</code></pre><p>在死循环里不断调用了MessageQueue.next()方法我们来看一下:</p>
+<pre><code>Message next() {
+        ......
+        int pendingIdleHandlerCount = -1; 
+        int nextPollTimeoutMillis = 0; //下个任务的执行时间
+        for (;;) {
+            nativePollOnce(ptr, nextPollTimeoutMillis);
+
+            synchronized (this) {
+                // Try to retrieve the next message.  Return if found.
+                final long now = SystemClock.uptimeMillis();
+                Message prevMsg = null;
+                Message msg = mMessages;
+
+                if (msg != null) {
+                    if (now &lt; msg.when) {
+                        // Next message is not ready.  Set a timeout to wake up when it is ready.
+                        nextPollTimeoutMillis = (int) Math.min(msg.when - now, Integer.MAX_VALUE);//更新下次任务时间
+                    } else {
+                        // 执行消息
+                        mBlocked = false;
+                        if (prevMsg != null) {
+                            prevMsg.next = msg.next;
+                        } else {
+                            mMessages = msg.next;
+                        }
+                        return msg;
+                    }
+                } else {
+                    // No more messages.
+                    nextPollTimeoutMillis = -1;
+                }
+
+                if (pendingIdleHandlerCount &lt;= 0) {
+                    // No idle handlers to run.  Loop and wait some more.
+                    mBlocked = true;//true则进入阻塞等待任务
+                    continue;
+                }
+
+        }
+        ......
+    }
+</code></pre><p>所以MessageQueue会根据postDelay的时间排序放入到链表中，链表头的时间小，尾部时间最大。因此能保证时间Delay最长的不会block住时间短的。当每次post message的时候会进入到MessageQueue的next()方法，会根据其delay时间和链表头的比较，如果更短则，放入链表头，并且看时间是否有delay，如果有，则block，等待时间到来唤醒执行，否则将唤醒立即执行。</p>
 
       
     </div>
