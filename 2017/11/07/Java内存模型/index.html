@@ -103,7 +103,7 @@
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-07-7.jpg">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-07-8.jpg">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-07-9.jpg">
-<meta property="og:updated_time" content="2017-11-07T07:14:58.455Z">
+<meta property="og:updated_time" content="2017-11-07T07:53:01.525Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java内存模型">
 <meta name="twitter:description" content="Java内存模型即Java Memory Model，简称JMM。JMM定义了Java 虚拟机(JVM)在计算机内存(RAM)中的工作方式。JVM是整个计算机虚拟模型，所以JMM是隶属于JVM的。 如果我们要想深入了解Java并发编程，就要先理解好Java内存模型。Java内存模型定义了多线程之间共享变量的可见性以及如何在需要的时候对共享变量进行同步。原始的Java内存模型效率并不是很理想，因此J">
@@ -500,7 +500,7 @@
 <p>如果这两个加1操作是串行执行的，那么Obj.count变量便会在原始值上加2，最终主存中的Obj.count的值会是3。然而下图中两个加1操作是并行的，不管是线程A还是线程B先flush计算结果到主存，最终主存中的Obj.count只会增加1次变成2，尽管一共有两次加1操作。 </p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-07-9.jpg" alt="9"></p>
 <p>要解决上面的问题我们可以使用java synchronized代码块。synchronized代码块可以保证同一个时刻只能有一个线程进入代码竞争区，synchronized代码块也能保证代码块中所有变量都将会从主存中读，当线程退出代码块时，对所有变量的更新将会flush到主存，不管这些变量是不是volatile类型的。</p>
-<h4 id="volatile和-synchronized区别"><a href="#volatile和-synchronized区别" class="headerlink" title="volatile和 synchronized区别"></a>volatile和 synchronized区别</h4><p>详细请见 volatile和synchronized的区别</p>
+<h4 id="volatile和-synchronized区别"><a href="#volatile和-synchronized区别" class="headerlink" title="volatile和 synchronized区别"></a>volatile和 synchronized区别</h4><p>详细请见 <a href="2017/11/07/volatile和synchronized的区别/">volatile和synchronized的区别</a></p>
 <h3 id="支撑Java内存模型的基础原理"><a href="#支撑Java内存模型的基础原理" class="headerlink" title="支撑Java内存模型的基础原理"></a>支撑Java内存模型的基础原理</h3><h4 id="指令重排序"><a href="#指令重排序" class="headerlink" title="指令重排序"></a>指令重排序</h4><p>在执行程序时，为了提高性能，编译器和处理器会对指令做重排序。但是，JMM确保在不同的编译器和不同的处理器平台之上，通过插入特定类型的Memory Barrier来禁止特定类型的编译器重排序和处理器重排序，为上层提供一致的内存可见性保证。</p>
 <blockquote>
 <ol>
