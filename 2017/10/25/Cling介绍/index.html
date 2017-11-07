@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.5.0 -->
+    <script>
+        window.materialVersion = "1.5.0"
+        // Delete localstorage with these tags
+        window.oldVersion = [
+            'codestartv1',
+            '1.3.4',
+            '1.4.0',
+            '1.4.0b1'
+        ]
+    </script>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+
+
+
+    <link rel="dns-prefetch" href="https://busuanzi.ibruce.info"/>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Title -->
+    
+    <title>
+        
+            Android投屏,同屏库Cling源码使用和解析 | 
+        
+        Ace的技术客栈
+    </title>
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="Ace">
+    <meta name="description" itemprop="description" content="1. 简单使用为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的Cling这个库.">
+    <meta name="keywords" content="android">
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(key){try{localStorage.removeItem(key)}catch(e){}};lsloader.setLS=function(key,val){try{localStorage.setItem(key,val)}catch(e){}};lsloader.getLS=function(key){var val="";try{val=localStorage.getItem(key)}catch(e){val=""}return val};versionString="/*"+(window.materialVersion||"unknownVersion")+"*/";lsloader.clean=function(){try{var keys=[];for(var i=0;i<localStorage.length;i++){keys.push(localStorage.key(i))}keys.forEach(function(key){var data=lsloader.getLS(key);if(window.oldVersion){var remove=window.oldVersion.reduce(function(p,c){return p||data.indexOf("/*"+c+"*/")!==-1},false);if(remove){lsloader.removeLS(key)}}})}catch(e){}};lsloader.clean();lsloader.load=function(jsname,jspath,cssonload,isJs){if(typeof cssonload==="boolean"){isJs=cssonload;cssonload=undefined}isJs=isJs||false;cssonload=cssonload||function(){};var code;code=this.getLS(jsname);if(code&&code.indexOf(versionString)===-1){this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload,isJs);return}if(code){var versionNumber=code.split(versionString)[0];if(versionNumber!=jspath){console.log("reload:"+jspath);this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload,isJs);return}code=code.split(versionString)[1];if(isJs){this.jsRunSequence.push({name:jsname,code:code});this.runjs(jspath,jsname,code)}else{document.getElementById(jsname).appendChild(document.createTextNode(code));cssonload()}}else{this.requestResource(jsname,jspath,cssonload,isJs)}};lsloader.requestResource=function(name,path,cssonload,isJs){var that=this;if(isJs){this.iojs(path,name,function(path,name,code){that.setLS(name,path+versionString+code);that.runjs(path,name,code)})}else{this.iocss(path,name,function(code){document.getElementById(name).appendChild(document.createTextNode(code));that.setLS(name,path+versionString+code)},cssonload)}};lsloader.iojs=function(path,jsname,callback){var that=this;that.jsRunSequence.push({name:jsname,code:""});try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(path,jsname,xhr.response);return}}that.jsfallback(path,jsname)}};xhr.send(null)}catch(e){that.jsfallback(path,jsname)}};lsloader.iocss=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.iofonts=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.runjs=function(path,name,code){if(!!name&&!!code){for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code=code}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var script=document.createElement("script");script.appendChild(document.createTextNode(this.jsRunSequence[0].code));script.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(script);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var that=this;var script=document.createElement("script");script.src=this.jsRunSequence[0].path;script.type="text/javascript";this.jsRunSequence[0].status="loading";script.onload=function(){that.jsRunSequence.shift();if(that.jsRunSequence.length>0){that.runjs()}};document.body.appendChild(script)}};lsloader.tagLoad=function(path,name){this.jsRunSequence.push({name:name,code:"",path:path,status:"failed"});this.runjs()};lsloader.jsfallback=function(path,name){if(!!this.jsnamemap[name]){return}else{this.jsnamemap[name]=name}for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code="";this.jsRunSequence[k].status="failed";this.jsRunSequence[k].path=path}}this.runjs()};lsloader.cssfallback=function(path,name,cssonload){if(!!this.cssnamemap[name]){return}else{this.cssnamemap[name]=1}var link=document.createElement("link");link.type="text/css";link.href=path;link.rel="stylesheet";link.onload=link.onerror=cssonload;var root=document.getElementsByTagName("script")[0];root.parentNode.insertBefore(link,root)};lsloader.runInlineScript=function(scriptId,codeId){var code=document.getElementById(codeId).innerText;this.jsRunSequence.push({name:scriptId,code:code});this.runjs()};lsloader.loadCombo=function(jslist){var updateList="";var requestingModules={};for(var k in jslist){var LS=this.getLS(jslist[k].name);if(!!LS){var version=LS.split(versionString)[0];var code=LS.split(versionString)[1]}else{var version=""}if(version==jslist[k].path){this.jsRunSequence.push({name:jslist[k].name,code:code,path:jslist[k].path})}else{this.jsRunSequence.push({name:jslist[k].name,code:null,path:jslist[k].path,status:"comboloading"});requestingModules[jslist[k].name]=true;updateList+=(updateList==""?"":";")+jslist[k].path}}var that=this;if(!!updateList){var xhr=new XMLHttpRequest;xhr.open("get",combo+updateList,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){that.runCombo(xhr.response,requestingModules);return}}else{for(var i in that.jsRunSequence){if(requestingModules[that.jsRunSequence[i].name]){that.jsRunSequence[i].status="failed"}}that.runjs()}}};xhr.send(null)}this.runjs()};lsloader.runCombo=function(comboCode,requestingModules){comboCode=comboCode.split("/*combojs*/");comboCode.shift();for(var k in this.jsRunSequence){if(!!requestingModules[this.jsRunSequence[k].name]&&!!comboCode[0]){this.jsRunSequence[k].status="comboJS";this.jsRunSequence[k].code=comboCode[0];this.setLS(this.jsRunSequence[k].name,this.jsRunSequence[k].path+versionString+comboCode[0]);comboCode.shift()}}this.runjs()}})();</script>
+
+    <!-- Import queue -->
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Ace的技术客栈">
+
+    <!-- Site Verification -->
+    <meta name="google-site-verification" content="kIUHLDxNMBpRpMBTSy7PlUx1DwEjtG8oJQEZgJCzPv4" />
+    
+
+    <!-- RSS -->
+    
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import CSS -->
+    
+        <style id="material_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("material_css","/css/material.min.css?Z7a72R1E4SxzBKR/WGctOA==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+        <style id="style_css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("style_css","/css/style.min.css?MKetZV3cUTfDxvMffaOezg==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";}, false)</script>
+
+        
+
+    
+
+    
+
+    <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    overflow-x: hidden !important;
+  }
+  
+  code {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-color: #F5F5F5;
+      }
+
+      /* blog_info bottom background */
+      #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+        background-color: #fff;
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+<!-- Import Roboto -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+
+
+<!-- Import Material Icon -->
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+
+
+    <!-- Import jQuery -->
+    
+        <script>lsloader.load("jq_js","/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==", true)</script>
+    
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="http://www.azhangbing.com">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Android投屏,同屏库Cling源码使用和解析 | Ace的技术客栈">
+    <meta property="og:image" content="http://www.azhangbing.com/img/favicon.png" />
+    <meta property="og:description" content="1. 简单使用为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的Cling这个库.">
+    
+
+    
+        <meta property="article:published_time" content="Wed Oct 25 2017 14:41:51 GMT+0800" />
+        <meta property="article:modified_time" content="Fri Nov 03 2017 10:08:14 GMT+0800" />
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:title" content="Android投屏,同屏库Cling源码使用和解析 | Ace的技术客栈">
+    <meta name="twitter:description" content="1. 简单使用为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的Cling这个库.">
+    <meta name="twitter:image" content="http://www.azhangbing.com/img/favicon.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="http://www.azhangbing.com" />
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="http://www.azhangbing.com/2017/10/25/Cling介绍/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "http://www.azhangbing.com/2017/10/25/Cling介绍/index.html",
+    "headline": "Android投屏,同屏库Cling源码使用和解析",
+    "datePublished": "Wed Oct 25 2017 14:41:51 GMT+0800",
+    "dateModified": "Fri Nov 03 2017 10:08:14 GMT+0800",
+    "author": {
+        "@type": "Person",
+        "name": "Ace",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/head.jpg"
+        },
+        "description": "业精于勤荒于嬉 行成于思毁于随"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Ace的技术客栈",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": "android",
+    "description": "1. 简单使用为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的Cling这个库.",
+}
+</script>
+
+
+    
+
+    <!-- Analytics -->
+    
+    
+        <script>
+    var _hmt = _hmt || [];
+    (function() {var hm = document.createElement('script');
+    hm.src = 'https://hm.baidu.com/hm.js?f4df925f5ecaae00a62621ca00acdaae';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+    
+    
+
+    <!-- Custom Head -->
+    
+
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-简单使用"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 简单使用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-源码解析"><span class="post-toc-number">2.</span> <span class="post-toc-text">2.源码解析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-总体设计"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">2.1 总体设计</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-1-概述"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">2.1.1 概述</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-2-使用场景"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">2.1.2 使用场景</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-3-设备发现及控制流程"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">2.1.3 设备发现及控制流程</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-4-类关系图"><span class="post-toc-number">2.1.4.</span> <span class="post-toc-text">2.1.4 类关系图</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-5-类功能详细介绍"><span class="post-toc-number">2.1.5.</span> <span class="post-toc-text">2.1.5 类功能详细介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-1-ControlPoint"><span class="post-toc-number">2.1.5.1.</span> <span class="post-toc-text">2.1.5.1 ControlPoint</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#1-查找"><span class="post-toc-number">2.1.5.1.1.</span> <span class="post-toc-text">(1) 查找</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#2-执行控制指令"><span class="post-toc-number">2.1.5.1.2.</span> <span class="post-toc-text">(2) 执行控制指令</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#3-执行事件订阅指令"><span class="post-toc-number">2.1.5.1.3.</span> <span class="post-toc-text">(3) 执行事件订阅指令</span></a></li></ol></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-2-ProtocolFactory"><span class="post-toc-number">2.1.5.2.</span> <span class="post-toc-text">2.1.5.2 ProtocolFactory</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#1-处理接收到的报文"><span class="post-toc-number">2.1.5.2.1.</span> <span class="post-toc-text">(1) 处理接收到的报文</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#2-组装发送的报文"><span class="post-toc-number">2.1.5.2.2.</span> <span class="post-toc-text">(2) 组装发送的报文</span></a></li></ol></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-3-Registry"><span class="post-toc-number">2.1.5.3.</span> <span class="post-toc-text">2.1.5.3 Registry</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-4-RegistryListener"><span class="post-toc-number">2.1.5.4.</span> <span class="post-toc-text">2.1.5.4 RegistryListener</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-5-Resource"><span class="post-toc-number">2.1.5.5.</span> <span class="post-toc-text">2.1.5.5 Resource</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-6-RegistryItem"><span class="post-toc-number">2.1.5.6.</span> <span class="post-toc-text">2.1.5.6 RegistryItem</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-7-RegistryItems"><span class="post-toc-number">2.1.5.7.</span> <span class="post-toc-text">2.1.5.7 RegistryItems</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-8-LocalItems"><span class="post-toc-number">2.1.5.8.</span> <span class="post-toc-text">2.1.5.8 LocalItems</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-9-RemoteItems"><span class="post-toc-number">2.1.5.9.</span> <span class="post-toc-text">2.1.5.9 RemoteItems</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-10-xpirationDetails"><span class="post-toc-number">2.1.5.10.</span> <span class="post-toc-text">2.1.5.10 xpirationDetails</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-11-RegistryMaintainer"><span class="post-toc-number">2.1.5.11.</span> <span class="post-toc-text">2.1.5.11 RegistryMaintainer</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#1-判断过期的-item，并从-resourceItems-中移除；"><span class="post-toc-number">2.1.5.11.1.</span> <span class="post-toc-text">(1) 判断过期的 item，并从 resourceItems 中移除；</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#2-遍历-resourceItems，对其中的每个-Resource-调用其-maintain-方法；"><span class="post-toc-number">2.1.5.11.2.</span> <span class="post-toc-text">(2) 遍历 resourceItems，对其中的每个 Resource 调用其 maintain() 方法；</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#3-remoteItems-maintain-对-remote-进行维护；"><span class="post-toc-number">2.1.5.11.3.</span> <span class="post-toc-text">(3) remoteItems.maintain() 对 remote 进行维护；</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#4-localItems-maintain-对-local-进行维护；"><span class="post-toc-number">2.1.5.11.4.</span> <span class="post-toc-text">(4) localItems.maintain() 对 local 进行维护；</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#5-runPendingExecutions-执行异步任务。"><span class="post-toc-number">2.1.5.11.5.</span> <span class="post-toc-text">(5) runPendingExecutions 执行异步任务。</span></a></li></ol></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-12-Router"><span class="post-toc-number">2.1.5.12.</span> <span class="post-toc-text">2.1.5.12 Router</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#1-enable"><span class="post-toc-number">2.1.5.12.1.</span> <span class="post-toc-text">(1) enable()</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#2-disable"><span class="post-toc-number">2.1.5.12.2.</span> <span class="post-toc-text">(2) disable()</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#3-getActiveStreamServers-InetAddress-preferredAddress"><span class="post-toc-number">2.1.5.12.3.</span> <span class="post-toc-text">(3) getActiveStreamServers(InetAddress preferredAddress)</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#4-received-IncomingDatagramMessage-msg"><span class="post-toc-number">2.1.5.12.4.</span> <span class="post-toc-text">(4) received(IncomingDatagramMessage msg)</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#5-发送数据"><span class="post-toc-number">2.1.5.12.5.</span> <span class="post-toc-text">(5) 发送数据</span></a></li></ol></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-13-StreamClient"><span class="post-toc-number">2.1.5.13.</span> <span class="post-toc-text">2.1.5.13 StreamClient</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-14-StreamServer"><span class="post-toc-number">2.1.5.14.</span> <span class="post-toc-text">2.1.5.14 StreamServer</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-15-ReceivingNotification"><span class="post-toc-number">2.1.5.15.</span> <span class="post-toc-text">2.1.5.15 ReceivingNotification</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-1-5-16-RetrieveRemoteDescriptors"><span class="post-toc-number">2.1.5.16.</span> <span class="post-toc-text">2.1.5.16 RetrieveRemoteDescriptors</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#额外补充-MulticastSocket多播协议"><span class="post-toc-number">2.1.5.17.</span> <span class="post-toc-text">额外补充 MulticastSocket多播协议</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#单播："><span class="post-toc-number">2.1.5.17.1.</span> <span class="post-toc-text">单播：</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#广播："><span class="post-toc-number">2.1.5.17.2.</span> <span class="post-toc-text">广播：</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#组播："><span class="post-toc-number">2.1.5.17.3.</span> <span class="post-toc-text">组播：</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#UDP单播的例子"><span class="post-toc-number">2.1.5.17.4.</span> <span class="post-toc-text">UDP单播的例子</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#UDP广播的例子"><span class="post-toc-number">2.1.5.17.5.</span> <span class="post-toc-text">UDP广播的例子</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#UDP组播的例子"><span class="post-toc-number">2.1.5.17.6.</span> <span class="post-toc-text">UDP组播的例子</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+    </ul>
+    
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                Android投屏,同屏库Cling源码使用和解析
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/head.jpg" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>Ace</strong>
+        <span>10月 25, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+
+    <!-- Share -->
+    
+        <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+        
+            <!-- Busuanzi Views -->
+            <a class="post_share-link" href="#">
+                <li class="mdl-menu__item">
+                    <span id="busuanzi_container_page_pv">
+                        <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+                    </span>
+                </li>
+            </a>
+        
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Android投屏,同屏库Cling源码使用和解析&url=http://www.azhangbing.com/2017/10/25/Cling介绍/index.html&pic=http://www.azhangbing.com/img/favicon.png&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Android投屏,同屏库Cling源码使用和解析&url=http://www.azhangbing.com/2017/10/25/Cling介绍/index.html&via=Ace" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://www.azhangbing.com/2017/10/25/Cling介绍/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://www.azhangbing.com/2017/10/25/Cling介绍/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+    
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <h2 id="1-简单使用"><a href="#1-简单使用" class="headerlink" title="1. 简单使用"></a>1. 简单使用</h2><p>为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的<a href="https://github.com/4thline/cling" target="_blank" rel="external">Cling</a>这个库.</p>
+<a id="more"></a>
+<p>(1) 定义自己的 UpnpService 类，继承自 AndroidUpnpServiceImpl<br>(2) 启动该 Service,同时启动jetty资源服务器<br>(3) 从 UpnpService 中获取 ControlPoint，并搜索设备</p>
+<p>搜索注册在同局域网的所有设备。</p>
+<pre><code>    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            isBind = true;
+            upnpService = (AndroidUpnpService) service;
+            ....
+upnpService.getRegistry().addListener(registryListener);
+            ....
+            // 搜索局域网内设备
+upnpService.getControlPoint().search();
+        }
+      ...
+    };
+
+ private RegistryListener registryListener = new RegistryListener() {
+    ....
+            @Override
+        public void localDeviceAdded(Registry registry, LocalDevice localDevice) {
+           ....
+           //注册接收TV设备消息的回调
+           localService.getManager().getImplementation().setiControlCallback(innerCallback);
+              ....
+        }
+
+
+        @Override
+        public void remoteDeviceAdded(Registry registry, RemoteDevice remoteDevice) {
+            //添加搜索到的设备到remoteDevices
+            remoteDevices.add(remoteDevice);
+        }
+
+      ......
+       };
+</code></pre><p>然后根据和家相册TV独有的字段过滤</p>
+<pre><code>    /**
+     * 过滤感兴趣的设备
+     * @return 
+     */
+    public List&lt;Device&gt; getDmrDevices() {
+        List&lt;Device&gt; devices = new ArrayList&lt;&gt;();
+        List&lt;Device&gt; mdevices = new ArrayList&lt;&gt;();
+        devices.addAll(remoteDevices);
+        for (int i = 0; i &lt; devices.size(); i++) {
+            if (!dmrDeviceType.equals(devices.get(i).getType())) {
+                continue;
+            }
+            String devices_uuid = devices.get(i).getIdentity().getUdn().toString();
+            String localuuid = LocalDeviceFactoty.uniqueSystemIdentifier(LocalDeviceFactoty.DMR_KEY).toString();
+            if (!devices_uuid.equals(localuuid)) {
+            //过滤我们感兴趣的设备
+                if (devices_uuid.contains(&quot;-dmp&quot;))
+                    mdevices.add(devices.get(i));
+            }
+        }
+        return mdevices;
+    }
+</code></pre><p>连接电视</p>
+<pre><code>    public void connecttotv(Device device, Handler handler) {
+        String data = &quot;&quot;;
+        JSONObject jsonObject = new JSONObject();
+
+            try {
+                jsonObject.put(&quot;tv_uuid&quot;, device.getIdentity().getUdn().getIdentifierString());
+                jsonObject.put(&quot;phone_uuid&quot;, DevicesManager.getInstance().getDmsDeviceIdentifierString());
+                jsonObject.put(&quot;phone_model&quot;, Utils.getDevName());
+                jsonObject.put(&quot;phone_ip&quot;, getPhoneIP());
+                data = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            sendtoTV(device.getIdentity().getUdn().getIdentifierString(), Constants.TYPE_CONNECT, data, handler);
+    }
+</code></pre><p>sendtoTV()方法</p>
+<pre><code> //查找设备的方法
+            Service service = device.findService(simpleParamServiceId);
+            if (service != null) {
+                targetService = service;
+                break;
+            }
+        }
+
+        SendSimpleParamActionCallback callback = new SendSimpleParamActionCallback(targetService, str);
+        callback.setiServiceResult(iServiceResult);
+
+        upnpService().getControlPoint().execute(callback)
+</code></pre><h2 id="2-源码解析"><a href="#2-源码解析" class="headerlink" title="2.源码解析"></a>2.源码解析</h2><h3 id="2-1-总体设计"><a href="#2-1-总体设计" class="headerlink" title="2.1 总体设计"></a>2.1 总体设计</h3><h4 id="2-1-1-概述"><a href="#2-1-1-概述" class="headerlink" title="2.1.1 概述"></a>2.1.1 概述</h4><p>Cling 作为 UPnP 协议栈，其主旨即是在设备的发现，控制等过程中对不同的协议及内容进行处理。UPnP 协议栈由多个层组成，Cling 只关心底层的 TCP/IP 协议以及包含 SSDP（设备发现），SOAP（设备控制），GENA（设备事件）协议的层。</p>
+<h4 id="2-1-2-使用场景"><a href="#2-1-2-使用场景" class="headerlink" title="2.1.2 使用场景"></a>2.1.2 使用场景</h4><blockquote>
+<ul>
+<li>手机加入到局域网中，建立 MulticastSocket 监听局域网中设备</li>
+<li>手机 向多播发出 M-SEARCH 报文</li>
+<li>和家相册TV端 获取局域网中手机发出的报文，判断是否符合条件，若符合向手机回应 OK 报文，报文中包含 description,URL,uuid,udn等信息(封装在Device里)</li>
+<li>手机 监听局域网获取到相关报文，并通过 URL 获得设备描述信息判断是不是自己感兴趣</li>
+<li>手机 通过 Jetty Service 将媒体内容的HTTP链接推送到 和家相册TV端并播放</li>
+</ul>
+</blockquote>
+<h4 id="2-1-3-设备发现及控制流程"><a href="#2-1-3-设备发现及控制流程" class="headerlink" title="2.1.3 设备发现及控制流程"></a>2.1.3 设备发现及控制流程</h4><p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-25-control_flow.png" alt="control_flo"></p>
+<h4 id="2-1-4-类关系图"><a href="#2-1-4-类关系图" class="headerlink" title="2.1.4 类关系图"></a>2.1.4 类关系图</h4><p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-25-15089023672484.png" alt=""></p>
+<h4 id="2-1-5-类功能详细介绍"><a href="#2-1-5-类功能详细介绍" class="headerlink" title="2.1.5 类功能详细介绍"></a>2.1.5 类功能详细介绍</h4><blockquote>
+<p>由类图可知，Cling 的一切都是从 UpnpService 开始的，其中包含了 ControlPoint，ProtocolFactory，Registry，Router 四个核心模块，以及一个配置信息类 UpnpServiceConfiguration。<br>ControlPoint<br>控制点的接口，主要功能是异步执行搜索，设备控制订阅等指令。<br>此接口定义了查找设备，向设备发送指令，订阅设备变更，其实现类只有一个为 ControlPointImpl。</p>
+</blockquote>
+<h5 id="2-1-5-1-ControlPoint"><a href="#2-1-5-1-ControlPoint" class="headerlink" title="2.1.5.1 ControlPoint"></a>2.1.5.1 ControlPoint</h5><h6 id="1-查找"><a href="#1-查找" class="headerlink" title="(1) 查找"></a>(1) 查找</h6><pre><code>public void search(UpnpHeader searchType, int mxSeconds);
+</code></pre><p>第一个参数UpnpHeader表示查询条件，第二个参数表示最大超时时间，以秒为单位。<br>UpnpHeader 是一个抽象类，其中定义了包含每个过程请求中的 Header 信息的枚举类型Type以及泛型 value，查询时常用的实现类有：DeviceTypeHeader，UDNHeader 等，可根据设备类型、UDN、服务类型等多种方式。</p>
+<h6 id="2-执行控制指令"><a href="#2-执行控制指令" class="headerlink" title="(2) 执行控制指令"></a>(2) 执行控制指令</h6><pre><code>public Future execute(ActionCallback callback);
+</code></pre><p>将 ActionCallback 放入 DefaultUpnpServiceConfiguration 中定义的线程池 <strong>ClingExecutor</strong> 执行，执行完毕回调 ActionCallback 中定义的 success 或 failure 函数。<br>ActionCallback 是命令执行的回调接口，在其 run 方法内会根据是本地命令还是远程命令进行执行，执行结束后回调成功或失败接口。</p>
+<h6 id="3-执行事件订阅指令"><a href="#3-执行事件订阅指令" class="headerlink" title="(3) 执行事件订阅指令"></a>(3) 执行事件订阅指令</h6><pre><code>public void execute(SubscriptionCallback callback);
+</code></pre><p>将 SubscriptionCallback 放入 DefaultUpnpServiceConfiguration 中定义的线程池 ClingExecutor 执行，执行完毕回调 ActionCallback 中定义的 established、failed、ended 等函数。</p>
+<h5 id="2-1-5-2-ProtocolFactory"><a href="#2-1-5-2-ProtocolFactory" class="headerlink" title="2.1.5.2 ProtocolFactory"></a>2.1.5.2 ProtocolFactory</h5><p>UPnP 协议的工厂类，用于根据收到的 UPnP 协议或是本地设备的 meta 信息，创建一个可执行的协议。<br>使用简单工厂模式封装协议内容的处理，实现类为 ProtocolFactoryImpl，主要根据接收报文和发送报文两大类创建不同协议。</p>
+<p>在该类中 UDP 包通过 createReceivingAsync() 方法对传递来的 IncomingDatagramMessage 进行处理，如 NOTIFY–ReceivingNotification，MSEARCH–ReceivingSearch。<br>TCP 包通过 createReceivingSync 进行分发处理，并通过 ReceivingSync 的子类进行处理，子类中调用 executeSync 方法等待并返回 response。</p>
+<h6 id="1-处理接收到的报文"><a href="#1-处理接收到的报文" class="headerlink" title="(1) 处理接收到的报文"></a>(1) 处理接收到的报文</h6><pre><code>public ReceivingAsync createReceivingAsync(IncomingDatagramMessage message);
+</code></pre><p>IncomingDatagramMessage 封装了 UDP 包的信息，在 createReceivingAsync 中根据消息的操作类型及方法创建不同的 ReceivingAsync 子类对象，ReceivingAsync 子类通过重写 execute 方法定义具体实现。如请求的 NOTIFY 信息创建 ReceivingNotification，请求的 MSEARCH 创建 ReceivingSearch。</p>
+<pre><code>public ReceivingSync createReceivingSync(StreamRequestMessage message);
+</code></pre><p>StreamRequestMessage 封装 TCP 报文，在 createReceivingSync 中根据消息的操作类型方法及 UPnP 服务 NameSpace 等的配置创建不同的 ReceivingSync 的子类对象，ReceivingSync 子类通过重写 executeSync 方法定义具体实现。</p>
+<h6 id="2-组装发送的报文"><a href="#2-组装发送的报文" class="headerlink" title="(2) 组装发送的报文"></a>(2) 组装发送的报文</h6><p>有若干功能类似的方法，返回不同的 SendingAsync 子类对象，通过重写 executeSync 方法定义具体实现。如：</p>
+<blockquote>
+<ol>
+<li>向组播发送 ssdp:alive 告知设备存活<br>public SendingNotificationAlive createSendingNotificationAlive(LocalDevice localDevice)</li>
+<li>生产 SendingSearch 实例的工厂方法，SendingSearch 中定义了查询条件以及请求超时时间，在重写的 execute 函数中，在线程启动后创建 OutgoingSearchRequest 对象并通过 Router 发送。</li>
+</ol>
+</blockquote>
+<pre><code>public SendingSearch createSendingSearch(UpnpHeader searchTarget, int mxSeconds);
+</code></pre><h5 id="2-1-5-3-Registry"><a href="#2-1-5-3-Registry" class="headerlink" title="2.1.5.3 Registry"></a>2.1.5.3 Registry</h5><p>设备资源管理器，用于设备、资源、订阅消息的管理，包括添加、更新、移除、查询。可将新设备时加入 Registry 中，在设备失效后从 Registry 中移除。目前实现类为 RegistryImpl。<br>关联类包括：RegistryListener、Resource、RegistryItem、RegistryItems、LocalItems、RemoteItems、ExpirationDetails、RegistryMaintainer。</p>
+<h5 id="2-1-5-4-RegistryListener"><a href="#2-1-5-4-RegistryListener" class="headerlink" title="2.1.5.4 RegistryListener"></a>2.1.5.4 RegistryListener</h5><p>设备状态监听类，包含本地/远程设备的发现、添加、更新、移除等回调函数。可通过<br>addListener(RegistryListener listener)<br>添加，保存在RegistryListener的 Set\ registryListener 参数内。<br>实现类有空实现的 DefaultRegistryListener 以及通过注入属性实现的 RegistryListenerAdapter。</p>
+<h5 id="2-1-5-5-Resource"><a href="#2-1-5-5-Resource" class="headerlink" title="2.1.5.5 Resource"></a>2.1.5.5 Resource</h5><p>资源的父类。该类中定义资源的 URI，model 等属性。</p>
+<h5 id="2-1-5-6-RegistryItem"><a href="#2-1-5-6-RegistryItem" class="headerlink" title="2.1.5.6 RegistryItem"></a>2.1.5.6 RegistryItem</h5><p>KV 形式的数据项，在 RegistryImpl 中用于包装设备、资源、订阅消息等。</p>
+<h5 id="2-1-5-7-RegistryItems"><a href="#2-1-5-7-RegistryItems" class="headerlink" title="2.1.5.7 RegistryItems"></a>2.1.5.7 RegistryItems</h5><p>RegistryImpl中设备、资源集合的父类，定义了对元素的增删查改等操作。<br>包含deviceItems和subscriptionItems两个属性，分别表示设备集合和订阅消息集合，集合元素为RegistryItem。<br>子类有LocalItems和RemoteItems分别表示本地设备和远程设备集合。</p>
+<h5 id="2-1-5-8-LocalItems"><a href="#2-1-5-8-LocalItems" class="headerlink" title="2.1.5.8 LocalItems"></a>2.1.5.8 LocalItems</h5><p>继承自 RegistryItems，key 为 LocalDevice，value 为 LocalGENASubscription。存储本地设备及其订阅消息。</p>
+<h5 id="2-1-5-9-RemoteItems"><a href="#2-1-5-9-RemoteItems" class="headerlink" title="2.1.5.9 RemoteItems"></a>2.1.5.9 RemoteItems</h5><p>继承自 RegistryItems，key 为 RemoteDevice，value 为 RemoteGENASubscription。存储远程设备及其订阅消息。</p>
+<h5 id="2-1-5-10-xpirationDetails"><a href="#2-1-5-10-xpirationDetails" class="headerlink" title="2.1.5.10 xpirationDetails"></a>2.1.5.10 xpirationDetails</h5><p>为 RegistryItem 的属性，记录上次刷新和最大超时时间，从而判断对象是否过期。</p>
+<h5 id="2-1-5-11-RegistryMaintainer"><a href="#2-1-5-11-RegistryMaintainer" class="headerlink" title="2.1.5.11 RegistryMaintainer"></a>2.1.5.11 RegistryMaintainer</h5><p>资源管理器中元素有效期的定期维护，每隔 1000ms 调用一次 registry.maintain() 方法，该方法执行的操作有：</p>
+<h6 id="1-判断过期的-item，并从-resourceItems-中移除；"><a href="#1-判断过期的-item，并从-resourceItems-中移除；" class="headerlink" title="(1) 判断过期的 item，并从 resourceItems 中移除；"></a>(1) 判断过期的 item，并从 resourceItems 中移除；</h6><h6 id="2-遍历-resourceItems，对其中的每个-Resource-调用其-maintain-方法；"><a href="#2-遍历-resourceItems，对其中的每个-Resource-调用其-maintain-方法；" class="headerlink" title="(2) 遍历 resourceItems，对其中的每个 Resource 调用其 maintain() 方法；"></a>(2) 遍历 resourceItems，对其中的每个 Resource 调用其 maintain() 方法；</h6><h6 id="3-remoteItems-maintain-对-remote-进行维护；"><a href="#3-remoteItems-maintain-对-remote-进行维护；" class="headerlink" title="(3) remoteItems.maintain() 对 remote 进行维护；"></a>(3) remoteItems.maintain() 对 remote 进行维护；</h6><h6 id="4-localItems-maintain-对-local-进行维护；"><a href="#4-localItems-maintain-对-local-进行维护；" class="headerlink" title="(4) localItems.maintain() 对 local 进行维护；"></a>(4) localItems.maintain() 对 local 进行维护；</h6><h6 id="5-runPendingExecutions-执行异步任务。"><a href="#5-runPendingExecutions-执行异步任务。" class="headerlink" title="(5) runPendingExecutions 执行异步任务。"></a>(5) runPendingExecutions 执行异步任务。</h6><h5 id="2-1-5-12-Router"><a href="#2-1-5-12-Router" class="headerlink" title="2.1.5.12 Router"></a>2.1.5.12 Router</h5><p>数据传输层接口，负责接收和发送 UPnP 和 UDP 消息，或者将接收到的数据流广播给局域网内的其他设备。<br>目前实现类为 RouterImpl 和 MockRouter，其中 MockRouter 仅用来作为测试时的 Mock 接口，RouterImpl 作为默认的数据传输层实现。</p>
+<h6 id="1-enable"><a href="#1-enable" class="headerlink" title="(1) enable()"></a>(1) enable()</h6><p>启动。<br>得到配置中的NetworkAddressFactory，其目前实现为NetworkAddressFactoryImpl，调用startInterfaceBasedTransports()为NetworkAddressFactory的每个网络接口绑定一个多播接收器MulticastReceiver，用来监听多播地址，并处理获取到的数据。<br>KV 形式存储在multicastReceivers中;调用startAddressBasedTransportsNetworkAddressFactory的每个地址绑定一个StreamServer和DatagramIO，监听并进行数据处理。KV 形式存储在streamServers中。创建一个StreamClient用于发送 TCP 消息。</p>
+<h6 id="2-disable"><a href="#2-disable" class="headerlink" title="(2) disable()"></a>(2) disable()</h6><p>停止。<br>停止StreamClient，停止streamServers中每个StreamServer，停止multicastReceivers中每个MulticastReceiver，停止datagramIOs中每个DatagramIO。<br>通过可重入锁写锁控制启动和停止的并发。</p>
+<h6 id="3-getActiveStreamServers-InetAddress-preferredAddress"><a href="#3-getActiveStreamServers-InetAddress-preferredAddress" class="headerlink" title="(3) getActiveStreamServers(InetAddress preferredAddress)"></a>(3) getActiveStreamServers(InetAddress preferredAddress)</h6><p>根据 preferredAddress 得到活跃的 StreamServer，如果 preferredAddress 对应的 StreamServer 存在且活跃则返回，否则返回当前所有活跃的 StreamServer。</p>
+<h6 id="4-received-IncomingDatagramMessage-msg"><a href="#4-received-IncomingDatagramMessage-msg" class="headerlink" title="(4) received(IncomingDatagramMessage msg)"></a>(4) received(IncomingDatagramMessage msg)</h6><p>根据消息类型得到协议并执行。</p>
+<h6 id="5-发送数据"><a href="#5-发送数据" class="headerlink" title="(5) 发送数据"></a>(5) 发送数据</h6><p>send(StreamRequestMessage msg) 通过 StreamClient 发送 TCP 包。<br>send(OutgoingDatagramMessage msg) 向所有 datagramIO 发送 UDP 包。<br>broadcast(byte[] bytes) 向所有 datagramIO 广播发送数据。</p>
+<h5 id="2-1-5-13-StreamClient"><a href="#2-1-5-13-StreamClient" class="headerlink" title="2.1.5.13 StreamClient"></a>2.1.5.13 StreamClient</h5><p>StreamClient 具体实现类为 AbstractStreamClient 以及其子类 StreamClientImpl。<br>在 Android 系统下使用的 Jetty 实现。在该类中具体的 http 协议处理由 HttpClient 实现，核心方法 sendRequest 用于创建请求并获取返回 response，请求及返回值通过 HttpContentExchange 封装，每一个 StreamRequestMessage 及其对应的 HttpContentExchange 通过 createCallable 方法封装为 Callable 对象，并将其压入 DefaultUpnpServiceConfiguration 中的 defaultExecutorService。在 call() 中调用 client.send(exchange) 发送 request 并获取 response。</p>
+<h5 id="2-1-5-14-StreamServer"><a href="#2-1-5-14-StreamServer" class="headerlink" title="2.1.5.14 StreamServer"></a>2.1.5.14 StreamServer</h5><p>StreamServer 用来接收 HTTP 请求并进行处理。在 AndroidUpnpServiceConfiguration 中进行初始化：</p>
+<pre><code>public StreamServer createStreamServer(NetworkAddressFactory networkAddressFactory) {
+        // Use Jetty, start/stop a new shared instance of JettyServletContainer
+        return new AsyncServletStreamServerImpl(
+            new AsyncServletStreamServerConfigurationImpl(
+                JettyServletContainer.INSTANCE,
+                networkAddressFactory.getStreamListenPort()
+            )
+        );
+    }
+</code></pre><p>本质上是由 Jetty 实现的 servlet 容器。从 HttpServletRequest 中获取数据流并传递给 Router 的 received(UpnpStream stream) 进行处理。JettyServletContainer 使用了单例模式，其中定义 Server 的具体实现，并使用 synchronized 同步 Server 属性变更操作。</p>
+<h5 id="2-1-5-15-ReceivingNotification"><a href="#2-1-5-15-ReceivingNotification" class="headerlink" title="2.1.5.15 ReceivingNotification"></a>2.1.5.15 ReceivingNotification</h5><p>处理接收到的 notification 消息。如 ALIVE，BYEBYE。当接收到 ALIVE 消息后，会在后台启动一个线程执行 RetrieveRemoteDescriptors 获取该设备的信息。</p>
+<h5 id="2-1-5-16-RetrieveRemoteDescriptors"><a href="#2-1-5-16-RetrieveRemoteDescriptors" class="headerlink" title="2.1.5.16 RetrieveRemoteDescriptors"></a>2.1.5.16 RetrieveRemoteDescriptors</h5><p>用来主动获取远端介绍详情，并返回 RemoteService 加入到 Registry 中。</p>
+<h5 id="额外补充-MulticastSocket多播协议"><a href="#额外补充-MulticastSocket多播协议" class="headerlink" title="额外补充 MulticastSocket多播协议"></a>额外补充 MulticastSocket多播协议</h5><p>前面说过设备开启之后 启动MulticastSocket多播协议，<br>先来复习一下网络通讯中的三种模式：</p>
+<p>在当前网络通信中（TCP/IP也不例外）有三种通信模式：<strong>单播、广播、组播(又叫多播, 个人感觉叫多播描述的有点不恰当)</strong>，其中多播出现的时间最晚，但同时具备单播和广播的优点，最具有发展前景。<br>通信方式分类：<br>    1.单播：单台主机与单台主机之间的通信；<br>    2.广播：单台主机与网络中所有主机的通信；<br>    3.组播：单台主机与选定的一组主机的通信；</p>
+<h6 id="单播："><a href="#单播：" class="headerlink" title="单播："></a>单播：</h6><blockquote>
+<pre><code> 单播是网络通信中最常见的，网络节点之间的通信 就好像是人们之间的对话一样。如果一个人对另外一个人说话，
+ 那么用网络技术的术语来描述就是“单播”，此时信息的接收和传递只在两个节点之间进行。
+ 1. 单播的优点：
+     (1)服务器以及响应客户端的请求；
+     (2)服务器能针对每个客户端的不同请求发送不同的响应，容易显示个性化服务；
+ 2. 单播的缺点：
+     (1)服务器针对每个客户机发送数据流，服务器流量＝客户机数量×客户机流量；在客户数量大、每个客户机流量大的流媒体应用中服务器不堪重负；
+ 3. 应用场景：
+    单播在网络中得到了广泛的应用，网络上绝大部分的数据都 是以单播的形式传输的。例如：收发电子邮件、游览网页时，必须与邮件服务器、
+    服务器建立连接，此时使用的就是单播通信方式；
+</code></pre></blockquote>
+<h6 id="广播："><a href="#广播：" class="headerlink" title="广播："></a>广播：</h6><blockquote>
+<pre><code>“广播”可以比方为：一个人通过广播喇叭对在场的全体说话(他才不管你是否乐意听)。换句话说: 广播是一台主机对某一个网络上的所有主机发送数据报包。
+这个网络可能是网络，也可能时子网，还有可能是所有子网。
+广播有两类：本地广播和定向广播：
+        定向广播：将数据报包发送到本网络之外的特定网络的所有主机，然而，由于互联网上的大部分路由器都不转发定向广播消息，所以这里不深入介绍了
+        本地广播：将数据报包发送到本地网络的所有主机，IPv4的本地广播地址为“255.255.255.255”，路由器不会转发此广播；
+1.广播的优点：
+   (1)通信的效率高，信息一下子就可以传递到某一个网络上的所有主机。
+   (2)由于服务器不用向每个客户端单独发送数据，所以服务器流量比较负载低；
+2.广播的缺点：
+   (1)非常占用网络的带宽；
+   (2)缺乏针对性,也不管主机是否真的需要接收该数据, 就强制的接收数据；
+3.应用场景：
+   (1)有线电视就是典型的广播型网络
+</code></pre></blockquote>
+<h6 id="组播："><a href="#组播：" class="headerlink" title="组播："></a>组播：</h6><blockquote>
+<pre><code> ”组播“可以比方为：你对着大街喊：”是男人的来一下，一人发一百块”，那么男的过来，女就不会过来,因为没有钱发她不理你(组播：其中所有的男生就是一个组)，
+ 换句话说: 组播是一台主机向指定的一组主机发送数据报包，因为如果采用单播方式，逐个节点传输，有多少个目标节点，就会有多少次传送过程，这种方式显然效率 极低，是不可取  
+ 的；如果采用不区分目标、全部发送的广播方式，虽然一次可以传送完数据，但是显然达不到区分特定数据接收对象的目的，又会占用网络带宽。采用组播方式，既可以 实现一次传送所
+ 有目标节点的数据，也可以达到只对特定对象传送数据的目的。
+ IP网络的组播一般通过组播IP地址来实现。组播IP地址就是D类IP地址，即224.0.0.0至239.255.255.255之间的IP地址。
+ 1.组播的优点：
+(1)具备广播所具备的所有优点；
+(2)与单播相比，提供了发送数据报包的效率，与广播相比，减少了网络流量；
+ 2.组播的缺点：
+(1)与单播协议相比没有纠错机制，发生丢包错包后难以弥补，但可以通过一定的容错机制和QOS加以弥补；
+</code></pre></blockquote>
+<p>没有代码bb个毛线，来实现一下：</p>
+<h6 id="UDP单播的例子"><a href="#UDP单播的例子" class="headerlink" title="UDP单播的例子"></a>UDP单播的例子</h6><pre><code>
+
+// 客户端  
+public class ClientTest  
+{  
+    private static final int MAXRECEIVED = 255;  
+
+    public static void main(String[] args) throws IOException  
+    {  
+        byte[] msg = new String(&quot;connect test successfully!!!&quot;).getBytes();  
+
+        DatagramSocket client = new DatagramSocket();  
+
+        InetAddress inetAddr = InetAddress.getLocalHost();  
+        SocketAddress socketAddr = new InetSocketAddress(inetAddr, 8888);  
+
+        DatagramPacket sendPacket = new DatagramPacket(msg, msg.length,  
+                socketAddr);  
+
+        client.send(sendPacket);  
+
+        client.close();  
+    }  
+}  
+
+
+
+//服务端  
+public class ServerTest  
+{  
+    private static final int MAXREV = 255;  
+
+    public static void main(String[] args) throws IOException  
+    {  
+        DatagramSocket server = new DatagramSocket(8888);  
+        DatagramPacket recvPacket = new DatagramPacket(new byte[MAXREV], MAXREV);  
+
+        while (true)  
+        {  
+            server.receive(recvPacket);  
+
+            byte[] receiveMsg = Arrays.copyOfRange(recvPacket.getData(),  
+                    recvPacket.getOffset(),  
+                    recvPacket.getOffset() + recvPacket.getLength());  
+
+            System.out.println(&quot;Handing at client &quot;  
+                    + recvPacket.getAddress().getHostName() + &quot; ip &quot;  
+                    + recvPacket.getAddress().getHostAddress());  
+
+            System.out.println(&quot;Server Receive Data:&quot; + new String(receiveMsg));  
+
+            server.send(recvPacket);  
+
+        }  
+
+    }  
+}
+</code></pre><h6 id="UDP广播的例子"><a href="#UDP广播的例子" class="headerlink" title="UDP广播的例子"></a>UDP广播的例子</h6><pre><code>//客户端  
+public class BroadcastSender  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+        byte[] msg = new String(&quot;connection successfully!!!&quot;).getBytes();  
+        /* 
+         * 在Java UDP中单播与广播的代码是相同的,要实现具有广播功能的程序只需要使用广播地址即可, 例如：这里使用了本地的广播地址 
+         */  
+        InetAddress inetAddr = InetAddress.getByName(&quot;255.255.255.255&quot;);  
+        DatagramSocket client = new DatagramSocket();  
+
+        DatagramPacket sendPack = new DatagramPacket(msg, msg.length, inetAddr,  
+                8888);  
+
+        client.send(sendPack);  
+        System.out.println(&quot;Client send msg complete&quot;);  
+        client.close();  
+    }  
+}  
+
+
+//服务端  
+public class BroadcastReceive  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+
+        DatagramPacket receive = new DatagramPacket(new byte[1024], 1024);  
+        DatagramSocket server = new DatagramSocket(8888);  
+
+        System.out.println(&quot;---------------------------------&quot;);  
+        System.out.println(&quot;Server current start......&quot;);  
+        System.out.println(&quot;---------------------------------&quot;);  
+
+        while (true)  
+        {  
+            server.receive(receive);  
+
+            byte[] recvByte = Arrays.copyOfRange(receive.getData(), 0,  
+                    receive.getLength());  
+
+            System.out.println(&quot;Server receive msg:&quot; + new String(recvByte));  
+        }  
+
+    }  
+}
+</code></pre><h6 id="UDP组播的例子"><a href="#UDP组播的例子" class="headerlink" title="UDP组播的例子"></a>UDP组播的例子</h6><pre><code>
+//客户端  
+public class MulticastSender  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+        int port = 8888;  
+        byte[] msg = &quot;Connection successfully!!!&quot;.getBytes();  
+
+        InetAddress inetRemoteAddr = InetAddress.getByName(&quot;224.0.0.5&quot;);  
+
+        /* 
+         * Java UDP组播应用程序主要通过MulticastSocket实例进行通信,它是DatagramSocket的是一个子类, 
+         * 其中包含了一些额外的可以控制多播的属性. 
+         *  
+         * 注意： 
+         *  
+         * 多播数据报包实际上可以通过DatagramSocket发送,只需要简单地指定一个多播地址。 
+         * 我们这里使用MulticastSocket,是因为它具有DatagramSocket没有的能力 
+         */  
+        MulticastSocket client = new MulticastSocket();  
+
+        DatagramPacket sendPack = new DatagramPacket(msg, msg.length,  
+                inetRemoteAddr, port);  
+
+        client.send(sendPack);  
+
+        System.out.println(&quot;Client send msg complete&quot;);  
+
+        client.close();  
+
+    }  
+}  
+
+
+
+//服务端  
+public class MulticastReceive  
+{  
+    public static void main(String[] args) throws IOException  
+    {  
+        InetAddress inetRemoteAddr = InetAddress.getByName(&quot;224.0.0.5&quot;);  
+
+        DatagramPacket recvPack = new DatagramPacket(new byte[1024], 1024);  
+
+        MulticastSocket server = new MulticastSocket(8888);  
+
+        /* 
+         * 如果是发送数据报包,可以不加入多播组; 如果是接收数据报包,必须加入多播组; 这里是接收数据报包,所以必须加入多播组; 
+         */  
+        server.joinGroup(inetRemoteAddr);  
+
+        System.out.println(&quot;---------------------------------&quot;);  
+        System.out.println(&quot;Server current start......&quot;);  
+        System.out.println(&quot;---------------------------------&quot;);  
+
+        while (true)  
+        {  
+            server.receive(recvPack);  
+
+            byte[] recvByte = Arrays.copyOfRange(recvPack.getData(), 0,  
+                    recvPack.getLength());  
+
+            System.out.println(&quot;Server receive msg:&quot; + new String(recvByte));  
+        }  
+
+    }  
+}
+</code></pre>
+        
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2017/11/06/Java虚拟机类加载机制/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/10/24/Java-到底是值传递还是引用传递/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/head.jpg" alt="Ace's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        2577113@qq.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="#" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">8</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/Java/">Java<span class="sidebar_archives-count">6</span></a>
+            </ul>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Pages  -->
+    
+
+    <!-- Article Number  -->
+    
+        <li>
+            <a href="/archives">
+                文章总数
+                <span class="sidebar-badge">10</span>
+            </a>
+        </li>
+        
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+    
+    <!-- V2EX -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>Ace的技术客栈
+            
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import JS File -->
+
+    <script>lsloader.load("lazyload_js","/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==", true)</script>
+
+
+
+    <script>lsloader.load("js_js","/js/js.min.js?V/53wGualMuiPM3xoetD5Q==", true)</script>
+
+
+
+    <script>lsloader.load("np_js","/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==", true)</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+    
+        <script>lsloader.load("sm_js","/js/smoothscroll.js?lOy/ACj5suSNi7ZVFVbpFQ==", true)</script>
+    
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Import prettify js  -->
+
+
+    
+        <script>lsloader.load("hanabi","/js/hanabi-browser-bundle.js?Pki5+pzkluqu53g+ouMWpA==", true)</script>
+    
+
+
+<!-- Window Load -->
+<!-- add class for prettify -->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+
+    
+    
+        
+        
+        HanabiBrowser.start('pre code',true);
+    
+</script>
+
+<!-- MathJax Load-->
+
+
+<!-- Bing Background -->
+
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Custom Footer -->
+
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.5.0 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
