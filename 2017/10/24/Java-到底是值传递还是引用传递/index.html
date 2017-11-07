@@ -404,41 +404,15 @@
 <li><strong>参数本身是变量，参数传递本质就是一种 = 操作。</strong>参数是变量，所有我们对变量的操作、变量能有的行为，参数都有。所以把C语言里参数是传值啊、传指针啊的那套理论全忘掉，参数传递就是 = 操作。</li>
 </ul>
 <p>举个例子</p>
-<h4 id="搞清楚-基本类型-和-引用类型的不同之处"><a href="#搞清楚-基本类型-和-引用类型的不同之处" class="headerlink" title="搞清楚 基本类型 和 引用类型的不同之处"></a>搞清楚 基本类型 和 引用类型的不同之处</h4><pre><code>int num = 10;
-String str = &quot;ace&quot;;
-</code></pre><p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-24-WX20171024-144300@2x.png" alt="WX20171024-144300@2x"></p>
+<h4 id="搞清楚-基本类型-和-引用类型的不同之处"><a href="#搞清楚-基本类型-和-引用类型的不同之处" class="headerlink" title="搞清楚 基本类型 和 引用类型的不同之处"></a>搞清楚 基本类型 和 引用类型的不同之处</h4><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">int num</span> = 10;</div><div class="line"><span class="attribute">String str</span> = <span class="string">"ace"</span>;</div></pre></td></tr></table></figure>
+<p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-24-WX20171024-144300@2x.png" alt="WX20171024-144300@2x"></p>
 <p>如图所示，num是基本类型，值就直接保存在变量中。而str是引用类型，变量中保存的只是实际对象的地址。一般称这种变量为”引用”，引用指向实际对象，实际对象中保存着内容。</p>
 <h4 id="搞清楚赋值运算符（-）的作用"><a href="#搞清楚赋值运算符（-）的作用" class="headerlink" title="搞清楚赋值运算符（=）的作用"></a>搞清楚赋值运算符（=）的作用</h4><p>接着上面的栗子,现在我把num改成20 str改成”Java”</p>
-<pre><code>num = 20;
-str = &quot;Java&quot;;
-</code></pre><p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-24-333.png" alt="333"></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">num</span> = <span class="number">20</span><span class="comment">;</span></div><div class="line"><span class="attribute">str</span> = <span class="string">"Java"</span><span class="comment">;</span></div></pre></td></tr></table></figure>
+<p><img src="http://oy261wvqm.bkt.clouddn.com/2017-10-24-333.png" alt="333"></p>
 <p>对于基本类型 num ，赋值运算符会直接覆盖掉原来的值。对于引用类型 str，赋值运算符会改变引用中所保存的地址，原来的地址被覆盖掉。但是原来的对象不会被改变（重要）。如上图所示，”ace” 字符串对象没有被改变。（没有被任何引用所指向的对象是垃圾，会被垃圾回收器回收）</p>
-<h4 id="调用方法时发生了什么？参数传递基本上就是赋值操作。"><a href="#调用方法时发生了什么？参数传递基本上就是赋值操作。" class="headerlink" title="调用方法时发生了什么？参数传递基本上就是赋值操作。"></a>调用方法时发生了什么？参数传递基本上就是赋值操作。</h4><pre><code>第一个例子：基本类型
-void change(int value) {
-    value = 100;
-}
-change(num); // num 没有被改变
-
-第二个例子：没有提供改变自身方法的引用类型
-void change(String text) {
-    text = &quot;windows&quot;;
-}
-change(str); // str 也没有被改变 同上面所说
-
-第三个例子：提供了改变自身方法的引用类型
-StringBuilder sb = new StringBuilder(&quot;iphone&quot;);
-void change(StringBuilder builder) {
-    builder.append(&quot;8&quot;);
-}
-change(sb); // sb 被改变了，内存地址变成了新的&quot;iphone8&quot;地址。赋值运算符只能让引用指向一个新的对象，而不会改变对象本身,所以iPhone地址还在
-
-第四个例子：提供了改变自身方法的引用类型，但是不使用，而是使用赋值运算符。
-StringBuilder sb = new StringBuilder(&quot;iphone&quot;);
-void change(StringBuilder builder) {
-    builder = new StringBuilder(&quot;ipad&quot;);
-}
-change(sb); // sb 没有被改变还是 内存地址还是指向了&quot;iphone&quot;所在,builder内存地址指向了&quot;ipad&quot;所在的内存。
-</code></pre><p>注意对比3 ,4 append还是原来的对象,是new了一个新的对象</p>
+<h4 id="调用方法时发生了什么？参数传递基本上就是赋值操作。"><a href="#调用方法时发生了什么？参数传递基本上就是赋值操作。" class="headerlink" title="调用方法时发生了什么？参数传递基本上就是赋值操作。"></a>调用方法时发生了什么？参数传递基本上就是赋值操作。</h4><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">第一个例子：基本类型</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">change</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>) </span>&#123;</div><div class="line">    <span class="keyword">value</span> = <span class="number">100</span>;</div><div class="line">&#125;</div><div class="line">change(num); <span class="comment">// num 没有被改变</span></div><div class="line"></div><div class="line">第二个例子：没有提供改变自身方法的引用类型</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">change</span>(<span class="params">String text</span>) </span>&#123;</div><div class="line">    text = <span class="string">"windows"</span>;</div><div class="line">&#125;</div><div class="line">change(str); <span class="comment">// str 也没有被改变 同上面所说</span></div><div class="line"></div><div class="line">第三个例子：提供了改变自身方法的引用类型</div><div class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">"iphone"</span>);</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">change</span>(<span class="params">StringBuilder builder</span>) </span>&#123;</div><div class="line">    builder.append(<span class="string">"8"</span>);</div><div class="line">&#125;</div><div class="line">change(sb); <span class="comment">// sb 被改变了，内存地址变成了新的"iphone8"地址。赋值运算符只能让引用指向一个新的对象，而不会改变对象本身,所以iPhone地址还在</span></div><div class="line"></div><div class="line">第四个例子：提供了改变自身方法的引用类型，但是不使用，而是使用赋值运算符。</div><div class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">"iphone"</span>);</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">change</span>(<span class="params">StringBuilder builder</span>) </span>&#123;</div><div class="line">    builder = <span class="keyword">new</span> StringBuilder(<span class="string">"ipad"</span>);</div><div class="line">&#125;</div><div class="line">change(sb); <span class="comment">// sb 没有被改变还是 内存地址还是指向了"iphone"所在,builder内存地址指向了"ipad"所在的内存。</span></div></pre></td></tr></table></figure>
+<p>注意对比3 ,4 append还是原来的对象,是new了一个新的对象</p>
 
       
     </div>

@@ -389,12 +389,7 @@
 <h2 id="运行流程"><a href="#运行流程" class="headerlink" title="运行流程"></a>运行流程</h2><p>我们都知道java一直宣传的口号是：一次编译，到处运行。那么它如何实现的呢？我们看下图：</p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-06-1.jpg" alt="1"></p>
 <p>java程序经过一次编译之后，将java代码编译为字节码也就是class文件，然后在不同的操作系统上依靠不同的java虚拟机进行解释，最后再转换为不同平台的机器码，最终得到执行。这样我们是不是可以推演，如果要在mac系统上运行，是不是只需要安装mac java虚拟机就行了。那么了解了这个基本原理后，我们尝试去做更深的研究，一个普通的java程序它的执行流程到底是怎样的呢？例如我们写了一段这样的代码：</p>
-<pre><code class="Java">public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.print(&quot;Hello world&quot;);
-    }
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        System.out.print(<span class="string">"Hello world"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这段程序从编译到运行，最终打印出“Hello world”中间经过了哪些步骤呢？我们直接上图：</p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-06-2.jpg" alt="2"></p>
 <p>java代码通过编译之后生成字节码文件（class文件），通过：java HelloWorld执行，此时java根据系统版本找到jvm.cfg，各位可以搜索一下自己电脑上的jvm.cfg文件在哪，它会根据你的系统版本放在不同的位置，比如我的这个文件就在：</p>

@@ -394,50 +394,15 @@
 </ul>
 <h4 id="2-和-equals-的区别"><a href="#2-和-equals-的区别" class="headerlink" title="2.==和.equals()的区别"></a>2.==和.equals()的区别</h4><p>结论:==指的是内存引用一样。equals是指的是逻辑相等。逻辑相等具体的意思由编写者决定(比如String 重写的equals,根据逻辑重写的)。</p>
 <p>默认情况下(继承自Object类,如:int,long等基本类型)，equals和==是一样的，没有区别，即俩个对象的比较是比较他们的栈内存中存储的内存地址。，除非被覆写(override)了</p>
-<pre><code>   public boolean equals(Object obj) {
-        return (this == obj);
-    }
-</code></pre><p>最典型equals已经被覆写(override)的例子是String； String中的字符串文本相等则视为逻辑相等（s1.equals(s2)==true）</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">     <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>最典型equals已经被覆写(override)的例子是String； String中的字符串文本相等则视为逻辑相等（s1.equals(s2)==true）</p>
 <p>String.equals()：</p>
-<pre><code>public boolean equals(Object anObject) {
-        if (this == anObject) {
-            return true;
-        }
-        if (anObject instanceof String) {
-            String anotherString = (String) anObject;
-            int n = value.length;
-            if (n == anotherString.value.length) {
-                char v1[] = value;
-                char v2[] = anotherString.value;
-                int i = 0;
-                while (n-- != 0) {
-                    if (v1[i] != v2[i])
-                            return false;
-                    i++;
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-</code></pre><p>来个栗子:</p>
-<pre><code>  //对于对象变量，&quot;==&quot;和&quot;equal&quot;的区别
-
-        String st1=&quot;zhangbing &quot;;
-        String st2=&quot;is so cool&quot;;
-        String st3=&quot;zhangbing is so cool&quot;;
-        String st4=&quot;zhangbing is so cool&quot;;
-
-        Boolean b1=(st1==st2);
-        Boolean b2=(st1+st2)==st3;
-        Boolean b3=(st3==st4);
-
-        System.out.println(&quot;/n/n-----【st1==st2】&quot;+b1+&quot;/n-----【(st1+st2)==st3】&quot;+b2+&quot;/n-----【st3==st4】&quot;+b3);
-</code></pre><p>打印:</p>
-<pre><code>-----【st1==st2】false/n-----
------【(st1+st2)==st3】false/n-----
------【st3==st4】true-----
-</code></pre><p>四个字符串都放到了常量池,==是比较引用,st1,st2常量池中引用不同,st3和st4相同, 而st1+st2是在heap中创建了新的对象,st3是在常量池中,所以引用地址不一样.</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="built_in">boolean</span> equals(<span class="keyword">Object</span> anObject) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> <span class="keyword">String</span>) &#123;</div><div class="line">            <span class="keyword">String</span> anotherString = (<span class="keyword">String</span>) anObject;</div><div class="line">            <span class="built_in">int</span> n = value.length;</div><div class="line">            <span class="keyword">if</span> (n == anotherString.value.length) &#123;</div><div class="line">                <span class="built_in">char</span> v1[] = value;</div><div class="line">                <span class="built_in">char</span> v2[] = anotherString.value;</div><div class="line">                <span class="built_in">int</span> i = <span class="number">0</span>;</div><div class="line">                <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">if</span> (v1[i] != v2[i])</div><div class="line">                            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">                    i++;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>来个栗子:</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//对于对象变量，<span class="string">"=="</span>和<span class="string">"equal"</span>的区别</div><div class="line"></div><div class="line">      String <span class="built_in">st1</span>=<span class="string">"zhangbing "</span><span class="comment">;</span></div><div class="line">      String <span class="built_in">st2</span>=<span class="string">"is so cool"</span><span class="comment">;</span></div><div class="line">      String <span class="built_in">st3</span>=<span class="string">"zhangbing is so cool"</span><span class="comment">;</span></div><div class="line">      String <span class="built_in">st4</span>=<span class="string">"zhangbing is so cool"</span><span class="comment">;</span></div><div class="line"></div><div class="line">      Boolean b1=(<span class="built_in">st1</span>==<span class="built_in">st2</span>)<span class="comment">;</span></div><div class="line">      Boolean b2=(<span class="built_in">st1</span>+<span class="built_in">st2</span>)==<span class="built_in">st3</span><span class="comment">;</span></div><div class="line">      Boolean b3=(<span class="built_in">st3</span>==<span class="built_in">st4</span>)<span class="comment">;</span></div><div class="line"></div><div class="line">      System.out.println(<span class="string">"/n/n-----【st1==st2】"</span>+b1+<span class="string">"/n-----【(st1+st2)==st3】"</span>+b2+<span class="string">"/n-----【st3==st4】"</span>+b3)<span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>打印:</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="params">-----</span>【st1==st2】<span class="literal">false</span>/n<span class="params">-----</span></div><div class="line"><span class="params">-----</span>【<span class="params">(st1+st2)</span>==st3】<span class="literal">false</span>/n<span class="params">-----</span></div><div class="line"><span class="params">-----</span>【st3==st4】<span class="literal">true</span><span class="params">-----</span></div></pre></td></tr></table></figure>
+<p>四个字符串都放到了常量池,==是比较引用,st1,st2常量池中引用不同,st3和st4相同, 而st1+st2是在heap中创建了新的对象,st3是在常量池中,所以引用地址不一样.</p>
 <blockquote>
 <p>常量池的基本概念：Java是一种动态连接的语言，常量池的作用非常重要，常量池中除了包含代码中所定义的各种基本类型（如int、long等等）和对象型（如String及数组）的常量值还，还包含一些以文本形式出现的符号引用.</p>
 </blockquote>
