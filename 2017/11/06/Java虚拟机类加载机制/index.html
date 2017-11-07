@@ -384,53 +384,9 @@
         <p>因为最近在看think in java 和jvm虚拟机 所以会有很多Java文章,但我还是android程序员啊,以后会好好写android的,上周没写是因为在学习和写kotlin程序,写好会一并放出来的,</p>
 <p>看到这个题目，很多人会觉得我写我的java代码，至于类，JVM爱怎么加载就怎么加载，博主有很长一段时间也是这么认为的。随着编程经验的日积月累，越来越感觉到了解虚拟机相关要领的重要性。闲话不多说，老规矩，先来一段代码吊吊胃口。</p>
 <a id="more"></a>
-<pre><code class="Java">public class SSClass {
-    static {
-        System.out.println(&quot;SSClass&quot;);
-    }
-
-}
-
-
-public class SuperClass extends SSClass {
-    static {
-        System.out.println(&quot;SuperClass init!&quot;);
-    }
-
-    public static int value = 123;
-
-    public SuperClass() {
-        System.out.println(&quot;init SuperClass&quot;);
-    }
-}
-
-
-
-public class SubClass extends SuperClass {
-    static {
-        System.out.println(&quot;SubClass init&quot;);
-    }
-
-    static int a;
-
-    public SubClass() {
-        System.out.println(&quot;init SubClass&quot;);
-    }
-}
-
-
-public class NotInitialization {
-
-    public static void main(String[] args) {
-        System.out.println(SubClass.value);
-    }
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SSClass</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        System.out.println(<span class="string">"SSClass"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SuperClass</span> <span class="keyword">extends</span> <span class="title">SSClass</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        System.out.println(<span class="string">"SuperClass init!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> value = <span class="number">123</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SuperClass</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"init SuperClass"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        System.out.println(<span class="string">"SubClass init"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> a;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SubClass</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"init SubClass"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitialization</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        System.out.println(SubClass.value);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>结果</p>
-<pre><code class="Java">SSClass
-SuperClass init!
-123
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">SSClass</div><div class="line">SuperClass init!</div><div class="line"><span class="number">123</span></div></pre></td></tr></table></figure>
 <p>答案答对了嚒？<br>也许有人会疑问：为什么没有输出SubClass init。ok~解释一下：对于静态字段，只有直接定义这个字段的类才会被初始化，因此通过其子类来引用父类中定义的静态字段，只会触发父类的初始化而不会触发子类的初始化。<br>上面就牵涉到了虚拟机类加载机制。如果有兴趣，可以继续看下去。</p>
 <h2 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h2><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载（Loading）、验证（Verification）、准备(Preparation)、解析(Resolution)、初始化(Initialization)、使用(Using)和卸载(Unloading)7个阶段。其中准备、验证、解析3个部分统称为连接（Linking）。如图所示。<br><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-06-1.jpg" alt="1"></p>
 <p><strong>加载、验证、准备、初始化和卸载这5个阶段的顺序是确定的</strong>，类的加载过程必须按照这种顺序按部就班地开始，而<strong>解析阶段则不一定</strong>：它在某些情况下可以在初始化阶段之后再开始，这是为了支持Java语言的<strong>运行时绑定</strong>（也称为动态绑定或晚期绑定）。以下陈述的内容都已HotSpot为基准。</p>
@@ -457,89 +413,24 @@ SuperClass init!
 </ol>
 </blockquote>
 <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。这时候进行内存分配的仅包括类变量（被static修饰的变量），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配在堆中。其次，这里所说的初始值“通常情况”下是数据类型的零值，假设一个类变量的定义为：</p>
-<pre><code class="Java">    public static int value=123;
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> value=<span class="number">123</span>;</div></pre></td></tr></table></figure>
 <p>那变量value在准备阶段过后的初始值为0而不是123.因为这时候尚未开始执行任何java方法，而把value赋值为123的putstatic指令是程序被编译后，存放于类构造器()方法之中，所以把value赋值为123的动作将在初始化阶段才会执行。<br>至于“特殊情况”是指：public static final int value=123，即当类字段的字段属性是ConstantValue时，会在准备阶段初始化为指定的值，所以标注为final之后，value的值在准备阶段初始化为123而非0.</p>
 <h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行。</p>
 <h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>类初始化阶段是类加载过程的最后一步，到了初始化阶段，才真正开始执行类中定义的java程序代码。在准备阶段，变量已经赋过一次系统要求的初始值，而在初始化阶段，则根据程序猿通过程序制定的主观计划去初始化类变量和其他资源，或者说：初始化阶段是执行类构造器<clinit>()方法的过程. </clinit></p>
 <p><clinit>()方法是由编译器自动收集类中的所有类变量的赋值动作和静态语句块static{}中的语句合并产生的，编译器收集的顺序是由语句在源文件中出现的顺序所决定的，静态语句块只能访问到定义在静态语句块之前的变量，定义在它之后的变量，在前面的静态语句块可以赋值，但是不能访问。如下：</clinit></p>
-<pre><code class="Java">
-public class Test {
-    static {
-        i = 0;
-        System.out.println(i);//这句编译器会报错：Cannot reference a field before it is defined（非法向前应用）
-    }
-
-    static int i = 1;
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        i = <span class="number">0</span>;</div><div class="line">        System.out.println(i);<span class="comment">//这句编译器会报错：Cannot reference a field before it is defined（非法向前应用）</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>那么去掉报错的那句，改成下面：</p>
-<pre><code class="Java">public class Test {
-    static {
-        i = 0;
-//      System.out.println(i);
-    }
-
-    static int i = 1;
-
-    public static void main(String args[]) {
-        System.out.println(i);
-    }
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        i = <span class="number">0</span>;</div><div class="line"><span class="comment">//      System.out.println(i);</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">        System.out.println(i);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>输出结果是什么呢？当然是1啦~在准备阶段我们知道i=0，然后类初始化阶段按照顺序执行，首先执行static块中的i=0,接着执行static赋值操作i=1,最后在main方法中获取i的值为1。</p>
 <p><clinit>()方法与实例构造器<init>()方法不同，它不需要显示地调用父类构造器，虚拟机会保证在子类<cinit>()方法执行之前，父类的<clinit>()方法已经执行完毕，回到本文开篇的举例代码中，结果会打印输出：SSClass就是这个道理。<br>由于父类的<clinit>()方法先执行，也就意味着父类中定义的静态语句块要优先于子类的变量赋值操作。 </clinit></clinit></cinit></init></clinit></p>
 <p><clinit>()方法对于类或者接口来说并不是必需的，如果一个类中没有静态语句块，也没有对变量的赋值操作，那么编译器可以不为这个类生产<clinit>()方法。<br>接口中不能使用静态语句块，但仍然有变量初始化的赋值操作，因此接口与类一样都会生成<clinit>()方法。但接口与类不同的是，执行接口的<clinit>()方法不需要先执行父接口的<clinit>()方法。只有当父接口中定义的变量使用时，父接口才会初始化。另外，接口的实现类在初始化时也一样不会执行接口的<clinit>()方法。<br>虚拟机会保证一个类的<clinit>()方法在多线程环境中被正确的加锁、同步，如果多个线程同时去初始化一个类，那么只会有一个线程去执行这个类的<clinit>()方法，其他线程都需要阻塞等待，直到活动线程执行<clinit>()方法完毕。如果在一个类的<clinit>()方法中有耗时很长的操作，就可能造成多个线程阻塞，在实际应用中这种阻塞往往是隐藏的。</clinit></clinit></clinit></clinit></clinit></clinit></clinit></clinit></clinit></clinit></p>
-<pre><code class="Java">public class DealLoopTest {
-    static class DeadLoopClass {
-        static {
-            if (true) {
-                System.out.println(Thread.currentThread() + &quot;init DeadLoopClass&quot;);
-                while (true) {
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        Runnable script = new Runnable() {
-            public void run() {
-                System.out.println(Thread.currentThread() + &quot; start&quot;);
-                DeadLoopClass dlc = new DeadLoopClass();
-                System.out.println(Thread.currentThread() + &quot; run over&quot;);
-            }
-        };
-
-        Thread thread1 = new Thread(script);
-        Thread thread2 = new Thread(script);
-        thread1.start();
-        thread2.start();
-    }
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DealLoopTest</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DeadLoopClass</span> </span>&#123;</div><div class="line">        <span class="keyword">static</span> &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">true</span>) &#123;</div><div class="line">                System.out.println(Thread.currentThread() + <span class="string">"init DeadLoopClass"</span>);</div><div class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Runnable script = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                System.out.println(Thread.currentThread() + <span class="string">" start"</span>);</div><div class="line">                DeadLoopClass dlc = <span class="keyword">new</span> DeadLoopClass();</div><div class="line">                System.out.println(Thread.currentThread() + <span class="string">" run over"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        Thread thread1 = <span class="keyword">new</span> Thread(script);</div><div class="line">        Thread thread2 = <span class="keyword">new</span> Thread(script);</div><div class="line">        thread1.start();</div><div class="line">        thread2.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>运行结果：</p>
-<pre><code>Thread[Thread-0,5,main] start
-Thread[Thread-1,5,main] start
-Thread[Thread-0,5,main]init DeadLoopClass
-</code></pre><p>需要注意的是，其他线程虽然会被阻塞，但如果执行<clinit>()方法的那条线程退出<clinit>()方法后，其他线程唤醒之后不会再次进入<clinit>()方法。同一个类加载器下，一个类型只会初始化一次。<br>将上面代码中的静态内部类替换如下：</clinit></clinit></clinit></p>
-<pre><code class="Java">   static class DeadLoopClass {
-        static {
-            System.out.println(Thread.currentThread() + &quot;init DeadLoopClass&quot;);
-            try {
-                TimeUnit.SECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-</code></pre>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Thread[Thread-0,5,main] <span class="keyword">start</span></div><div class="line"><span class="keyword">Thread</span>[<span class="keyword">Thread</span><span class="number">-1</span>,<span class="number">5</span>,<span class="keyword">main</span>] <span class="keyword">start</span></div><div class="line"><span class="keyword">Thread</span>[<span class="keyword">Thread</span><span class="number">-0</span>,<span class="number">5</span>,<span class="keyword">main</span>]init DeadLoopClass</div></pre></td></tr></table></figure>
+<p>需要注意的是，其他线程虽然会被阻塞，但如果执行<clinit>()方法的那条线程退出<clinit>()方法后，其他线程唤醒之后不会再次进入<clinit>()方法。同一个类加载器下，一个类型只会初始化一次。<br>将上面代码中的静态内部类替换如下：</clinit></clinit></clinit></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DeadLoopClass</span> </span>&#123;</div><div class="line">     <span class="keyword">static</span> &#123;</div><div class="line">         System.out.println(Thread.currentThread() + <span class="string">"init DeadLoopClass"</span>);</div><div class="line">         <span class="keyword">try</span> &#123;</div><div class="line">             TimeUnit.SECONDS.sleep(<span class="number">10</span>);</div><div class="line">         &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">             e.printStackTrace();</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
 <p>结果如下</p>
-<pre><code class="Java">Thread[Thread-0,5,main] start
-Thread[Thread-1,5,main] start
-Thread[Thread-0,5,main]init DeadLoopClass
-Thread[Thread-1,5,main] run over
-Thread[Thread-0,5,main] run over
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Thread[Thread-<span class="number">0</span>,<span class="number">5</span>,main] start</div><div class="line">Thread[Thread-<span class="number">1</span>,<span class="number">5</span>,main] start</div><div class="line">Thread[Thread-<span class="number">0</span>,<span class="number">5</span>,main]init DeadLoopClass</div><div class="line">Thread[Thread-<span class="number">1</span>,<span class="number">5</span>,main] run over</div><div class="line">Thread[Thread-<span class="number">0</span>,<span class="number">5</span>,main] run over</div></pre></td></tr></table></figure>
 <p><strong>虚拟机规范严格规定了有且只有5中情况（jdk1.7）必须对类进行“初始化”</strong>（而加载、验证、准备自然需要在此之前开始）：</p>
 <ol>
 <li><p>遇到<strong>new,getstatic,putstatic,invokestatic</strong>这失调字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。生成这4条指令的最常见的Java代码场景是：使用new关键字实例化对象的时候、读取或设置一个类的静态字段<strong>（被final修饰、已在编译器把结果放入常量池的静态字段除外</strong>）的时候，以及调用一个类的静态方法的时候。</p>
@@ -552,78 +443,32 @@ Thread[Thread-0,5,main] run over
 <li>当使用jdk1.7动态语言支持时，如果一个<strong>java.lang.invoke.MethodHandle</strong>实例最后的解析结果REF_getstatic,REF_putstatic,REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行初始化，则需要先出触发其初始化。</li>
 </ol>
 <h2 id="栗子"><a href="#栗子" class="headerlink" title="栗子"></a>栗子</h2><p>开篇已经举了一个范例：通过子类引用付了的静态字段，不会导致子类初始化。<br>这里再举两个例子。 </p>
-<h4 id="1-通过数组定义来引用类，不会触发此类的初始化："><a href="#1-通过数组定义来引用类，不会触发此类的初始化：" class="headerlink" title="1. 通过数组定义来引用类，不会触发此类的初始化："></a>1. <strong>通过数组定义来引用类，不会触发此类的初始化</strong>：</h4><pre><code>public class NotInitialization {
-
-    public static void main(String[] args) {
-        SuperClass[] sca = new SuperClass[10];
-    }
-}
-</code></pre><p>运行结果：<strong>（无）</strong> </p>
-<h4 id="2-常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化："><a href="#2-常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化：" class="headerlink" title="2. 常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化："></a>2. 常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化：</h4><pre><code class="Java">public class ConstClass {
-    static {
-        System.out.println(&quot;ConstClass init!&quot;);
-    }
-
-    public static final String HELLOWORLD = &quot;hello world&quot;;
-}
-
-
-public class NotInitialization {
-
-    public static void main(String[] args) {
-//        SuperClass[] sca = new SuperClass[10];
-        System.out.println(ConstClass.HELLOWORLD);
-    }
-}
-</code></pre>
+<h4 id="1-通过数组定义来引用类，不会触发此类的初始化："><a href="#1-通过数组定义来引用类，不会触发此类的初始化：" class="headerlink" title="1. 通过数组定义来引用类，不会触发此类的初始化："></a>1. <strong>通过数组定义来引用类，不会触发此类的初始化</strong>：</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitialization</span> &#123;</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        SuperClass[] sca = <span class="keyword">new</span> SuperClass[<span class="number">10</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果：<strong>（无）</strong> </p>
+<h4 id="2-常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化："><a href="#2-常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化：" class="headerlink" title="2. 常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化："></a>2. 常量在编译阶段会存入调用类的常量池中，本质上并没有直接引用到定义常量的类，因此不会触发定义常量的类的初始化：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConstClass</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        System.out.println(<span class="string">"ConstClass init!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String HELLOWORLD = <span class="string">"hello world"</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitialization</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"><span class="comment">//        SuperClass[] sca = new SuperClass[10];</span></div><div class="line">        System.out.println(ConstClass.HELLOWORLD);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>打印结果:hello world</p>
 <h2 id="作业和思考"><a href="#作业和思考" class="headerlink" title="作业和思考"></a>作业和思考</h2><p>下面程序的打印是什么?</p>
-<pre><code class="Java">public class StaticTest{
-    public static void main(String args[]){
-        staticFunction();
-    }
-    static StaticTest st = new StaticTest();
-    static{
-        System.out.println(&quot;1&quot;);
-    }
-    StaticTest(){
-        System.out.println(&quot;3&quot;);
-        System.out.println(&quot;a=&quot;+a+&quot; b=&quot;+b);
-    }
-    public static void staticFunction(){
-        System.out.println(&quot;4&quot;);
-    }
-    {
-        System.out.println(&quot;2&quot;);
-    }
-    int a=100;
-    static int b=112;
-}
-</code></pre>
-<pre><code>                    禁
-                    止
-                    看
-                    答
-                    案
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticTest</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</div><div class="line">        staticFunction();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">static</span> StaticTest st = <span class="keyword">new</span> StaticTest();</div><div class="line">    <span class="keyword">static</span>&#123;</div><div class="line">        System.out.println(<span class="string">"1"</span>);</div><div class="line">    &#125;</div><div class="line">    StaticTest()&#123;</div><div class="line">        System.out.println(<span class="string">"3"</span>);</div><div class="line">        System.out.println(<span class="string">"a="</span>+a+<span class="string">" b="</span>+b);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">staticFunction</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"4"</span>);</div><div class="line">    &#125;</div><div class="line">    &#123;</div><div class="line">        System.out.println(<span class="string">"2"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">int</span> a=<span class="number">100</span>;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">int</span> b=<span class="number">112</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre><code>禁
+止
+看
+答
+案
 
-                    禁
-                    止
-                    看
-                    答
-                    案
-                    禁
-                    止
-                    看
-                    答
-                    案
+禁
+止
+看
+答
+案
+禁
+止
+看
+答
+案
 </code></pre><h4 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h4><p>我们先来看一下各个变量在类加载的时候的初始化顺序：<br>1、初始化父类的静态变量，静态代码块，初始化的顺序按照出现顺序。<br>2、初始化子类的静态变量，静态代码块。<br>3、初始化父类的成员变量。<br>4、执行父类的构造函数。<br>5、初始化子类的成员变量。<br>6、构造代码块创建对象时执行。<br>7、执行子类的构造函数。 </p>
 <p>执行的结果为： </p>
-<pre><code>2 
-3 
-a=100,b=0 
-1 
-4
-</code></pre><p>可以从类的生命周期和对象的初始化来分析：<br>1.类的生命周期是：加载-&gt;验证-&gt;准备-&gt;解析-&gt;初始化-&gt;使用-&gt;卸载，只有在准备阶段和初始化阶段才会涉及类变量的初始化和赋值，因此只针对这两个阶段进行分析；<br>2.类的准备阶段需要做是为类变量分配内存并设置默认值，因此类变量st为null、b为0；（需要注意的是如果类变量是final在加载阶段就已经完成了初始化，可以把b设置为final试试）；<br>3.类的初始化阶段需要做是执行类构造器（类构造器是编译器收集所有静态语句块和类变量的赋值语句按语句在源码中的顺序合并生成类构造器，对象的构造方法是init，类的构造方法是cinit，可以在堆栈信息中看到），因此先执行第一条静态变量的赋值语句即st = new StaticTest ()，此时会进行对象的初始化，对象的初始化是先初始化成员变量再执行构造方法，因此打印2-&gt;设置a为110-&gt;执行构造方法(打印3,此时a已经赋值为110，但是b只是设置了默认值0，并未完成赋值动作)，等对象的初始化完成后继续执行之前的类构造器的语句，接下来就不详细说了，按照语句在源码中的顺序执行即可</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">2</span> </div><div class="line"><span class="number">3</span> </div><div class="line">a=<span class="number">100</span>,b=<span class="number">0</span> </div><div class="line"><span class="number">1</span> </div><div class="line"><span class="number">4</span></div></pre></td></tr></table></figure>
+<p>可以从类的生命周期和对象的初始化来分析：<br>1.类的生命周期是：加载-&gt;验证-&gt;准备-&gt;解析-&gt;初始化-&gt;使用-&gt;卸载，只有在准备阶段和初始化阶段才会涉及类变量的初始化和赋值，因此只针对这两个阶段进行分析；<br>2.类的准备阶段需要做是为类变量分配内存并设置默认值，因此类变量st为null、b为0；（需要注意的是如果类变量是final在加载阶段就已经完成了初始化，可以把b设置为final试试）；<br>3.类的初始化阶段需要做是执行类构造器（类构造器是编译器收集所有静态语句块和类变量的赋值语句按语句在源码中的顺序合并生成类构造器，对象的构造方法是init，类的构造方法是cinit，可以在堆栈信息中看到），因此先执行第一条静态变量的赋值语句即st = new StaticTest ()，此时会进行对象的初始化，对象的初始化是先初始化成员变量再执行构造方法，因此打印2-&gt;设置a为110-&gt;执行构造方法(打印3,此时a已经赋值为110，但是b只是设置了默认值0，并未完成赋值动作)，等对象的初始化完成后继续执行之前的类构造器的语句，接下来就不详细说了，按照语句在源码中的顺序执行即可</p>
 
       
     </div>
