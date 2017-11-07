@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="欢迎来到zhangbing的酒馆,来了就坐下吧" />
+  <meta name="keywords" content="Java,并发编程," />
 
 
 
@@ -86,14 +86,18 @@
 
 
 
-<meta name="keywords" content="前端,android,jquery,javascript,html5,开发者,程序猿,程序媛,极客,编程,代码,开源,IT网站,Developer,Programmer,Coder,Geek,html,css,css3,用户体验">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ace的技术客栈">
-<meta property="og:url" content="http://www.azhangbing.com/archives/2017/index.html">
+<meta name="description" content="volatile和synchronized特点 首先需要理解线程安全的两个方面：执行控制和内存可见。执行控制的目的是控制代码执行（顺序）及是否可以并发执行。 内存可见控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。 synchronized关键字解决的是执行控制的问题，它会">
+<meta name="keywords" content="Java,并发编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="volatile和synchronized的区别">
+<meta property="og:url" content="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
+<meta property="og:description" content="volatile和synchronized特点 首先需要理解线程安全的两个方面：执行控制和内存可见。执行控制的目的是控制代码执行（顺序）及是否可以并发执行。 内存可见控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。 synchronized关键字解决的是执行控制的问题，它会">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-07T07:48:34.468Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ace的技术客栈">
+<meta name="twitter:title" content="volatile和synchronized的区别">
+<meta name="twitter:description" content="volatile和synchronized特点 首先需要理解线程安全的两个方面：执行控制和内存可见。执行控制的目的是控制代码执行（顺序）及是否可以并发执行。 内存可见控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。 synchronized关键字解决的是执行控制的问题，它会">
 
 
 
@@ -123,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://www.azhangbing.com/archives/2017/"/>
+  <link rel="canonical" href="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/"/>
 
 
 
 
 
-  <title>归档 | Ace的技术客栈</title>
+  <title>volatile和synchronized的区别 | Ace的技术客栈</title>
   
 
 
@@ -158,7 +162,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -262,263 +266,257 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h2 class="post-title" itemprop="name headline">volatile和synchronized的区别</h2>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-07T15:46:00+08:00">
+                2017-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 12 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
+             <span id="/2017/11/07/volatile和synchronized的区别/" class="leancloud_visitors" data-flag-title="volatile和synchronized的区别">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
 
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/07/volatile和synchronized的区别/" itemprop="url">
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
               
-                <span itemprop="name">volatile和synchronized的区别</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  793
+                </span>
               
-            </a>
-        
-      </h3>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-07T15:46:00+08:00"
-              content="2017-11-07" >
-          11-07
-        </time>
-      </div>
+              
+                <span class="post-meta-divider">|</span>
+              
 
-    </header>
-  </article>
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
 
+          
 
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/07/Java内存模型/" itemprop="url">
-              
-                <span itemprop="name">Java内存模型</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-07T15:03:00+08:00"
-              content="2017-11-07" >
-          11-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/07/JVM基本原理/" itemprop="url">
-              
-                <span itemprop="name">JVM基本原理</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-07T01:17:00+08:00"
-              content="2017-11-07" >
-          11-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>volatile和synchronized特点</p>
+<p>首先需要理解线程安全的两个方面：<strong>执行控制和内存可见。</strong><br>执行控制的目的是控制代码执行（顺序）及是否可以并发执行。</p>
+<p><strong>内存可见</strong>控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。</p>
+<p><strong>synchronized</strong>关键字解决的是执行控制的问题，它会阻止其它线程获取当前对象的监控锁，这样就使得当前对象中被<strong>synchronized</strong>关键字保护的代码块无法被其它线程访问，也就无法并发执行。更重要的是，<strong>synchronized</strong>还会创建一个<strong>内存屏障</strong>，内存屏障指令保证了所有CPU操作结果都会直接刷到主存中，从而保证了操作的内存可见性，同时也使得先获得这个锁的线程的所有操作，都<strong>happens-before</strong>于随后获得这个锁的线程的操作。</p>
+<p><strong>volatile</strong>关键字解决的是<strong>内存可见性</strong>的问题，会使得所有对<strong>volatile</strong>变量的读写都会直接刷到主存，即保证了变量的可见性。这样就能满足一些对变量可见性有要求而对读取顺序没有要求的需求。</p>
+<p>使用<strong>volatile</strong>关键字仅能实现对<strong>原始变量</strong>(如boolen、 short 、int 、long等)操作的<strong>原子性</strong>，但需要特别注意， volatile不能保证复合操作的原子性，即使只是<strong>i++</strong>，实际上也是由多个原子操作组成：read i; inc; write i，假如多个线程同时执行i++，<strong>volatile只能保证他们操作的i是同一块内存</strong>，但依然<strong>可能出现写入脏数据</strong>的情况。</p>
+<p>在Java 5提供了原子数据类型atomic wrapper classes，对它们的increase之类的操作都是原子操作，不需要使用sychronized关键字。<br>具体看<a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicInteger.html" target="_blank" rel="external">AtomicInteger</a> <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicLong.html" target="_blank" rel="external">AtomicLong</a></p>
+<p>对于volatile关键字，当且仅当满足以下所有条件时可使用：</p>
+<blockquote>
+<ol>
+<li>对变量的写入操作不依赖变量的当前值，或者你能确保只有单个线程更新变量的值。</li>
+<li>该变量没有包含在具有其他变量的不变式中。</li>
+</ol>
+</blockquote>
+<p>volatile和synchronized的区别</p>
+<ol>
+<li>volatile本质是在告诉jvm当前变量在寄存器（工作内存）中的值是不确定的，需要从主存中读取； synchronized则是锁定当前变量，只有当前线程可以访问该变量，其他线程被阻塞住。</li>
+<li>volatile仅能使用在变量级别；synchronized则可以使用在变量、方法、和类级别的</li>
+<li>volatile仅能实现变量的修改可见性，不能保证原子性；而synchronized则可以保证变量的修改可见性和原子性</li>
+<li>volatile不会造成线程的阻塞；synchronized可能会造成线程的阻塞。</li>
+<li>volatile标记的变量不会被编译器优化；synchronized标记的变量可以被编译器优化</li>
+</ol>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/06/Java虚拟机类加载机制/" itemprop="url">
-              
-                <span itemprop="name">Java虚拟机类加载机制</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-06T17:22:00+08:00"
-              content="2017-11-06" >
-          11-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/25/Cling介绍/" itemprop="url">
-              
-                <span itemprop="name">Android投屏,同屏库Cling源码使用和解析</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-25T14:41:51+08:00"
-              content="2017-10-25" >
-          10-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/24/Java-到底是值传递还是引用传递/" itemprop="url">
-              
-                <span itemprop="name">Java 到底是值传递还是引用传递?</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-24T15:06:00+08:00"
-              content="2017-10-24" >
-          10-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Ace
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/" title="volatile和synchronized的区别">http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/并发编程/" rel="tag"># 并发编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/07/Java内存模型/" rel="next" title="Java内存模型">
+                <i class="fa fa-chevron-left"></i> Java内存模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2017/page/2/">2</a><a class="extend next" rel="next" href="/archives/2017/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -526,6 +524,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -780,6 +782,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 

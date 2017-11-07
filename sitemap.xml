@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.azhangbing.com/2017/11/07/volatile%E5%92%8Csynchronized%E7%9A%84%E5%8C%BA%E5%88%AB/</loc>
+    
+    <lastmod>2017-11-07T07:48:34.468Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.azhangbing.com/2017/11/07/Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</loc>
     
     <lastmod>2017-11-07T07:14:58.455Z</lastmod>
@@ -51,14 +58,14 @@
   </url>
   
   <url>
-    <loc>http://www.azhangbing.com/404/index.html</loc>
+    <loc>http://www.azhangbing.com/404.html</loc>
     
     <lastmod>2017-10-23T14:25:05.777Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.azhangbing.com/404.html</loc>
+    <loc>http://www.azhangbing.com/404/index.html</loc>
     
     <lastmod>2017-10-23T14:25:05.777Z</lastmod>
     
