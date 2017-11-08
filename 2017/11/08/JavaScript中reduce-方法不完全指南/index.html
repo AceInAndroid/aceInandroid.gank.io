@@ -86,13 +86,13 @@
 
 
 
-<meta name="description" content="reduce()方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。 语法： arr.reduce(callback[, initialValue]) —More FromMDN  参数： callback（一个在数组中每一项上调用的函数，接受四个函数：） previ">
+<meta name="description" content="JavaScript中reduce()方法不完全指南reduce()方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。 语法： arr.reduce(callback[, initialValue]) —More FromMDN  参数： callback（一个在数">
 <meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript中reduce()方法解析">
 <meta property="og:url" content="http://www.azhangbing.com/2017/11/08/JavaScript中reduce-方法不完全指南/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="reduce()方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。 语法： arr.reduce(callback[, initialValue]) —More FromMDN  参数： callback（一个在数组中每一项上调用的函数，接受四个函数：） previ">
+<meta property="og:description" content="JavaScript中reduce()方法不完全指南reduce()方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。 语法： arr.reduce(callback[, initialValue]) —More FromMDN  参数： callback（一个在数">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/80c4aaf9gw1f2rxtqh8nqj20ur07jaam.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/80c4aaf9gw1f2s2nlfrt3j205y044glk.jpg">
@@ -100,10 +100,10 @@
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/80c4aaf9gw1f2s2nlfrt3j205y044glk.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/80c4aaf9gw1f2s2ns1hnuj205o040mx5.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/80c4aaf9gw1f2s2o49b49j205n0420sq.jpg">
-<meta property="og:updated_time" content="2017-11-08T09:16:03.990Z">
+<meta property="og:updated_time" content="2017-11-08T09:19:40.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript中reduce()方法解析">
-<meta name="twitter:description" content="reduce()方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。 语法： arr.reduce(callback[, initialValue]) —More FromMDN  参数： callback（一个在数组中每一项上调用的函数，接受四个函数：） previ">
+<meta name="twitter:description" content="JavaScript中reduce()方法不完全指南reduce()方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。 语法： arr.reduce(callback[, initialValue]) —More FromMDN  参数： callback（一个在数">
 <meta name="twitter:image" content="http://ww3.sinaimg.cn/large/80c4aaf9gw1f2rxtqh8nqj20ur07jaam.jpg">
 
 
@@ -376,7 +376,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,092
+                  1,101
                 </span>
               
 
@@ -413,7 +413,7 @@
       
 
       
-        <p>reduce()<br>方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。</p>
+        <h2 id="JavaScript中reduce-方法不完全指南"><a href="#JavaScript中reduce-方法不完全指南" class="headerlink" title="JavaScript中reduce()方法不完全指南"></a>JavaScript中reduce()方法不完全指南</h2><p>reduce()<br>方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。</p>
 <h4 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h4><blockquote>
 <p>arr.reduce(callback[, initialValue]) —<a href="https://developer.mozilla.org/en-
 US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce" target="_blank" rel="external">More From<br>MDN</a></p>
@@ -463,12 +463,12 @@ US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce" target="_blank" re
 <li><p>第四次debugger</p>
 </li>
 </ul>
-<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">     return <span class="number">16</span> </div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">可以看出传入initialValue 会多递归一次，而initialValue的值的作用大家应该也明了了：为累加等操作传入起始值（额外的加值）。  </div><div class="line">而callbackfn中的四个参数也可以在debugger的动态变化中查看出具有的特性。  </div><div class="line">那么利用reduce方法还可以做哪些事情呢?</div><div class="line"></div><div class="line">#### 更多实例</div></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> return <span class="number">16</span> </div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">可以看出传入initialValue 会多递归一次，而initialValue的值的作用大家应该也明了了：为累加等操作传入起始值（额外的加值）。  </div><div class="line">而callbackfn中的四个参数也可以在debugger的动态变化中查看出具有的特性。  </div><div class="line">那么利用reduce方法还可以做哪些事情呢?</div><div class="line"></div><div class="line">#### 更多实例</div></pre></td></tr></table></figure>
 <p> var arr = [1,2,3]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">求乘积</div></pre></td></tr></table></figure></p>
 <pre><code>var pro = arr.reduce(function (pre, cur, index, arr) {
     return pre * cur
 })
-</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"></div><div class="line">  </div><div class="line">求最大值</div></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">求最大值</div></pre></td></tr></table></figure>
 <pre><code>var max = a.reduce(function (pre, cur, inde, arr) {
     return pre &gt; cur ? pre : cur;
 });
@@ -687,7 +687,7 @@ US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce" target="_blank" re
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#语法："><span class="nav-number">1.</span> <span class="nav-text">语法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数："><span class="nav-number">2.</span> <span class="nav-text">参数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图解参数"><span class="nav-number">3.</span> <span class="nav-text">图解参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例："><span class="nav-number">4.</span> <span class="nav-text">实例：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#forEach-实现"><span class="nav-number">4.1.</span> <span class="nav-text">forEach 实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#map-实现"><span class="nav-number">4.2.</span> <span class="nav-text">map 实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#reduce实现"><span class="nav-number">4.3.</span> <span class="nav-text">reduce实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#参数分解"><span class="nav-number">4.4.</span> <span class="nav-text">参数分解</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript中reduce-方法不完全指南"><span class="nav-number">1.</span> <span class="nav-text">JavaScript中reduce()方法不完全指南</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语法："><span class="nav-number">1.0.1.</span> <span class="nav-text">语法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数："><span class="nav-number">1.0.2.</span> <span class="nav-text">参数：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图解参数"><span class="nav-number">1.0.3.</span> <span class="nav-text">图解参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实例："><span class="nav-number">1.0.4.</span> <span class="nav-text">实例：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#forEach-实现"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">forEach 实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#map-实现"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">map 实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#reduce实现"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">reduce实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#参数分解"><span class="nav-number">1.0.4.4.</span> <span class="nav-text">参数分解</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>

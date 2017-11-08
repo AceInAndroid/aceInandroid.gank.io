@@ -526,7 +526,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,092
+                  1,101
                 </span>
               
 
@@ -565,7 +565,7 @@
       
         
           
-            <p>reduce()<br>方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。</p>
+            <h2 id="JavaScript中reduce-方法不完全指南"><a href="#JavaScript中reduce-方法不完全指南" class="headerlink" title="JavaScript中reduce()方法不完全指南"></a>JavaScript中reduce()方法不完全指南</h2><p>reduce()<br>方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值，是ES5中新增的又一个数组逐项处理方法，那reduce方法跟foreach、map等数组方法又有啥区别呢。</p>
 <h4 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h4><blockquote>
 <p>arr.reduce(callback[, initialValue]) —<a href="https://developer.mozilla.org/en-
 US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce" target="_blank" rel="external">More From<br>MDN</a></p>
@@ -615,12 +615,12 @@ US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce" target="_blank" re
 <li><p>第四次debugger</p>
 </li>
 </ul>
-<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">     return <span class="number">16</span> </div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">可以看出传入initialValue 会多递归一次，而initialValue的值的作用大家应该也明了了：为累加等操作传入起始值（额外的加值）。  </div><div class="line">而callbackfn中的四个参数也可以在debugger的动态变化中查看出具有的特性。  </div><div class="line">那么利用reduce方法还可以做哪些事情呢?</div><div class="line"></div><div class="line">#### 更多实例</div></pre></td></tr></table></figure>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> return <span class="number">16</span> </div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">可以看出传入initialValue 会多递归一次，而initialValue的值的作用大家应该也明了了：为累加等操作传入起始值（额外的加值）。  </div><div class="line">而callbackfn中的四个参数也可以在debugger的动态变化中查看出具有的特性。  </div><div class="line">那么利用reduce方法还可以做哪些事情呢?</div><div class="line"></div><div class="line">#### 更多实例</div></pre></td></tr></table></figure>
 <p> var arr = [1,2,3]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">求乘积</div></pre></td></tr></table></figure></p>
 <pre><code>var pro = arr.reduce(function (pre, cur, index, arr) {
     return pre * cur
 })
-</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"></div><div class="line">  </div><div class="line">求最大值</div></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">求最大值</div></pre></td></tr></table></figure>
 <pre><code>var max = a.reduce(function (pre, cur, inde, arr) {
     return pre &gt; cur ? pre : cur;
 });
