@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="Java,并发编程," />
+  <meta name="keywords" content="javascript," />
 
 
 
@@ -86,18 +86,18 @@
 
 
 
-<meta name="description" content="volatile和synchronized特点 首先需要理解线程安全的两个方面：执行控制和内存可见。执行控制的目的是控制代码执行（顺序）及是否可以并发执行。 内存可见控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。 synchronized关键字解决的是执行控制的问题，它会">
-<meta name="keywords" content="Java,并发编程">
+<meta name="description" content="这两个东西真的是傻傻分不清楚">
+<meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="volatile和synchronized的区别">
-<meta property="og:url" content="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/index.html">
+<meta property="og:title" content="JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）">
+<meta property="og:url" content="http://www.azhangbing.com/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="volatile和synchronized特点 首先需要理解线程安全的两个方面：执行控制和内存可见。执行控制的目的是控制代码执行（顺序）及是否可以并发执行。 内存可见控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。 synchronized关键字解决的是执行控制的问题，它会">
+<meta property="og:description" content="这两个东西真的是傻傻分不清楚">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-07T07:48:34.468Z">
+<meta property="og:updated_time" content="2017-11-13T16:34:00.081Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="volatile和synchronized的区别">
-<meta name="twitter:description" content="volatile和synchronized特点 首先需要理解线程安全的两个方面：执行控制和内存可见。执行控制的目的是控制代码执行（顺序）及是否可以并发执行。 内存可见控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。 synchronized关键字解决的是执行控制的问题，它会">
+<meta name="twitter:title" content="JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）">
+<meta name="twitter:description" content="这两个东西真的是傻傻分不清楚">
 
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/"/>
+  <link rel="canonical" href="http://www.azhangbing.com/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/"/>
 
 
 
 
 
-  <title>volatile和synchronized的区别 | Ace的技术客栈</title>
+  <title>JavaScript 中的 __proto__（隐式原型）与prototype（显式原型） | Ace的技术客栈</title>
   
 
 
@@ -270,7 +270,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ace">
@@ -287,7 +287,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">volatile和synchronized的区别</h2>
+          <h2 class="post-title" itemprop="name headline">JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）</h2>
         
 
         <div class="post-meta">
@@ -299,8 +299,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-07T15:46:00+08:00">
-                2017-11-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-14T00:33:00+08:00">
+                2017-11-14
               </time>
             
 
@@ -322,8 +322,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
                   </a>
                 </span>
 
@@ -339,7 +339,7 @@
 
           
           
-             <span id="/2017/11/07/volatile和synchronized的区别/" class="leancloud_visitors" data-flag-title="volatile和synchronized的区别">
+             <span id="/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/" class="leancloud_visitors" data-flag-title="JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -369,7 +369,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  793
+                  1,044
                 </span>
               
 
@@ -385,7 +385,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  4
                 </span>
               
             </div>
@@ -406,28 +406,31 @@
       
 
       
-        <p>volatile和synchronized特点</p>
-<p>首先需要理解线程安全的两个方面：<strong>执行控制和内存可见。</strong><br>执行控制的目的是控制代码执行（顺序）及是否可以并发执行。</p>
-<p><strong>内存可见</strong>控制的是线程执行结果在内存中对其它线程的可见性。根据Java内存模型的实现，线程在具体执行时，会先拷贝主存数据到线程本地（CPU缓存），操作完成后再把结果从线程本地刷到主存。</p>
-<p><strong>synchronized</strong>关键字解决的是执行控制的问题，它会阻止其它线程获取当前对象的监控锁，这样就使得当前对象中被<strong>synchronized</strong>关键字保护的代码块无法被其它线程访问，也就无法并发执行。更重要的是，<strong>synchronized</strong>还会创建一个<strong>内存屏障</strong>，内存屏障指令保证了所有CPU操作结果都会直接刷到主存中，从而保证了操作的内存可见性，同时也使得先获得这个锁的线程的所有操作，都<strong>happens-before</strong>于随后获得这个锁的线程的操作。</p>
-<p><strong>volatile</strong>关键字解决的是<strong>内存可见性</strong>的问题，会使得所有对<strong>volatile</strong>变量的读写都会直接刷到主存，即保证了变量的可见性。这样就能满足一些对变量可见性有要求而对读取顺序没有要求的需求。</p>
-<p>使用<strong>volatile</strong>关键字仅能实现对<strong>原始变量</strong>(如boolen、 short 、int 、long等)操作的<strong>原子性</strong>，但需要特别注意， volatile不能保证复合操作的原子性，即使只是<strong>i++</strong>，实际上也是由多个原子操作组成：read i; inc; write i，假如多个线程同时执行i++，<strong>volatile只能保证他们操作的i是同一块内存</strong>，但依然<strong>可能出现写入脏数据</strong>的情况。</p>
-<p>在Java 5提供了原子数据类型atomic wrapper classes，对它们的increase之类的操作都是原子操作，不需要使用sychronized关键字。<br>具体看<a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicInteger.html" target="_blank" rel="external">AtomicInteger</a> <a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicLong.html" target="_blank" rel="external">AtomicLong</a></p>
-<p>对于volatile关键字，当且仅当满足以下所有条件时可使用：</p>
+        <p>这两个东西真的是傻傻分不清楚<br><a id="more"></a></p>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><h3 id="proto与prototype是什么"><a href="#proto与prototype是什么" class="headerlink" title="proto与prototype是什么"></a><strong>proto</strong>与prototype是什么</h3><p><strong>显式原型 explicit prototype property：</strong>每一个函数在创建之后都会拥有一个名为<strong>prototype</strong>的属性，这个属性指向函数的原型对象。Note：通过Function.prototype.bind方法构造出来的函数是个例外，它没有prototype属性。</p>
 <blockquote>
-<ol>
-<li>对变量的写入操作不依赖变量的当前值，或者你能确保只有单个线程更新变量的值。</li>
-<li>该变量没有包含在具有其他变量的不变式中。</li>
-</ol>
+<p>NOTE Function objects created using Function.prototype.bind do not have a prototype property or the [[Code]], [[FormalParameters]], and [[Scope]] internal properties. —– <a href="http://www.ecma-international.org/ecma-262/5.1/#sec-15.3.4.5" target="_blank" rel="external">ECMAScript Language Specification</a></p>
 </blockquote>
-<p>volatile和synchronized的区别</p>
-<ol>
-<li>volatile本质是在告诉jvm当前变量在寄存器（工作内存）中的值是不确定的，需要从主存中读取； synchronized则是锁定当前变量，只有当前线程可以访问该变量，其他线程被阻塞住。</li>
-<li>volatile仅能使用在变量级别；synchronized则可以使用在变量、方法、和类级别的</li>
-<li>volatile仅能实现变量的修改可见性，不能保证原子性；而synchronized则可以保证变量的修改可见性和原子性</li>
-<li>volatile不会造成线程的阻塞；synchronized可能会造成线程的阻塞。</li>
-<li>volatile标记的变量不会被编译器优化；synchronized标记的变量可以被编译器优化</li>
-</ol>
+<h3 id="隐式原型-implicit-prototype-link："><a href="#隐式原型-implicit-prototype-link：" class="headerlink" title="隐式原型 implicit prototype link："></a>隐式原型 implicit prototype link：</h3><p>JavaScript中任意对象都有一个内置属性<strong>[[prototype]]</strong>，在ES5之前没有标准的方法访问这个内置属性，<strong>但是大多数浏览器都支持通过<strong>proto</strong>来访问</strong>。ES5中有了对于这个内置属性标准的Get方法Object.getPrototypeOf().                     Note: Object.prototype 这个对象是个例外，它的<strong>proto</strong>值为null</p>
+<h3 id="二者的关系："><a href="#二者的关系：" class="headerlink" title="二者的关系："></a>二者的关系：</h3><p>隐式原型指向创建这个对象的<strong>函数(constructor)的prototype</strong></p>
+<h2 id="作用是什么"><a href="#作用是什么" class="headerlink" title="作用是什么"></a>作用是什么</h2><h5 id="显式原型的作用：用来实现基于原型的继承与属性的共享。"><a href="#显式原型的作用：用来实现基于原型的继承与属性的共享。" class="headerlink" title="显式原型的作用：用来实现基于原型的继承与属性的共享。"></a>显式原型的作用：用来实现基于原型的继承与属性的共享。</h5><blockquote>
+<p>ECMAScript does not use classes such as those in C++, Smalltalk, or Java. Instead objects may be created in various ways including via a literal notation or via constructors which create objects and then execute code that initialises all or part of them by assigning initial values to their properties. Each constructor is a function that has a property named “prototype” that is used to implement prototype-based inheritance and shared properties.Objects are created by using constructors in new expressions; for example, new Date(2009,11) creates a new Date object. —-<a href="http://www.ecma-international.org/ecma-262/5.1/#sec-4.2.1" target="_blank" rel="external">ECMAScript Language Specification</a></p>
+</blockquote>
+<h5 id="隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问obj这个对象中的x属性时，如果在obj中找不到，那么就会沿着proto依次查找。"><a href="#隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问obj这个对象中的x属性时，如果在obj中找不到，那么就会沿着proto依次查找。" class="headerlink" title="隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问obj这个对象中的x属性时，如果在obj中找不到，那么就会沿着proto依次查找。"></a>隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问obj这个对象中的x属性时，如果在obj中找不到，那么就会沿着<strong>proto</strong>依次查找。</h5><blockquote>
+<p>Every object created by a constructor has an implicit reference (called the object’s prototype) to the value of its constructor’s “prototype” —-<a href="http://www.ecma-international.org/ecma-262/5.1/#sec-4.2.1" target="_blank" rel="external">ECMAScript Language Specification</a></p>
+</blockquote>
+<h2 id="proto的指向"><a href="#proto的指向" class="headerlink" title="proto的指向"></a><strong>proto</strong>的指向</h2><p><strong>proto</strong>的指向到底如何判断呢？</p>
+<p>根据ECMA定义 ‘to the value of its constructor’s “prototype” ‘ —-指向创建这个对象的函数的显式原型。所以关键的点在于找到创建这个对象的构造函数，接下来就来看一下JS中对象被创建的方式，一眼看过去似乎有三种方式：（1）对象字面量的方式 （2）new 的方式 （3）ES5中的Object.create() 但是我认为本质上只有一种方式，也就是通过new来创建。为什么这么说呢，首先字面量的方式是一种为了开发人员更方便创建对象的一个语法糖，本质就是 var o = new Object(); o.xx = xx;o.yy=yy; 再来看看Object.create(),这是ES5中新增的方法，在这之前这被称为原型式继承，</p>
+<p>具体看例子：</p>
+<p>那么一个对象的[[prototype]]属性究竟怎么决定呢？这是由构造该对象的方法决定的。据我所知有三种构造一个对象的方法：这个对象是通过对象字面量构造出来的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person1 = &#123;</div><div class="line">    name: <span class="string">'cyl'</span>,</div><div class="line">    sex: <span class="string">'male'</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>形如这个形式的叫做对象字面量。这样子构造出的对象，其[[prototype]]指向Object.prototype这个对象是由构造函数构造出来的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person();</div></pre></td></tr></table></figure>
+<p>通过new操作符调用的函数就是构造函数。由构造函数构造的对象，<strong>其[[prototype]]指向其构造函数的prototype属性指向的对象</strong>。每个函数都有一个prototype属性，其所指向的对象带有constructor属性，这一属性指向函数自身。（在本例中，person1的[[prototype]]指向Person.prototype）这个对象是由函数Object.create构造的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person1 = &#123;</div><div class="line">    name: <span class="string">'cyl'</span>,</div><div class="line">    sex: <span class="string">'male'</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>var person2 = Object.create(person1);<br>本例中，对象person2的[[prototype]]指向对象person1。在没有Object.create函数的日子里，人们是这样做的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.create = <span class="function"><span class="keyword">function</span>(<span class="params">p</span>) </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">    f.prototype = p;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> f();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然而虽然说[[prototype]]是一个隐藏属性，但很多浏览器都给每一个对象提供.<strong>proto</strong>这一属性，这个属性就是上文反复提到的该对象的[[prototype]]。由于这个属性不标准，因此一般不提倡使用。ES5中用Object.getPrototypeOf函数获得一个对象的[[prototype]]。ES6中，使用Object.setPrototypeOf可以直接修改一个对象的[[prototype]]</p>
 
       
     </div>
@@ -448,7 +451,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/" title="volatile和synchronized的区别">http://www.azhangbing.com/2017/11/07/volatile和synchronized的区别/</a>
+    <a href="http://www.azhangbing.com/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/" title="JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）">http://www.azhangbing.com/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -463,9 +466,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-            <a href="/tags/并发编程/" rel="tag"># 并发编程</a>
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
           
         </div>
       
@@ -478,8 +479,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/07/Java内存模型/" rel="next" title="Java内存模型">
-                <i class="fa fa-chevron-left"></i> Java内存模型
+              <a href="/2017/11/10/学习Javascript闭包/" rel="next" title="学习Javascript闭包">
+                <i class="fa fa-chevron-left"></i> 学习Javascript闭包
               </a>
             
           </div>
@@ -487,10 +488,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/08/JavaScript中reduce-方法不完全指南/" rel="prev" title="JavaScript中reduce()方法解析">
-                JavaScript中reduce()方法解析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -542,8 +539,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +629,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#是什么"><span class="nav-number">1.</span> <span class="nav-text">是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proto与prototype是什么"><span class="nav-number">1.1.</span> <span class="nav-text">proto与prototype是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐式原型-implicit-prototype-link："><span class="nav-number">1.2.</span> <span class="nav-text">隐式原型 implicit prototype link：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二者的关系："><span class="nav-number">1.3.</span> <span class="nav-text">二者的关系：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作用是什么"><span class="nav-number">2.</span> <span class="nav-text">作用是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#显式原型的作用：用来实现基于原型的继承与属性的共享。"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">显式原型的作用：用来实现基于原型的继承与属性的共享。</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问obj这个对象中的x属性时，如果在obj中找不到，那么就会沿着proto依次查找。"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问obj这个对象中的x属性时，如果在obj中找不到，那么就会沿着proto依次查找。</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proto的指向"><span class="nav-number">3.</span> <span class="nav-text">proto的指向</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
