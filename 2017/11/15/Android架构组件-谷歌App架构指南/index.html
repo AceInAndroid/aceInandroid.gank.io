@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.png?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="注意：本文中的 app组件 指代 Android应用中的四大组件（ activities , services ,content providers and broadcast receivers ）   APP开发者面临的常见问题 通用架构原则 推荐的App架构 搭建用户界面 获取数据 关联ViewModel和repository 缓存数据 持久化数据 测试 最终的架构   指导原则 附录暴露">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android架构组件-谷歌App架构指南">
+<meta property="og:url" content="http://www.azhangbing.com/2017/11/15/Android架构组件-谷歌App架构指南/index.html">
+<meta property="og:site_name" content="Ace的技术客栈">
+<meta property="og:description" content="注意：本文中的 app组件 指代 Android应用中的四大组件（ activities , services ,content providers and broadcast receivers ）   APP开发者面临的常见问题 通用架构原则 推荐的App架构 搭建用户界面 获取数据 关联ViewModel和repository 缓存数据 持久化数据 测试 最终的架构   指导原则 附录暴露">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-15-final-architecture.png">
+<meta property="og:image" content="https://developer.android.google.cn/topic/libraries/architecture/images
+/final-architecture.png">
+<meta property="og:image" content="https://developer.android.google.cn/topic/libraries/architecture/images
+/network-bound-resource.png">
+<meta property="og:updated_time" content="2017-11-15T01:28:34.216Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android架构组件-谷歌App架构指南">
+<meta name="twitter:description" content="注意：本文中的 app组件 指代 Android应用中的四大组件（ activities , services ,content providers and broadcast receivers ）   APP开发者面临的常见问题 通用架构原则 推荐的App架构 搭建用户界面 获取数据 关联ViewModel和repository 缓存数据 持久化数据 测试 最终的架构   指导原则 附录暴露">
+<meta name="twitter:image" content="http://oy261wvqm.bkt.clouddn.com/2017-11-15-final-architecture.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.azhangbing.com/2017/11/15/Android架构组件-谷歌App架构指南/"/>
+
+
+
+
+
+  <title>Android架构组件-谷歌App架构指南 | Ace的技术客栈</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f4df925f5ecaae00a62621ca00acdaae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ace的技术客栈</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">业精于勤荒于嬉 行成于思毁于随</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/11/15/Android架构组件-谷歌App架构指南/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Android架构组件-谷歌App架构指南</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-15T09:27:00+08:00">
+                2017-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/11/15/Android架构组件-谷歌App架构指南/" class="leancloud_visitors" data-flag-title="Android架构组件-谷歌App架构指南">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  8,013
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  31
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>注意：本文中的 <strong>app组件</strong> 指代 Android应用中的四大组件（ <strong>activities</strong> , <strong>services</strong> ,<br><strong>content providers</strong> and <strong>broadcast receivers</strong> ）</p>
+</blockquote>
+<ul>
+<li>APP开发者面临的常见问题</li>
+<li>通用架构原则</li>
+<li>推荐的App架构<ul>
+<li>搭建用户界面</li>
+<li>获取数据</li>
+<li>关联ViewModel和repository</li>
+<li>缓存数据</li>
+<li>持久化数据</li>
+<li>测试</li>
+<li>最终的架构</li>
+</ul>
+</li>
+<li>指导原则</li>
+<li>附录暴露网络状态</li>
+</ul>
+<p>本指南适用于那些已经拥有开发Android应用基础知识的开发人员，现在想了解能够开发出更加健壮、优质的应用程序架构。</p>
+<a id="more"></a>
+<blockquote>
+<p>注意：本指南假定读者熟悉Android框架。如果你不熟悉Android应用程序开发，请查看Android入门培训教程，其中包含本指南的必备内容。</p>
+</blockquote>
+<p><strong>首先需要说明的是：Android Architecture Components 翻译为 Android架构组件<br>并不是我自己随意翻译的，而是Google官方博客中明确称其为 Android架构组件，因此我遵循了这种叫法。</strong></p>
+<p>在这里我先贴上Google原文地址，以及Android架构组件官方开源示例代码地址。</p>
+<p><strong>Google原文地址</strong><br>：</p>
+<p><strong>Android架构组件官方开源示例代码地址（android-architecture-components）</strong> ：</p>
+<p><strong>下面这张图是Android架构组件完整的架构图，其中表示了的架构组件的所有模块以及它们之间如何交互：</strong><br><img src="http://oy261wvqm.bkt.clouddn.com/2017-11-15-final-architecture.png" alt="final-architecture"></p>
+<h1 id="APP开发者面临的常见问题"><a href="#APP开发者面临的常见问题" class="headerlink" title="APP开发者面临的常见问题"></a>APP开发者面临的常见问题</h1><hr>
+<p>与传统的桌面应用程序不同，Android应用程序的结构要复杂得多，在大多数情况下，它们只在桌面快捷启动方式中有一个入口，并且作为单个进程运行。一个典型的Android应用程序是由多个<br>app组件(Android四大组件) 构成的，包括 <strong>activities</strong> , <strong>fragments</strong> , <strong>services</strong> ,<br><strong>content providers</strong> and <strong>broadcast receivers</strong> 。</p>
+<p>这些 <strong>app组件</strong> 中的大部分都是在 <strong>应用清单(AndroidManifast.xml)</strong><br>中声明的，Android操作系统使用这些组件来决定如何将应用程序集成到设备的用户体验中。虽然，如前所述，桌面应用程序通常上是以单个进程运行的，但是一个合理的Android应用需要更加灵活，因为用户可以通过不同的应用程序，在他们的设备上不断切换流程和任务。</p>
+<p>例如，想象下在您最喜爱的社交网络应用中分享照片时会发生什么情况。这个应用程序触发了一个Camera（拍照或摄像）意图，由Android操作系统启动一个Camera应用来处理请求。此时，用户虽然离开了这个社交网络应用，但他们的体验是无缝的。相机应用程序又可能触发其他意图，例如启动文件选择器，该文件选择器可以启动另一个应用程序。最终用户回到社交网络应用并分享照片。此外，用户在这个过程的任何时候都可能被电话打断，并在打完电话后回来继续分享照片。</p>
+<p>在Android中，这种应用程序跳转行为是很常见的，所以您的应用程序必须正确处理这些流程。请记住，移动设备是资源受限的，所以在任何时候，操作系统都可能需要杀死一些应用程序，以腾出空间给新的应用。</p>
+<p>这一切的要点在于，您的 <strong>app组件</strong> 可以单独和无序地启动，并且可以在任何时候由用户或系统销毁。由于 <strong>app组件</strong><br>是短暂的，并且它们的生命周期（创建和销毁时）不在您的控制之下， <strong>因此您不应该在app组件中存储任何 app数据或状态</strong> ，并且 你的<br>app组件不应相互依赖。</p>
+<h1 id="通用架构原则"><a href="#通用架构原则" class="headerlink" title="通用架构原则"></a>通用架构原则</h1><hr>
+<p>如果你不使用 <strong>app组件</strong> 存储app数据和状态，那么应该如何构造应用程序呢？</p>
+<p>你关注的最重要的事情是 <strong>如何在你的应用中分离关注点</strong> 。常见的错误是将所有的代码写入一个Activity或Fragment，任何不处理 UI 或<br>与操作系统交互的代码都不应该出现在这些类中，你应该尽可能保持 Activity或Fragment<br>精简，这样可以避免许多生命周期相关的问题。请记住，你不拥有这些类，它们只是建立操作系统和你的应用程序之间契约的胶水类。Android操作系统可能会随时根据用户交互或其他因素（如低内存）来销毁它们。最好尽可能地减少依赖他们，以提供可靠的用户体验。</p>
+<p>第二个重要原则是 <strong>你应该从一个模型驱动你的UI</strong><br>，最好是一个持久化的模型。之所以说持久化是理想的模型，原因有两个：如果操作系统销毁你的应用程序以释放资源，那么你的用户就不会丢失数据，即使网络连接不稳定或连接不上，您的应用程序也会继续工作。<br><strong>模型是负责处理应用程序数据的组件</strong> 。它们独立于应用程序的 Views 和 app组件，因此模型与这些<br>app组件的生命周期问题是相隔离的。保持简洁的UI代码，以及不受约束的应用程序逻辑，可以使app的管理更加容易，基于具有明确定义的管理数据责任的模型类的应用程序，会更加具有可测试性，并使您的应用程序状态保持前后一致。</p>
+<h1 id="推荐的App架构"><a href="#推荐的App架构" class="headerlink" title="推荐的App架构"></a>推荐的App架构</h1><hr>
+<p>在本节中，我们将演示如何通过使用用例来构造使用了 <strong>架构组件（Architecture Components）</strong> 的应用程序。</p>
+<p>&gt;<br>注意：不可能有一种对每个场景都是最好的编写应用程序的方法。也就是说，对于大多数用例来说，这个推荐的架构可能是一个好的起点。如果你已经有了编写Android应用的好方法，那就不要在更改了。</p>
+<p>我们现在可以想象一下，假如我没正在搭建一个用来显示 <strong>用户概况的UI</strong> 。该用户概况将使用 <strong>REST API</strong> 从我们自己的服务器端获取。</p>
+<h2 id="搭建用户界面"><a href="#搭建用户界面" class="headerlink" title="搭建用户界面"></a>搭建用户界面</h2><p>这个UI 将由 UserProfileFragment.java 及 Fragment 相应的 user_profile_layout.xml<br>布局文件组成。</p>
+<p>为了驱动用户界面，我们的数据模型需要保存两个数据元素。</p>
+<ul>
+<li><p>用户ID：用户的标识符。最好使用 fragment 参数（setArguments方法） 将此信息传递到 fragment 中。如果Android系统销毁了你的进程，这些信息将被保留，便于应用在下次重新启动时可用。</p>
+</li>
+<li><p>用户对象：保存用户数据的 <strong>POJO（简单的Java对象）</strong> 。</p>
+</li>
+</ul>
+<p>我们将创建一个基于 <strong>ViewModel</strong> 的 UserProfileViewModel 类来保存这些信息。</p>
+<blockquote>
+<p>一个 <strong>ViewModel</strong> 提供了一个特定 UI 组件中的数据，如一个 fragment 或 activity,<br>并且负责与数据处理业务的通信，例如调用其他app组件来加载数据或转发的用户信息的修改。 <strong>ViewModel</strong><br>不知道View，并且不受配置更改的影响，例如由于屏幕旋转而重新创建 Activity。</p>
+</blockquote>
+<p>现在我们有3个文件。</p>
+<ul>
+<li><p>user_profile.xml：定义屏幕上的 UI。</p>
+</li>
+<li><p>UserProfileViewModel.java：为 UI 准备数据的类。</p>
+</li>
+<li><p>UserProfileFragment.java：显示 <strong>ViewModel</strong> 中的数据并对用户交互作出响应的 UI 控制器。</p>
+</li>
+</ul>
+<p>接下来我们将开始实现（为了简单起见，省略了布局文件）：</p>
+<pre><code>public class UserProfileViewModel extends ViewModel {
+
+    private String userId;
+    private User user;
+
+    public void init(String userId) {
+        this.userId = userId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+}
+
+
+public class UserProfileFragment extends Fragment {
+    private static final String UID_KEY = &quot;uid&quot;;
+    private UserProfileViewModel viewModel;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        String userId = getArguments().getString(UID_KEY);
+        viewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
+        viewModel.init(userId);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.user_profile, container, false);
+    }
+}
+</code></pre><p>现在，我们已经有了三个代码块，那么我们如何将它们联系在一起呢？毕竟，当给 <strong>ViewModel</strong><br>的用户字段设值后，我们需要一种方法来通知用户界面，这就是 <strong>LiveData</strong> 类的作用。</p>
+<blockquote>
+<p><strong>LiveData</strong> 是一个可观察的数据持有者。它允许应用程序中的组件观察 LiveData<br>对象的更改，但不会在它们之间创建明确的和严格的依赖关系路径。 <strong>LiveData</strong> 还会关联 <strong>app组件(activities,<br>fragments, services)</strong> 的生命周期状态，并做出合适的事情来防止内存泄漏。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>注意：如果你已经在使用类似 <strong>RxJava</strong> 或 <strong>Agera</strong> 的库 ，则可以继续使用它们而不是 <strong>LiveData</strong><br>。但是，当你使用它们或其他方式时，请确保正确处理生命周期，以便在相关的LifecycleOwner 停止时暂停数据流，并在销毁 LifecycleOwner<br>时销毁数据流。你还可以添加 <strong>android.arch.lifecycle:reactivestreams</strong> 以将 <strong>LiveData</strong><br>与其他的响应流库（例如RxJava2）一起使用。</p>
+</blockquote>
+<p>现在我们用 <strong>LiveData</strong> 替换 <strong>UserProfileViewModel</strong> 中的 <strong>User字段</strong> ，以便在数据更新时通知<br>Fragment。最主要的是， <strong>LiveData</strong> 是生命周期感知的，并且在不在需要时，它将自动清理引用。</p>
+<pre><code> public class UserProfileViewModel extends ViewModel {
+    ...
+    private User user;
+    private LiveData user;
+
+    public LiveData getUser() {
+        return user;
+    }
+}
+</code></pre><p>现在我们修改 <strong>UserProfileFragment</strong> 以便观察数据并更新 UI。</p>
+<pre><code> @Override
+public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    viewModel.getUser().observe(this, user -&gt; {
+      // update UI
+    });
+}
+</code></pre><p>每次更新用户数据时， 都会调用 <strong>onChanged</strong> 回调，并刷新UI。</p>
+<p>如果你熟悉其他 可观察回调的库，你可能已经意识到，我们没有重写 fragment 的 <strong>onStop()</strong> 方法来停止观察数据。这对于<br><strong>LiveData</strong> 来说是没有必要的，因为它是生命周期感知的，这意味着它不会调用回调，除非Fragment 处于 <strong>活动状态</strong> （已收到<br><strong>onStart()</strong> 但未收到 <strong>onStop()</strong> ）。当 fragment 收到 <strong>onDestroy()</strong><br>时，LiveData也将自动移除观察者 。</p>
+<p>对于配置变化（例如，用户旋转屏幕）我们也没有做任何特殊的处理。当配置改变时， <strong>ViewModel</strong> 会自动恢复，所以一旦新的 Fragment<br>生效，它将接收到相同的 <strong>ViewModel实例</strong> ，并且 ViewModel 的回调将立即被当前数据调用，这就是 ViewModels<br>为什么不应该直接引用 Views 的原因。他们可以比 View的生命周期更持久。想了解更多信息的请查看 <a href="https://developer.android.google.cn/topic/libraries/architecture/viewmodel.html#the_lifecycle_of_a_viewmodel" target="_blank" rel="external">The lifecycle of a<br>ViewModel</a><br>。</p>
+<h2 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h2><hr>
+<p>现在我们已经将 <strong>ViewModel</strong> 关联到了 Fragment，但是 <strong>ViewModel</strong><br>如何获取用户数据呢？在这个例子中，我们假设服务器端提供了一个 <strong>REST API</strong> 。我们将使用 Retrofit<br>库来访问我们的服务器端，虽然你可以自由使用不同的库来达到同样的目的。</p>
+<p>下面是retrofit 的 <strong>Webservice</strong> ，负责与服务器端进行通信：</p>
+<pre><code> public interface Webservice {
+    /**
+     * @GET declares an HTTP GET request
+     * @Path(&quot;user&quot;) annotation on the userId parameter marks it as a
+     * replacement for the {user} placeholder in the @GET path
+     */
+    @GET(&quot;/users/{user}&quot;)
+    Call getUser(@Path(&quot;user&quot;) String userId);
+}
+</code></pre><p>ViewModel 的一个简单实现是直接调用 <strong>Webservice</strong> 来获取数据并将其 赋值给 user<br>对象，虽然这样是可行的，但是你的应用程序以后将很难维护。它赋予了 ViewModel 类太多的职责，违背了我们前面提到的 <strong>关注点分离原则</strong><br>。此外，ViewModel 的作用域与一个 Activity 或一个 Fragment<br>生命周期相关联，当他们的生命周期完成时将丢失所有的数据，这是非常糟糕的用户体验。因此，我们将 ViewModel 的这个工作委托给了一个新的模块<br><strong>Repository</strong> 。</p>
+<blockquote>
+<p><strong>Repository</strong><br>模块负责数据处理操作。他们为应用的其余部分提供了一个干净的API，他们知道从何处获取数据以及在更新数据时调用哪些API。你可以将它们视为不同数据源 (<br><strong>持久化模型， web服务, 缓存, etc.</strong> )之间的中介。</p>
+</blockquote>
+<p><strong>UserRepository</strong> 类使用 <strong>WebService</strong> 来获取用户数据项，如下：</p>
+<pre><code> public class UserRepository {
+
+    private Webservice webservice;
+    // ...
+    public LiveData getUser(int userId) {
+        // This is not an optimal implementation, we&apos;ll fix it below
+        final MutableLiveData data = new MutableLiveData&lt;&gt;();
+        webservice.getUser(userId).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                // error case is left out for brevity
+                data.setValue(response.body());
+            }
+        });
+        return data;
+    }
+}
+</code></pre><p>虽然 <strong>repository</strong> 模块看起来没有必要，但是它有一个重要的目的，它从应用程序的其余部分提取数据源。现在我们的 ViewModel<br>不知道数据是从 Webservice 获取到的，这意味着我们可以根据需要，将它（Webservice）替换为其他的实现。</p>
+<blockquote>
+<p>注意：为了简单起见，我们忽略了网络错误的情况。对于暴露错误和加载状态的另一个实现，请查看 <strong>附录：暴露网络状态</strong> 。</p>
+</blockquote>
+<p><strong>管理组件之间的依赖关系：</strong></p>
+<p>上面的 UserRepository 类需要一个 Webservice 的实例来工作，UserRepository 可以简单地创建Webservice<br>，但要做到这一点，它必须需要知道 Webservice 类的依赖关系来构造它，这会使代码显著和成倍的复杂化（例如，每个需要 Webservice实例的类<br>都需要知道如何用它的依赖来构造它）。另外，UserRepository 可能不是唯一需要 Webservice 的类。如果每个类创建一个新的<br>WebService，这将是非常沉重的资源。</p>
+<p>现在我们有两种模式可以用来解决这个问题：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="external">依赖注入</a>：依赖注入允许类在不构造它们的情况下定义它们的依赖关系。在运行时，另一个类负责提供这些依赖关系。我们推荐 Google 的 <a href="https://google.github.io/dagger/" target="_blank" rel="external">Dagger 2 </a>库，在Android应用中实现依赖注入。Dagger 2 通过遍历依赖关系树来自动构造对象，并为依赖关系提供编译时间保证。</li>
+<li><a href="https://en.wikipedia.org/wiki/Service_locator_pattern" target="_blank" rel="external">服务定位器</a>：服务定位器提供了一个注册表，这个类可以获得它们的依赖 而不是 构建它们。实现起来比依赖注入（DI）更容易，所以如果你不熟悉DI，可以使用 Service Locator。</li>
+</ul>
+<p>这些模式允许您扩展代码，因为它们提供了用于管理依赖关系的清晰模式，无需复制代码或增加复杂性。这两个模式也允许交换实现测试， 这是使用它们的主要好处之一。</p>
+<p>在这个例子中，我们将使用 <a href="https://en.wikipedia.org/wiki/Dependency_injection" target="_blank" rel="external">依赖注入</a><br>来管理依赖关系。</p>
+<h2 id="关联ViewModel和repository"><a href="#关联ViewModel和repository" class="headerlink" title="关联ViewModel和repository"></a>关联ViewModel和repository</h2><hr>
+<p>现在我们修改 <strong>UserProfileViewModel</strong> 使用的 repository。</p>
+<pre><code> public class UserProfileViewModel extends ViewModel {
+
+    private LiveData user;
+    private UserRepository userRepo;
+
+    @Inject // UserRepository parameter is provided by Dagger 2
+    public UserProfileViewModel(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
+
+    public void init(String userId) {
+        if (this.user != null) {
+            // ViewModel is created per Fragment so
+            // we know the userId won&apos;t change
+            return;
+        }
+        user = userRepo.getUser(userId);
+    }
+
+    public LiveData getUser() {
+        return this.user;
+    }
+}
+</code></pre><h2 id="缓存数据"><a href="#缓存数据" class="headerlink" title="缓存数据"></a>缓存数据</h2><hr>
+<p>上面的 repository 实现 对抽象调用 Web服务是有好处的，但是因为它只依赖于一个数据源，所以它不是很有用。</p>
+<p>UserRepository 实现的问题是，在获取数据之后，它不保存在任何地方。如果用户离开 UserProfileFragment<br>并返回，应用程序将重新获取数据。这是不好的，原因有两个：浪费宝贵的网络带宽并强制用户等待新的查询完成。为了解决这个问题，我们将添加一个新的数据源到<br>UserRepository ，这个数据源可以将 User 对象 缓存 到内存中。</p>
+<pre><code>@Singleton  // informs Dagger that this class should be constructed once
+public class UserRepository {
+    private Webservice webservice;
+    // simple in memory cache, details omitted for brevity
+    private UserCache userCache;
+    public LiveData getUser(String userId) {
+        LiveData cached = userCache.get(userId);
+        if (cached != null) {
+            return cached;
+        }
+
+        final MutableLiveData data = new MutableLiveData&lt;&gt;();
+        userCache.put(userId, data);
+        // this is still suboptimal but better than before.
+        // a complete implementation must also handle the error cases.
+        webservice.getUser(userId).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                data.setValue(response.body());
+            }
+        });
+        return data;
+    }
+}
+</code></pre><h2 id="持久化数据"><a href="#持久化数据" class="headerlink" title="持久化数据"></a>持久化数据</h2><hr>
+<p>在我们当前的实现中，如果用户旋转屏幕或离开并返回到应用，现有UI将立即可见，因为 repository<br>从内存中检索缓存的数据。但是，如果用户离开应用程序并且数小时后回来，或Android 系统杀死该进程后，会发生什么？</p>
+<p>在目前的实现中，我们将需要从网络上重新获取数据。这不仅是一个糟糕的用户体验，而且会浪费，因为它会使用移动数据重新获取相同的数据。你可以简单地通过缓存Web请求来解决这个问题，但是这会产生新的问题。如果相同的用户数据从另一种类型的请求中显示出来（例如，获取朋友列表），会发生什么情况？那么你的应用程序可能会显示不一致的数据，这是一个混乱的用户体验。例如，由于好友列表请求和用户请求可以在不同的时间执行，所以相同用户的数据可能会以不同的方式显示。您的应用需要合并它们以避免显示不一致的数据。</p>
+<p>处理这个问题的正确方法是使用 <strong>持久化模型</strong> 。这就是<br><a href="https://developer.android.google.cn/training/data-
+storage/room/index.html" target="_blank" rel="external">Room</a> 持久化库可以拯救的地方。</p>
+<blockquote>
+<p><a href="https://developer.android.google.cn/training/data-
+storage/room/index.html" target="_blank" rel="external">Room</a><br>是一个对象映射库，使用最小的样板代码来提供本地数据持久化。在编译时，它会根据模式验证每个查询，因此，有问题的SQL查询会导致编译时出错，而不是运行时失败。Room<br>抽象了处理原始SQL表和查询的一些底层实现细节。它还允许观察对数据库数据（包括集合和 join 查询）的更改，通过 <strong>LiveData</strong> 对象<br>公开这些更改 。另外，它明确定义了解决常见问题的线程约束，例如在主线程上的访问存储。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>注意：如果你的应用程序已经使用另一个持久化解决方案（如SQLite对象关系映射（ORM）），则不需要使用 Room<br>替换现有的解决方案。但是，如果您正在编写新的应用程序或重构现有的应用程序，我们建议使用 Room 来保存应用程序的数据。这样，您可以利用库的抽象和查询<br>验证功能。</p>
+</blockquote>
+<p>要使用 Room，我们需要定义我们的本地模式。首先，使用<br><strong><a href="https://developer.android.google.cn/reference/android/arch/persistence/room/Entity.html" target="_blank" rel="external">@Entity</a></strong><br>注解 User 类 以将其标记为数据库中的表。</p>
+<pre><code> @Entity
+class User {
+  @PrimaryKey
+  private int id;
+  private String name;
+  private String lastName;
+  // getters and setters for fields
+}
+</code></pre><p>然后，为你的app创建一个数据库类继承于 <strong>RoomDatabase</strong> ：</p>
+<pre><code>@Database(entities = {User.class}, version = 1)
+public abstract class MyDatabase extends RoomDatabase {
+}
+</code></pre><p>注意 <strong>MyDatabase</strong> 是抽象的。Room 自动提供一个 它的实现。有关详细信息，请查看<br><a href="https://developer.android.google.cn/training/data-
+storage/room/index.html" target="_blank" rel="external">Room</a> 文档</p>
+<p>现在我们需要一种将用户数据插入数据库的方法。为此，我们将创建一个 <strong>数据访问对象（DAO</strong> 。</p>
+<pre><code>@Dao
+public interface UserDao {
+    @Insert(onConflict = REPLACE)
+    void save(User user);
+    @Query(&quot;SELECT * FROM user WHERE id = :userId&quot;)
+    LiveData load(String userId);
+}
+</code></pre><p>然后，从我们的数据库类中引用 <strong>DAO （Data Access Object）</strong> 。</p>
+<pre><code>@Database(entities = {User.class}, version = 1)
+public abstract class MyDatabase extends RoomDatabase {
+    public abstract UserDao userDao();
+}
+</code></pre><p>请注意，该 <strong>load</strong> 方法返回一个 <strong>LiveData</strong> 。Room<br>知道数据库何时被修改，当数据改变时它会自动通知所有活动的的察者。因为它使用的是<br>LiveData，所以这将是有效的，因为只有至少有一个活动的观察者才会更新数据。</p>
+<blockquote>
+<p>注意：Room 根据 table 的修改来检查失效，这意味着它可能发送误报的通知。</p>
+</blockquote>
+<p>现在我们可以修改我们的 <strong>UserRepository</strong> 来包含 Room 数据源。</p>
+<pre><code> @Singleton
+public class UserRepository {
+    private final Webservice webservice;
+    private final UserDao userDao;
+    private final Executor executor;
+
+    @Inject
+    public UserRepository(Webservice webservice, UserDao userDao, Executor executor) {
+        this.webservice = webservice;
+        this.userDao = userDao;
+        this.executor = executor;
+    }
+
+    public LiveData getUser(String userId) {
+        refreshUser(userId);
+        // return a LiveData directly from the database.
+        return userDao.load(userId);
+    }
+
+    private void refreshUser(final String userId) {
+        executor.execute(() -&gt; {
+            // running in a background thread
+            // check if user was fetched recently
+            boolean userExists = userDao.hasUser(FRESH_TIMEOUT);
+            if (!userExists) {
+                // refresh the data
+                Response response = webservice.getUser(userId).execute();
+                // TODO check for error etc.
+                // Update the database.The LiveData will automatically refresh so
+                // we don&apos;t need to do anything else here besides updating the database
+                userDao.save(response.body());
+            }
+        });
+    }
+}
+</code></pre><p>请注意，尽管我们改变了 来自于 UserRepository 的数据，我们并不需要改变我们 UserProfileViewModel或<br>UserProfileFragment。这是抽象提供的灵活性。这对于测试来说有好处的，因为你可以在测试你的UserProfileViewModel<br>的时候提供一个假的 UserRepository 。</p>
+<p>现在我们的代码是完整了。如果用户以后回到相同的用户界面，他们会立即看到用户信息，因为我们持久化了。同时，如果数据过期了，我们的仓库将在后台更新数据。当然，根据您的使用情况，如果数据太旧，您可能不希望显示持久化数据。</p>
+<p>在一些使用情况下，如 <strong>下拉刷新</strong> ，UI 显示用户是否正在进行网络操作是非常重要的。将UI<br>操作与实际数据分开是一个很好的做法，因为它可能因各种原因而导致更新（例如，如果我们获取朋友列表，同一用户可能会再次触发 <strong>LiveData</strong><br>更新）。站在UI 的角度，事实上，当有一个请求执行的时候，另一个数据点，类似于任何其他的数据 (比如 User 对象)。</p>
+<p>这个用例有两种常见的解决方案：</p>
+<ul>
+<li><p>更改 <strong>getUser</strong> 为返回包含网络操作状态的 LiveData 。附录中提供了一个示例实现：公开网络状态部分。</p>
+</li>
+<li><p>在 repository 类中提供另一个可以返回用户刷新状态的公共函数。如果只想响应显式的用户操作（如下拉刷新）来显示网络状态，则此选项更好。</p>
+</li>
+</ul>
+<p><strong>单一的真相来源：</strong></p>
+<p>不同的 <strong>REST API</strong> 端点通常返回相同的数据。例如，如果我们的服务器端拥有另一个返回 朋友列表的端点，则同一个用户对象可能来自两个不同的API<br>端点，也许粒度不同。如果 UserRepository 从<br>Webservice请求返回原本的响应，我们的UI可能会显示不一致的数据，因为在这些请求过程中数据可能已经在服务器端发生了改变。这就是为什么在<br>UserRepository 实现中，Web服务回调只是将数据保存到数据库中。然后，对数据库的更改将触发回调给 活动的 <strong>LiveData对象</strong> 。</p>
+<p>在这个模型中，数据库充当了 <strong>单一的真相来源</strong> ，应用程序的其他部分通过 Repository 访问它。无论你是否使用磁盘缓存，我们都建议将你的<br>Repository 指定为应用程序其余部分唯一的真相来源。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><hr>
+<p>我们已经提到分离的好处之一就是可测试性，让我们看看如何测试每个代码模块。</p>
+<ul>
+<li><p><strong>用户界面和交互</strong> ：你唯一需要花费时间的是 <a href="https://developer.android.google.cn/training/testing/unit-testing/instrumented-unit-tests.html" target="_blank" rel="external">Android UI Instrumentation</a> 。测试UI 代码的最好方法是创建一个 Espresso测试。您可以创建 Fragment 并为其提供一个模拟的ViewModel。由于该 Fragment 只与 ViewModel 联系，所以伪造它足以完全测试这个UI。</p>
+</li>
+<li><p><strong>ViewModel</strong> ：ViewModel 可以使用 <a href="https://developer.android.google.cn/training/testing/unit-testing/local-unit-tests.html" target="_blank" rel="external">JUnit</a> 来测试 。你只需要模拟 UserRepository 来测试它。</p>
+</li>
+<li><p><strong>UserRepository</strong> ：你同样也可以使用 <a href="https://developer.android.google.cn/training/testing/unit-testing/local-unit-tests.html" target="_blank" rel="external">JUnit</a> 来测试 UserRepository。你需要模拟 Webservice 和 DAO。你可以测试它是否做出了正确的Web服务调用，并将结果保存到数据库中，如果数据已缓存且最新，则不会发出任何不必要的请求。因为 Webservice 和 UserDao 都是接口，你可以模拟它们，或者为更复杂的测试用例创建伪造的实现…</p>
+</li>
+<li><p><strong>UserDao</strong> ：测试 DAO 类的推荐方法是使用 instrumentation 测试。由于这些 instrumentation 测试不需要任何用户界面，他们将会运行得很快。对于每个测试，您可以创建一个处于内存中的数据库，以确保测试没有任何副作用（如更改磁盘上的数据库文件）。<br>Room 也允许指定数据库的实现，所以你可以通过提供 JUnit 来测试<br><a href="https://developer.android.google.cn/reference/android/arch/persistence/db/SupportSQLiteOpenHelper.html" target="_blank" rel="external">SupportSQLiteOpenHelper</a><br>的实现。通常不建议使用这种方法，因为设备上运行的SQLite版本可能与主机上的SQLite版本不同。</p>
+</li>
+<li><p><strong>Webservice</strong> ：使测试独立于外界是很重要的，所以你的 Webservice 测试也应该避免对后端进行网络调用。有很多库可以帮助你，例如， MockWebServer 是一个强大的库，可以帮助你为测试创建一个伪造的本地服务器。</p>
+</li>
+<li><p><strong>Testing Artifacts</strong> 架构组件提供了一个Maven artifact 来控制其后台线程。在android.arch.core:core-testing artifact 内部 ，有2个 JUnit 规则：</p>
+<ul>
+<li><strong>InstantTaskExecutorRule</strong> ：此规则可用于强制架构组件立即在调用线程上执行任何后台操作。</li>
+<li><strong>CountingTaskExecutorRule</strong> ：此规则可用于检测测试，以等待架构组件的后台操作或将其作为闲置资源连接到 Espresso。</li>
+</ul>
+</li>
+</ul>
+<h2 id="最终的架构"><a href="#最终的架构" class="headerlink" title="最终的架构"></a>最终的架构</h2><hr>
+<p>下图显示了我们推荐的架构中的所有模块以及它们如何相互交互：</p>
+<p><img src="https://developer.android.google.cn/topic/libraries/architecture/images
+/final-architecture.png" alt="这里写图片描述"></p>
+<h1 id="指导原则"><a href="#指导原则" class="headerlink" title="指导原则"></a>指导原则</h1><hr>
+<p>编程是一个创造性的领域，开发Android应用也不例外。解决问题的方法有很多种，可以在多个Activity 或 Fragment<br>之间传递数据，检索远程数据并将其保存在本地以进行离线模式，也可以使用其他常见应用程序遇到的情况。</p>
+<p>虽然以下建议不是强制性的，但是根据我们的经验，从长远来看遵循这些建议将使您的代码更加健壮，变得可测试和可维护。</p>
+<ul>
+<li><p>你在 AndroidManifest 中定义的入口点（activities, services, broadcast receivers, 等等）不是数据的来源。相反，他们只应该协调与该入口点相关的数据子集。由于每个 app组件的 存活相当短，这取决于用户与设备的交互以及当前运行时的状况，因此你不希望这些入口点中的任何一个成为数据源。</p>
+</li>
+<li><p>在应用程序的各个模块之间建立明确的职责界限时要毫不留情。例如，不要将从网络中加载数据的代码分散到多个类或包中。同样，不要把不相关的职责 - 比如数据缓存和数据绑定 - 放到同一个类中。</p>
+</li>
+<li><p>尽可能少地暴露每个模块。不要试图创建“只有那一个”的快捷方式，从一个模块公开其内部实现细节。你可能会在短期内获得一些时间，但随着代码库的不断发展，你将会花费更多时间付出技术代价。</p>
+</li>
+<li><p>在定义模块之间的交互时，请考虑如何使每个模块独立地进行测试。例如，如果有一个定义良好的 API 从网络中获取数据，测试将数据保存在本地数据库中的模块会变得更容易。相反，如果将这两个模块的逻辑混合在一起，或者在整个代码库中分散网络请求代码，那么要测试就会更加困难。</p>
+</li>
+<li><p>你的APP的核心是让它从其他APP中脱颖而出。不要花费时间重新造轮子，或者一次又一次地写出相同的样板代码。相反，将精力集中在可以让你的应用独特的东西上，让Android 架构 和其他推荐的库处理重复的样板代码。</p>
+</li>
+<li><p>持久化尽可能多的相关和最新的数据，以便当设备处于离线模式时你的APP依然可用。虽然你可能喜欢恒定的高速连接，但你的用户可能并不会。</p>
+</li>
+<li><p>你的 repository 应该指定一个数据源作为单一的事实来源。无论你的应用程序何时需要访问这些数据，都应始终从单一的事实源头发起。有关更多信息，请查看 <strong>单一的真相来源</strong></p>
+</li>
+</ul>
+<h1 id="附录：暴露网络状态"><a href="#附录：暴露网络状态" class="headerlink" title="附录：暴露网络状态"></a>附录：暴露网络状态</h1><hr>
+<p>在上面推荐的App架构部分，我们故意省略了网络错误和加载状态，以保持示例的简单。在本节中，我们演示了如何使用 <strong>Resource</strong><br>类来暴露网络状态以及封装数据及其状态。</p>
+<p>以下是一个实现的例子：</p>
+<pre><code>//a generic class that describes a data with a status
+public class Resource {
+    @NonNull public final Status status;
+    @Nullable public final T data;
+    @Nullable public final String message;
+    private Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
+        this.status = status;
+        this.data = data;
+        this.message = message;
+    }
+
+    public static  Resource success(@NonNull T data) {
+        return new Resource&lt;&gt;(SUCCESS, data, null);
+    }
+
+    public static  Resource error(String msg, @Nullable T data) {
+        return new Resource&lt;&gt;(ERROR, data, msg);
+    }
+
+    public static  Resource loading(@Nullable T data) {
+        return new Resource&lt;&gt;(LOADING, data, null);
+    }
+}
+</code></pre><p>因为从网络加载数据，而从磁盘显示数据是一个常见的用例，我们将创建一个辅助类 <strong>NetworkBoundResource</strong><br>，它可以在多个地方重复使用。以下是 NetworkBoundResource 的决策树：</p>
+<p><img src="https://developer.android.google.cn/topic/libraries/architecture/images
+/network-bound-resource.png" alt="这里写图片描述"></p>
+<p>它首先通过对资源的数据库进行观察。当第一次从数据库加载条目时，<strong>NetworkBoundResource</strong>0<br>会检查结果是否足够好以便被分发，或者它应该从网络中获取。请注意，这两种情况可能同时发生，因为你可能希望在从网络获取数据时显示缓存的数据。</p>
+<p>如果网络调用成功完成，则将响应保存到数据库中并重新初始化流。如果网络请求失败，我们直接发送失败。</p>
+<p>&gt;<br>注意：在将新数据保存到磁盘之后，我们会重新初始化数据库中的数据流，但通常我们不需要这样做，因为数据库将会发送更改。另一方面，依靠数据库来发送更改，将产生依赖副作用，因为如果数据没有变化，数据库可以避免发送变化，那么它可能会中断。我们也不希望发送从网络返回的结果，因为这将违背单一的真相来源（也许数据库中会有触发机制可以改变保存的值）。我们也不想在没有新数据的情况下发送<br><strong>SUCCESS</strong> ，因为它会向客户发送错误的信息。</p>
+<p>下面是 公开API 是为 <strong>NetworkBoundResource</strong> 的子类提供的 ：</p>
+<pre><code> // ResultType: Type for the Resource data
+// RequestType: Type for the API response
+public abstract class NetworkBoundResource {
+    // Called to save the result of the API response into the database
+    @WorkerThread
+    protected abstract void saveCallResult(@NonNull RequestType item);
+
+    // Called with the data in the database to decide whether it should be
+    // fetched from the network.
+    @MainThread
+    protected abstract boolean shouldFetch(@Nullable ResultType data);
+
+    // Called to get the cached data from the database
+    @NonNull @MainThread
+    protected abstract LiveData loadFromDb();
+
+    // Called to create the API call.
+    @NonNull @MainThread
+    protected abstract LiveData&gt; createCall();
+
+    // Called when the fetch fails. The child class may want to reset components
+    // like rate limiter.
+    @MainThread
+    protected void onFetchFailed() {
+    }
+
+    // returns a LiveData that represents the resource, implemented
+    // in the base class.
+    public final LiveData&gt; getAsLiveData();
+}
+</code></pre><p>请注意，上面的类定义了两个类型参数（ResultType， RequestType），因为从 API 返回的数据类型可能与本地使用的数据类型不匹配。</p>
+<p>另请注意，上面的 ApiResponse 代码用于网络请求。<br>ApiResponse是一个简单的Retrofit2.Call类包装，将其响应转换为LiveData。</p>
+<p>以下是该 NetworkBoundResource 类的其余部分：</p>
+<pre><code>public abstract class NetworkBoundResource {
+    private final MediatorLiveData&gt; result = new MediatorLiveData&lt;&gt;();
+
+    @MainThread
+    NetworkBoundResource() {
+        result.setValue(Resource.loading(null));
+        LiveData dbSource = loadFromDb();
+        result.addSource(dbSource, data -&gt; {
+            result.removeSource(dbSource);
+            if (shouldFetch(data)) {
+                fetchFromNetwork(dbSource);
+            } else {
+                result.addSource(dbSource,
+                        newData -&gt; result.setValue(Resource.success(newData)));
+            }
+        });
+    }
+
+    private void fetchFromNetwork(final LiveData dbSource) {
+        LiveData&gt; apiResponse = createCall();
+        // we re-attach dbSource as a new source,
+        // it will dispatch its latest value quickly
+        result.addSource(dbSource,
+                newData -&gt; result.setValue(Resource.loading(newData)));
+        result.addSource(apiResponse, response -&gt; {
+            result.removeSource(apiResponse);
+            result.removeSource(dbSource);
+            //noinspection ConstantConditions
+            if (response.isSuccessful()) {
+                saveResultAndReInit(response);
+            } else {
+                onFetchFailed();
+                result.addSource(dbSource,
+                        newData -&gt; result.setValue(
+                                Resource.error(response.errorMessage, newData)));
+            }
+        });
+    }
+
+    @MainThread
+    private void saveResultAndReInit(ApiResponse response) {
+        new AsyncTask() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                saveCallResult(response.body);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                // we specially request a new live data,
+                // otherwise we will get immediately last cached value,
+                // which may not be updated with latest results received from network.
+                result.addSource(loadFromDb(),
+                        newData -&gt; result.setValue(Resource.success(newData)));
+            }
+        }.execute();
+    }
+
+    public final LiveData&gt; getAsLiveData() {
+        return result;
+    }
+}
+</code></pre><p>现在，我们可以使用 <strong>NetworkBoundResource</strong> 将在 repository 中绑定 User 实现 写入我们的磁盘和网络。</p>
+<pre><code>class UserRepository {
+    Webservice webservice;
+    UserDao userDao;
+
+     public LiveData&gt; loadUser(final String userId) {
+        return new NetworkBoundResource() {
+            @Override
+            protected void saveCallResult(@NonNull User item) {
+                userDao.insert(item);
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable User data) {
+                return rateLimiter.canFetch(userId) &amp;&amp; (data == null || !isFresh(data));
+            }
+
+            @NonNull @Override
+            protected LiveData loadFromDb() {
+                return userDao.load(userId);
+            }
+
+            @NonNull @Override
+            protected LiveData&gt; createCall() {
+                return webservice.getUser(userId);
+            }
+        }.getAsLiveData();
+    }
+}
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Ace
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.azhangbing.com/2017/11/15/Android架构组件-谷歌App架构指南/" title="Android架构组件-谷歌App架构指南">http://www.azhangbing.com/2017/11/15/Android架构组件-谷歌App架构指南/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/" rel="next" title="JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）">
+                <i class="fa fa-chevron-left"></i> JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="Ace" />
+            
+              <p class="site-author-name" itemprop="name">Ace</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:psel1991@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#APP开发者面临的常见问题"><span class="nav-number">1.</span> <span class="nav-text">APP开发者面临的常见问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通用架构原则"><span class="nav-number">2.</span> <span class="nav-text">通用架构原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#推荐的App架构"><span class="nav-number">3.</span> <span class="nav-text">推荐的App架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建用户界面"><span class="nav-number">3.1.</span> <span class="nav-text">搭建用户界面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取数据"><span class="nav-number">3.2.</span> <span class="nav-text">获取数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联ViewModel和repository"><span class="nav-number">3.3.</span> <span class="nav-text">关联ViewModel和repository</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缓存数据"><span class="nav-number">3.4.</span> <span class="nav-text">缓存数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持久化数据"><span class="nav-number">3.5.</span> <span class="nav-text">持久化数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">3.6.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终的架构"><span class="nav-number">3.7.</span> <span class="nav-text">最终的架构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指导原则"><span class="nav-number">4.</span> <span class="nav-text">指导原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录：暴露网络状态"><span class="nav-number">5.</span> <span class="nav-text">附录：暴露网络状态</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ace</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("T81Q0FDD6tksdyRHdSnEqPmR-gzGzoHsz", "J0cjY0PNICCiFQmpGDxxrlid>");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
