@@ -97,7 +97,7 @@
 <meta property="og:description" content="#重学自定义View系列教程02–理论基础：浅谈DecorView与ViewRootImpl 前言对于Android开发者来说，View无疑是开发中经常接触的，包括它的事件分发机制、测量、布局、绘制流程等，如果要自定义一个View，那么应该对以上流程有所了解、研究。本系列文章将会为大家带来View的工作流程详细解析。在深入接触View的测量、布局、绘制这三个流程之前，我们从Activity入手，看">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2017-12-23-20160522211749849.jpg">
-<meta property="og:updated_time" content="2017-12-22T17:12:08.184Z">
+<meta property="og:updated_time" content="2017-12-22T17:16:21.871Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="#重学自定义View系列教程02--理论基础：浅谈DecorView与ViewRootImpl">
 <meta name="twitter:description" content="#重学自定义View系列教程02–理论基础：浅谈DecorView与ViewRootImpl 前言对于Android开发者来说，View无疑是开发中经常接触的，包括它的事件分发机制、测量、布局、绘制流程等，如果要自定义一个View，那么应该对以上流程有所了解、研究。本系列文章将会为大家带来View的工作流程详细解析。在深入接触View的测量、布局、绘制这三个流程之前，我们从Activity入手，看">
@@ -422,7 +422,7 @@
 
       
         <p>#重学自定义View系列教程02–理论基础：浅谈DecorView与ViewRootImpl</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于Android开发者来说，View无疑是开发中经常接触的，包括它的事件分发机制、测量、布局、绘制流程等，如果要自定义一个View，那么应该对以上流程有所了解、研究。本系列文章将会为大家带来View的工作流程详细解析。在深入接触View的测量、布局、绘制这三个流程之前，我们从Activity入手，看看从Activity创建后到View的正式工作之前，所要经历的步骤。以下源码均取自Android API 21。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于Android开发者来说，View无疑是开发中经常接触的，包括它的事件分发机制、测量、布局、绘制流程等，如果要自定义一个View，那么应该对以上流程有所了解、研究。本系列文章将会为大家带来View的工作流程详细解析。在深入接触View的测量、布局、绘制这三个流程之前，我们从Activity入手，看看从Activity创建后到View的正式工作之前，所要经历的步骤。以下源码均取自Android API 21。<br><a id="more"></a></p>
 <h2 id="setContentView"><a href="#setContentView" class="headerlink" title="setContentView"></a>setContentView</h2><p>从setContentView说起<br>一般地，我们在Activity中，会在onCreate()方法中写下这样一句：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setContentView(R.layout.main);</div></pre></td></tr></table></figure>
 <p>显然，这是为activity设置一个我们定义好的main.xml布局，我们跟踪一下源码，看看这个方法是怎样做的，Activity#setContentView:</p>
