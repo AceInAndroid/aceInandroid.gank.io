@@ -4,6 +4,33 @@
 
     
   <url>
+    <loc>http://www.azhangbing.com/2018/01/02/%E9%87%8D%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89View%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B03-%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80Android-View-%E6%B5%8B%E9%87%8F%E6%B5%81%E7%A8%8B-Measure-%E5%AE%8C%E5%85%A8%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2018-01-02T07:34:02.244Z</lastmod>
+    <data>
+        <display>
+        <title>重学自定义View系列教程03--理论基础Android View 测量流程(Measure)完全解析</title>
+        <pubTime>2018-01-02T07:32:00.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+        <tag>view</tag>
+         
+        <tag>重学自定义view</tag>
+         
+         
+           
+             
+              <breadCrumb title="自定义view" url="http://www.azhangbing.com/categories/%E8%87%AA%E5%AE%9A%E4%B9%89view/"/>
+          
+             
+              <breadCrumb title="view" url="http://www.azhangbing.com/categories/%E8%87%AA%E5%AE%9A%E4%B9%89view/view/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.azhangbing.com/2017/12/23/%E9%87%8D%E5%AD%A6%E8%87%AA%E5%AE%9A%E4%B9%89View%E7%B3%BB%E5%88%97%E6%95%99%E7%A8%8B02-%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80%EF%BC%9A%E6%B5%85%E8%B0%88DecorView%E4%B8%8EViewRootImpl/</loc>
     <lastmod>2017-12-22T17:16:21.871Z</lastmod>
     <data>
