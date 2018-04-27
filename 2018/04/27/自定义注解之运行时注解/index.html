@@ -77,7 +77,7 @@
 
 
 
-  <meta name="keywords" content="javascript," />
+  <meta name="keywords" content="JAVA," />
 
 
 
@@ -88,18 +88,18 @@
 
 
 
-<meta name="description" content="闭包（closure）是Javascript语言的一个难点，也是它的特色，很多高级应用都要依靠闭包实现。下面就是我的学习笔记，对于Javascript初学者应该是很有用的。">
-<meta name="keywords" content="javascript">
+<meta name="description" content="自定义注解之运行时注解(RetentionPolicy.RUNTIME)前面有提到注解按生命周期来划分可分为3类：  RetentionPolicy.SOURCE：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃； RetentionPolicy.CLASS：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期； RetentionPolic">
+<meta name="keywords" content="JAVA">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习Javascript闭包">
-<meta property="og:url" content="http://www.azhangbing.com/2017/11/10/学习Javascript闭包/index.html">
+<meta property="og:title" content="自定义注解之运行时注解">
+<meta property="og:url" content="http://www.azhangbing.com/2018/04/27/自定义注解之运行时注解/index.html">
 <meta property="og:site_name" content="Ace的技术客栈">
-<meta property="og:description" content="闭包（closure）是Javascript语言的一个难点，也是它的特色，很多高级应用都要依靠闭包实现。下面就是我的学习笔记，对于Javascript初学者应该是很有用的。">
+<meta property="og:description" content="自定义注解之运行时注解(RetentionPolicy.RUNTIME)前面有提到注解按生命周期来划分可分为3类：  RetentionPolicy.SOURCE：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃； RetentionPolicy.CLASS：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期； RetentionPolic">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-09T17:26:44.713Z">
+<meta property="og:updated_time" content="2018-04-27T07:58:02.530Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习Javascript闭包">
-<meta name="twitter:description" content="闭包（closure）是Javascript语言的一个难点，也是它的特色，很多高级应用都要依靠闭包实现。下面就是我的学习笔记，对于Javascript初学者应该是很有用的。">
+<meta name="twitter:title" content="自定义注解之运行时注解">
+<meta name="twitter:description" content="自定义注解之运行时注解(RetentionPolicy.RUNTIME)前面有提到注解按生命周期来划分可分为3类：  RetentionPolicy.SOURCE：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃； RetentionPolicy.CLASS：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期； RetentionPolic">
 
 
 
@@ -129,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://www.azhangbing.com/2017/11/10/学习Javascript闭包/"/>
+  <link rel="canonical" href="http://www.azhangbing.com/2018/04/27/自定义注解之运行时注解/"/>
 
 
 
 
 
-  <title>学习Javascript闭包 | Ace的技术客栈</title>
+  <title>自定义注解之运行时注解 | Ace的技术客栈</title>
   
 
 
@@ -272,7 +272,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/11/10/学习Javascript闭包/">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2018/04/27/自定义注解之运行时注解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ace">
@@ -289,7 +289,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">学习Javascript闭包</h2>
+          <h2 class="post-title" itemprop="name headline">自定义注解之运行时注解</h2>
         
 
         <div class="post-meta">
@@ -301,8 +301,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-10T01:20:00+08:00">
-                2017-11-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T15:57:00+08:00">
+                2018-04-27
               </time>
             
 
@@ -324,8 +324,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/javascript/" itemprop="url" rel="index">
-                    <span itemprop="name">javascript</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -341,7 +341,7 @@
 
           
           
-             <span id="/2017/11/10/学习Javascript闭包/" class="leancloud_visitors" data-flag-title="学习Javascript闭包">
+             <span id="/2018/04/27/自定义注解之运行时注解/" class="leancloud_visitors" data-flag-title="自定义注解之运行时注解">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -371,7 +371,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,286
+                  1,032
                 </span>
               
 
@@ -387,7 +387,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  4
                 </span>
               
             </div>
@@ -408,26 +408,28 @@
       
 
       
-        <p>闭包（closure）是Javascript语言的一个难点，也是它的特色，很多高级应用都要依靠闭包实现。<br>下面就是我的学习笔记，对于Javascript初学者应该是很有用的。</p>
-<a id="more"></a>
-<h4 id="一、变量的作用域"><a href="#一、变量的作用域" class="headerlink" title="一、变量的作用域"></a>一、变量的作用域</h4><p>要理解闭包，首先必须理解Javascript特殊的变量作用域。<br>变量的作用域无非就是两种：全局变量和局部变量。<br>Javascript语言的特殊之处，就在于函数内部可以直接读取全局变量。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">　　<span class="keyword">var</span> n=<span class="number">999</span>;</div><div class="line">　　<span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　alert(n);</div><div class="line">　　&#125;</div><div class="line">　　f1(); <span class="comment">// 999</span></div></pre></td></tr></table></figure>
-<p>另一方面，在函数外部自然无法读取函数内的局部变量。<br>　<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　  　　<span class="keyword">var</span> n=<span class="number">999</span>;</div><div class="line">　　&#125;</div><div class="line">　　alert(n); <span class="comment">// error</span></div></pre></td></tr></table></figure></p>
-<p>这里有一个地方需要注意，函数内部声明变量的时候，一定要使用var命令。如果不用的话，你实际上声明了一个全局变量！</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　n=<span class="number">999</span>;</div><div class="line">　　&#125;</div><div class="line">　　f1();</div><div class="line">　　alert(n); <span class="comment">// 999</span></div></pre></td></tr></table></figure>
-<h4 id="二、如何从外部读取局部变量？"><a href="#二、如何从外部读取局部变量？" class="headerlink" title="二、如何从外部读取局部变量？"></a>二、如何从外部读取局部变量？</h4><p>出于种种原因，我们有时候需要得到函数内的局部变量。但是，前面已经说过了，正常情况下，这是办不到的，只有通过变通方法才能实现。<br>那就是在函数的内部，再定义一个函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　<span class="keyword">var</span> n=<span class="number">999</span>;</div><div class="line">　　　　<span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　alert(n); <span class="comment">// 999</span></div><div class="line">　　　　&#125;</div><div class="line">　　&#125;</div></pre></td></tr></table></figure>
-<p>在上面的代码中，函数f2就被包括在函数f1内部，这时f1内部的所有局部变量，对f2都是可见的。但是反过来就不行，f2内部的局部变量，对f1就是不可见的。这就是Javascript语言特有的”链式作用域”结构（chain scope），子对象会一级一级地向上寻找所有父对象的变量。所以，父对象的所有变量，对子对象都是可见的，反之则不成立。<br>既然f2可以读取f1中的局部变量，那么只要把f2作为返回值，我们不就可以在f1外部读取它的内部变量了吗！</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　<span class="keyword">var</span> n=<span class="number">999</span>;</div><div class="line">　　　　<span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　alert(n); </div><div class="line">　　　　&#125;</div><div class="line">　　　　<span class="keyword">return</span> f2;</div><div class="line">　　&#125;</div><div class="line">　　<span class="keyword">var</span> result=f1();</div><div class="line">　　result(); <span class="comment">// 999</span></div></pre></td></tr></table></figure>
-<h4 id="三、闭包的概念"><a href="#三、闭包的概念" class="headerlink" title="三、闭包的概念"></a>三、闭包的概念</h4><p>上一节代码中的f2函数，就是闭包。<br>各种专业文献上的”闭包”（closure）定义非常抽象，很难看懂。我的理解是，闭包就是能够读取其他函数内部变量的函数。<br>由于在Javascript语言中，只有函数内部的子函数才能读取局部变量，因此可以把闭包简单理解成”定义在一个函数内部的函数”。<br>所以，在本质上，闭包就是将函数内部和函数外部连接起来的一座桥梁。</p>
-<h4 id="四、闭包的用途"><a href="#四、闭包的用途" class="headerlink" title="四、闭包的用途"></a>四、闭包的用途</h4><p>闭包可以用在许多地方。它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中。<br>怎么来理解这句话呢？请看下面的代码。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　<span class="keyword">var</span> n=<span class="number">999</span>;</div><div class="line">　　　　nAdd=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;n+=<span class="number">1</span>&#125;</div><div class="line">　　　　<span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　alert(n);</div><div class="line">　　　　&#125;</div><div class="line">　　　　<span class="keyword">return</span> f2;</div><div class="line">　　&#125;</div><div class="line">　　<span class="keyword">var</span> result=f1();</div><div class="line">　　result(); <span class="comment">// 999</span></div><div class="line">　　nAdd();</div><div class="line">　　result(); <span class="comment">// 1000</span></div></pre></td></tr></table></figure>
-<p>在这段代码中，result实际上就是闭包f2函数。它一共运行了两次，第一次的值是999，第二次的值是1000。这证明了，函数f1中的局部变量n一直保存在内存中，并没有在f1调用后被自动清除。<br>为什么会这样呢？原因就在于f1是f2的父函数，而f2被赋给了一个全局变量，这导致f2始终在内存中，而f2的存在依赖于f1，因此f1也始终在内存中，不会在调用结束后，被垃圾回收机制（garbage collection）回收。<br>这段代码中另一个值得注意的地方，就是”nAdd=function(){n+=1}”这一行，首先在nAdd前面没有使用var关键字，因此nAdd是一个全局变量，而不是局部变量。其次，nAdd的值是一个匿名函数（anonymous function），而这个匿名函数本身也是一个闭包，所以nAdd相当于是一个setter，可以在函数外部对函数内部的局部变量进行操作。</p>
-<h4 id="五、使用闭包的注意点"><a href="#五、使用闭包的注意点" class="headerlink" title="五、使用闭包的注意点"></a>五、使用闭包的注意点</h4><p>1）由于闭包会使得函数中的变量都被保存在内存中，内存消耗很大，所以不能滥用闭包，否则会造成网页的性能问题，在IE中可能导致内存泄露。解决方法是，在退出函数之前，将不使用的局部变量全部删除。<br>2）闭包会在父函数外部，改变父函数内部变量的值。所以，如果你把父函数当作对象（object）使用，把闭包当作它的公用方法（Public Method），把内部变量当作它的私有属性（private value），这时一定要小心，不要随便改变父函数内部变量的值。</p>
-<h4 id="六、思考题"><a href="#六、思考题" class="headerlink" title="六、思考题"></a>六、思考题</h4><p>如果你能理解下面两段代码的运行结果，应该就算理解闭包的运行机制了。<br>代码片段一。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line">　　<span class="keyword">var</span> object = &#123;</div><div class="line">　　　　name : <span class="string">"My Object"</span>,</div><div class="line">　　　　getNameFunc : <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　　　<span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">　　　　　　&#125;;</div><div class="line">　　　　&#125;</div><div class="line">　　&#125;;</div><div class="line">　　alert(object.getNameFunc()());</div></pre></td></tr></table></figure>
-<p>代码片段二。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line">　　<span class="keyword">var</span> object = &#123;</div><div class="line">　　　　name : <span class="string">"My Object"</span>,</div><div class="line">　　　　getNameFunc : <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　<span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">　　　　　　<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">　　　　　　　　<span class="keyword">return</span> that.name;</div><div class="line">　　　　　　&#125;;</div><div class="line">　　　　&#125;</div><div class="line">　　&#125;;</div><div class="line">　　alert(object.getNameFunc()());</div></pre></td></tr></table></figure>
+        <h3 id="自定义注解之运行时注解-RetentionPolicy-RUNTIME"><a href="#自定义注解之运行时注解-RetentionPolicy-RUNTIME" class="headerlink" title="自定义注解之运行时注解(RetentionPolicy.RUNTIME)"></a>自定义注解之运行时注解(RetentionPolicy.RUNTIME)</h3><p>前面有提到注解按生命周期来划分可分为3类：</p>
+<ol>
+<li><strong>RetentionPolicy.SOURCE</strong>：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃；</li>
+<li><strong>RetentionPolicy.CLASS</strong>：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期；</li>
+<li><strong>RetentionPolicy.RUNTIME</strong>：注解不仅被保存到class文件中，jvm加载class文件之后，仍然存在；</li>
+</ol>
+<p>这3个生命周期分别对应于：<strong>Java源文件(.java文件) —&gt; .class文件 —&gt; 内存中的字节码</strong>。</p>
+<p>那怎么来选择合适的注解生命周期呢？</p>
+<p>首先要明确生命周期长度 <strong>SOURCE &lt; CLASS &lt; RUNTIME </strong>，所以前者能作用的地方后者一定也能作用。一般如果需要在运行时去动态获取注解信息，那只能用 RUNTIME 注解；如果要在编译时进行一些预处理操作，比如生成一些辅助代码（如 <strong>ButterKnife</strong>），就用 CLASS注解；如果只是做一些检查性的操作，比如 @Override 和 @SuppressWarnings，则可选用 SOURCE 注解。</p>
+<p>下面来介绍下运行时注解的简单运用。</p>
+<p>###获取注解</p>
+<p>你需要通过反射来获取运行时注解，可以从 Package、Class、Field、Method…上面获取，基本方法都一样，几个常见的方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取指定类型的注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> &lt;A extends Annotation&gt; <span class="function">A <span class="title">getAnnotation</span><span class="params">(Class&lt;A&gt; annotationType)</span></span>;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取所有注解，如果有的话 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> Annotation[] getAnnotations();  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取所有注解，忽略继承的注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> Annotation[] getDeclaredAnnotations();  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 指定注解是否存在该元素上，如果有则返回true，否则false </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isAnnotationPresent</span><span class="params">(Class&lt;? extends Annotation&gt; annotationType)</span></span>;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取Method中参数的所有注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> Annotation[][] getParameterAnnotations();</div></pre></td></tr></table></figure>
+<p>要使用这些函数必须先通过反射获取到对应的元素：Class、Field、Method 等。</p>
+<p>###自定义注解<br>来看下自定义注解的简单使用方式，这里先定义3个运行时注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 适用类、接口（包括注解类型）或枚举  </span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ClassInfo &#123;  </div><div class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;  </div><div class="line">&#125;  </div><div class="line"><span class="comment">// 适用field属性，也包括enum常量  </span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.FIELD)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> FieldInfo &#123;  </div><div class="line">    <span class="keyword">int</span>[] value();  </div><div class="line">&#125;  </div><div class="line"><span class="comment">// 适用方法  </span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.METHOD)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MethodInfo &#123;  </div><div class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> "<span class="keyword">long</span>"</span>;  </div><div class="line">    <span class="function">String <span class="title">data</span><span class="params">()</span></span>;  </div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">age</span><span class="params">()</span> <span class="keyword">default</span> 27</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这3个注解分别适用于不同的元素，并都带有不同的属性，在使用注解是需要设置这些属性值。<br>再定义一个测试类来使用这些注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 测试运行时注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="meta">@ClassInfo</span>(<span class="string">"Test Class"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestRuntimeAnnotation</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="meta">@FieldInfo</span>(value = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;)  </div><div class="line">    <span class="keyword">public</span> String fieldInfo = <span class="string">"FiledInfo"</span>;  </div><div class="line">  </div><div class="line">    <span class="meta">@FieldInfo</span>(value = &#123;<span class="number">10086</span>&#125;)  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> i = <span class="number">100</span>;  </div><div class="line">  </div><div class="line">    <span class="meta">@MethodInfo</span>(name = <span class="string">"BlueBird"</span>, data = <span class="string">"Big"</span>)  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getMethodInfo</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> TestRuntimeAnnotation.class.getSimpleName();  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用还是很简单的，最后来看怎么在代码中获取注解信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 测试运行时注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">_testRuntimeAnnotation</span><span class="params">()</span> </span>&#123;  </div><div class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();  </div><div class="line">    Class&lt;?&gt; cls = TestRuntimeAnnotation.class;  </div><div class="line">    Constructor&lt;?&gt;[] constructors = cls.getConstructors();  </div><div class="line">    <span class="comment">// 获取指定类型的注解  </span></div><div class="line">    sb.append(<span class="string">"Class注解："</span>).append(<span class="string">"\n"</span>);  </div><div class="line">    ClassInfo classInfo = cls.getAnnotation(ClassInfo.class);  </div><div class="line">    <span class="keyword">if</span> (classInfo != <span class="keyword">null</span>) &#123;  </div><div class="line">        sb.append(Modifier.toString(cls.getModifiers())).append(<span class="string">" "</span>)  </div><div class="line">                .append(cls.getSimpleName()).append(<span class="string">"\n"</span>);  </div><div class="line">        sb.append(<span class="string">"注解值: "</span>).append(classInfo.value()).append(<span class="string">"\n\n"</span>);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    sb.append(<span class="string">"Field注解："</span>).append(<span class="string">"\n"</span>);  </div><div class="line">    Field[] fields = cls.getDeclaredFields();  </div><div class="line">    <span class="keyword">for</span> (Field field : fields) &#123;  </div><div class="line">        FieldInfo fieldInfo = field.getAnnotation(FieldInfo.class);  </div><div class="line">        <span class="keyword">if</span> (fieldInfo != <span class="keyword">null</span>) &#123;  </div><div class="line">            sb.append(Modifier.toString(field.getModifiers())).append(<span class="string">" "</span>)  </div><div class="line">                    .append(field.getType().getSimpleName()).append(<span class="string">" "</span>)  </div><div class="line">                    .append(field.getName()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"注解值: "</span>).append(Arrays.toString(fieldInfo.value())).append(<span class="string">"\n\n"</span>);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    sb.append(<span class="string">"Method注解："</span>).append(<span class="string">"\n"</span>);  </div><div class="line">    Method[] methods = cls.getDeclaredMethods();  </div><div class="line">    <span class="keyword">for</span> (Method method : methods) &#123;  </div><div class="line">        MethodInfo methodInfo = method.getAnnotation(MethodInfo.class);  </div><div class="line">        <span class="keyword">if</span> (methodInfo != <span class="keyword">null</span>) &#123;  </div><div class="line">            sb.append(Modifier.toString(method.getModifiers())).append(<span class="string">" "</span>)  </div><div class="line">                    .append(method.getReturnType().getSimpleName()).append(<span class="string">" "</span>)  </div><div class="line">                    .append(method.getName()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"注解值: "</span>).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"name: "</span>).append(methodInfo.name()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"data: "</span>).append(methodInfo.data()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"age: "</span>).append(methodInfo.age()).append(<span class="string">"\n"</span>);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    System.out.print(sb.toString());  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所做的操作都是通过反射获取对应元素，再获取元素上面的注解，最后得到注解的属性值</p>
+<p>这个自定义运行时注解是很简单的例子，有很多优秀的开源项目都有使用运行时注解来处理问题，有兴趣可以找一些来研究。因为涉及到反射，所以运行时注解的效率多少会受到影响，现在很多的开源项目使用的是编译时注解，关于编译时注解后面再来详细介绍。</p>
 
       
     </div>
@@ -448,7 +450,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.azhangbing.com/2017/11/10/学习Javascript闭包/" title="学习Javascript闭包">http://www.azhangbing.com/2017/11/10/学习Javascript闭包/</a>
+    <a href="http://www.azhangbing.com/2018/04/27/自定义注解之运行时注解/" title="自定义注解之运行时注解">http://www.azhangbing.com/2018/04/27/自定义注解之运行时注解/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -463,7 +465,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/javascript/" rel="tag"># javascript</a>
+            <a href="/tags/JAVA/" rel="tag"># JAVA</a>
           
         </div>
       
@@ -476,8 +478,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/10/谷歌官方新架构LiveData-lifecycle简单使用和解析/" rel="next" title="谷歌官方新架构LiveData,lifecycle简单使用和解析">
-                <i class="fa fa-chevron-left"></i> 谷歌官方新架构LiveData,lifecycle简单使用和解析
+              <a href="/2018/04/27/Java注解基础概念总结/" rel="next" title="Java注解基础概念总结">
+                <i class="fa fa-chevron-left"></i> Java注解基础概念总结
               </a>
             
           </div>
@@ -485,10 +487,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/14/JavaScript-中的-proto-（隐式原型）与prototype（显式原型）/" rel="prev" title="JavaScript 中的 __proto__（隐式原型）与prototype（显式原型）">
-                JavaScript 中的 __proto__（隐式原型）与prototype（显式原型） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -640,7 +638,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、变量的作用域"><span class="nav-number">1.</span> <span class="nav-text">一、变量的作用域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、如何从外部读取局部变量？"><span class="nav-number">2.</span> <span class="nav-text">二、如何从外部读取局部变量？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、闭包的概念"><span class="nav-number">3.</span> <span class="nav-text">三、闭包的概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、闭包的用途"><span class="nav-number">4.</span> <span class="nav-text">四、闭包的用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、使用闭包的注意点"><span class="nav-number">5.</span> <span class="nav-text">五、使用闭包的注意点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、思考题"><span class="nav-number">6.</span> <span class="nav-text">六、思考题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义注解之运行时注解-RetentionPolicy-RUNTIME"><span class="nav-number">1.</span> <span class="nav-text">自定义注解之运行时注解(RetentionPolicy.RUNTIME)</span></a></li></ol></div>
             
 
           </div>

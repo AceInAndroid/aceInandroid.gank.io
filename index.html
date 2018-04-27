@@ -432,6 +432,211 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2018/04/27/自定义注解之运行时注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/27/自定义注解之运行时注解/" itemprop="url">自定义注解之运行时注解</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T15:57:00+08:00">
+                2018-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/27/自定义注解之运行时注解/" class="leancloud_visitors" data-flag-title="自定义注解之运行时注解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,032
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="自定义注解之运行时注解-RetentionPolicy-RUNTIME"><a href="#自定义注解之运行时注解-RetentionPolicy-RUNTIME" class="headerlink" title="自定义注解之运行时注解(RetentionPolicy.RUNTIME)"></a>自定义注解之运行时注解(RetentionPolicy.RUNTIME)</h3><p>前面有提到注解按生命周期来划分可分为3类：</p>
+<ol>
+<li><strong>RetentionPolicy.SOURCE</strong>：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃；</li>
+<li><strong>RetentionPolicy.CLASS</strong>：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期；</li>
+<li><strong>RetentionPolicy.RUNTIME</strong>：注解不仅被保存到class文件中，jvm加载class文件之后，仍然存在；</li>
+</ol>
+<p>这3个生命周期分别对应于：<strong>Java源文件(.java文件) —&gt; .class文件 —&gt; 内存中的字节码</strong>。</p>
+<p>那怎么来选择合适的注解生命周期呢？</p>
+<p>首先要明确生命周期长度 <strong>SOURCE &lt; CLASS &lt; RUNTIME </strong>，所以前者能作用的地方后者一定也能作用。一般如果需要在运行时去动态获取注解信息，那只能用 RUNTIME 注解；如果要在编译时进行一些预处理操作，比如生成一些辅助代码（如 <strong>ButterKnife</strong>），就用 CLASS注解；如果只是做一些检查性的操作，比如 @Override 和 @SuppressWarnings，则可选用 SOURCE 注解。</p>
+<p>下面来介绍下运行时注解的简单运用。</p>
+<p>###获取注解</p>
+<p>你需要通过反射来获取运行时注解，可以从 Package、Class、Field、Method…上面获取，基本方法都一样，几个常见的方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取指定类型的注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> &lt;A extends Annotation&gt; <span class="function">A <span class="title">getAnnotation</span><span class="params">(Class&lt;A&gt; annotationType)</span></span>;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取所有注解，如果有的话 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> Annotation[] getAnnotations();  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取所有注解，忽略继承的注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> Annotation[] getDeclaredAnnotations();  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 指定注解是否存在该元素上，如果有则返回true，否则false </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isAnnotationPresent</span><span class="params">(Class&lt;? extends Annotation&gt; annotationType)</span></span>;  </div><div class="line">  </div><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 获取Method中参数的所有注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="keyword">public</span> Annotation[][] getParameterAnnotations();</div></pre></td></tr></table></figure>
+<p>要使用这些函数必须先通过反射获取到对应的元素：Class、Field、Method 等。</p>
+<p>###自定义注解<br>来看下自定义注解的简单使用方式，这里先定义3个运行时注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 适用类、接口（包括注解类型）或枚举  </span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ClassInfo &#123;  </div><div class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span></span>;  </div><div class="line">&#125;  </div><div class="line"><span class="comment">// 适用field属性，也包括enum常量  </span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.FIELD)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> FieldInfo &#123;  </div><div class="line">    <span class="keyword">int</span>[] value();  </div><div class="line">&#125;  </div><div class="line"><span class="comment">// 适用方法  </span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.METHOD)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MethodInfo &#123;  </div><div class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> "<span class="keyword">long</span>"</span>;  </div><div class="line">    <span class="function">String <span class="title">data</span><span class="params">()</span></span>;  </div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">age</span><span class="params">()</span> <span class="keyword">default</span> 27</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这3个注解分别适用于不同的元素，并都带有不同的属性，在使用注解是需要设置这些属性值。<br>再定义一个测试类来使用这些注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 测试运行时注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="meta">@ClassInfo</span>(<span class="string">"Test Class"</span>)  </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestRuntimeAnnotation</span> </span>&#123;  </div><div class="line">  </div><div class="line">    <span class="meta">@FieldInfo</span>(value = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;)  </div><div class="line">    <span class="keyword">public</span> String fieldInfo = <span class="string">"FiledInfo"</span>;  </div><div class="line">  </div><div class="line">    <span class="meta">@FieldInfo</span>(value = &#123;<span class="number">10086</span>&#125;)  </div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> i = <span class="number">100</span>;  </div><div class="line">  </div><div class="line">    <span class="meta">@MethodInfo</span>(name = <span class="string">"BlueBird"</span>, data = <span class="string">"Big"</span>)  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getMethodInfo</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> TestRuntimeAnnotation.class.getSimpleName();  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用还是很简单的，最后来看怎么在代码中获取注解信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"><span class="comment"> * 测试运行时注解 </span></div><div class="line"><span class="comment"> */</span>  </div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">_testRuntimeAnnotation</span><span class="params">()</span> </span>&#123;  </div><div class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();  </div><div class="line">    Class&lt;?&gt; cls = TestRuntimeAnnotation.class;  </div><div class="line">    Constructor&lt;?&gt;[] constructors = cls.getConstructors();  </div><div class="line">    <span class="comment">// 获取指定类型的注解  </span></div><div class="line">    sb.append(<span class="string">"Class注解："</span>).append(<span class="string">"\n"</span>);  </div><div class="line">    ClassInfo classInfo = cls.getAnnotation(ClassInfo.class);  </div><div class="line">    <span class="keyword">if</span> (classInfo != <span class="keyword">null</span>) &#123;  </div><div class="line">        sb.append(Modifier.toString(cls.getModifiers())).append(<span class="string">" "</span>)  </div><div class="line">                .append(cls.getSimpleName()).append(<span class="string">"\n"</span>);  </div><div class="line">        sb.append(<span class="string">"注解值: "</span>).append(classInfo.value()).append(<span class="string">"\n\n"</span>);  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    sb.append(<span class="string">"Field注解："</span>).append(<span class="string">"\n"</span>);  </div><div class="line">    Field[] fields = cls.getDeclaredFields();  </div><div class="line">    <span class="keyword">for</span> (Field field : fields) &#123;  </div><div class="line">        FieldInfo fieldInfo = field.getAnnotation(FieldInfo.class);  </div><div class="line">        <span class="keyword">if</span> (fieldInfo != <span class="keyword">null</span>) &#123;  </div><div class="line">            sb.append(Modifier.toString(field.getModifiers())).append(<span class="string">" "</span>)  </div><div class="line">                    .append(field.getType().getSimpleName()).append(<span class="string">" "</span>)  </div><div class="line">                    .append(field.getName()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"注解值: "</span>).append(Arrays.toString(fieldInfo.value())).append(<span class="string">"\n\n"</span>);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    sb.append(<span class="string">"Method注解："</span>).append(<span class="string">"\n"</span>);  </div><div class="line">    Method[] methods = cls.getDeclaredMethods();  </div><div class="line">    <span class="keyword">for</span> (Method method : methods) &#123;  </div><div class="line">        MethodInfo methodInfo = method.getAnnotation(MethodInfo.class);  </div><div class="line">        <span class="keyword">if</span> (methodInfo != <span class="keyword">null</span>) &#123;  </div><div class="line">            sb.append(Modifier.toString(method.getModifiers())).append(<span class="string">" "</span>)  </div><div class="line">                    .append(method.getReturnType().getSimpleName()).append(<span class="string">" "</span>)  </div><div class="line">                    .append(method.getName()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"注解值: "</span>).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"name: "</span>).append(methodInfo.name()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"data: "</span>).append(methodInfo.data()).append(<span class="string">"\n"</span>);  </div><div class="line">            sb.append(<span class="string">"age: "</span>).append(methodInfo.age()).append(<span class="string">"\n"</span>);  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">    System.out.print(sb.toString());  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所做的操作都是通过反射获取对应元素，再获取元素上面的注解，最后得到注解的属性值</p>
+<p>这个自定义运行时注解是很简单的例子，有很多优秀的开源项目都有使用运行时注解来处理问题，有兴趣可以找一些来研究。因为涉及到反射，所以运行时注解的效率多少会受到影响，现在很多的开源项目使用的是编译时注解，关于编译时注解后面再来详细介绍。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2018/04/27/Java注解基础概念总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1228,206 +1433,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/12/23/重学自定义View系列教程02-理论基础：浅谈DecorView与ViewRootImpl/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ace">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ace的技术客栈">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/23/重学自定义View系列教程02-理论基础：浅谈DecorView与ViewRootImpl/" itemprop="url">#重学自定义View系列教程02--理论基础：浅谈DecorView与ViewRootImpl</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-23T01:09:00+08:00">
-                2017-12-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/自定义view/" itemprop="url" rel="index">
-                    <span itemprop="name">自定义view</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/12/23/重学自定义View系列教程02-理论基础：浅谈DecorView与ViewRootImpl/" class="leancloud_visitors" data-flag-title="#重学自定义View系列教程02--理论基础：浅谈DecorView与ViewRootImpl">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,125
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  9
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>#重学自定义View系列教程02–理论基础：浅谈DecorView与ViewRootImpl</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于Android开发者来说，View无疑是开发中经常接触的，包括它的事件分发机制、测量、布局、绘制流程等，如果要自定义一个View，那么应该对以上流程有所了解、研究。本系列文章将会为大家带来View的工作流程详细解析。在深入接触View的测量、布局、绘制这三个流程之前，我们从Activity入手，看看从Activity创建后到View的正式工作之前，所要经历的步骤。以下源码均取自Android API 21。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/23/重学自定义View系列教程02-理论基础：浅谈DecorView与ViewRootImpl/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1482,7 +1487,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
