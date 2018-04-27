@@ -269,6 +269,200 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/10/21/深入理解ThreadLocal/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/深入理解ThreadLocal/" itemprop="url">深入理解ThreadLocal</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T03:47:00+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/10/21/深入理解ThreadLocal/" class="leancloud_visitors" data-flag-title="深入理解ThreadLocal">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,882
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h4 id="深入理解ThreadLocal"><a href="#深入理解ThreadLocal" class="headerlink" title="深入理解ThreadLocal"></a>深入理解ThreadLocal</h4><p>今天解析了Handler messageQueue Loop三者的关系</p>
+<p>新建一个Handler的时候同时会取出这个Handler对应的Looper对象,如果当前线程没有looper就报错.</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> Handler() &#123;</div><div class="line">    <span class="params">...</span><span class="params">...</span></div><div class="line">    mLooper = Looper.myLooper();</div><div class="line">    <span class="keyword">if</span> (mLooper == <span class="built_in">null</span>) &#123;</div><div class="line">        throw <span class="literal">new</span> RuntimeException(</div><div class="line">            <span class="string">"Can't create handler inside thread that has not called Looper.prepare()"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="params">...</span><span class="params">...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里调用了Looper.myLooper()方法,让我们来看一下</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="function">Looper <span class="title">myLooper</span><span class="params">()</span> </span>&#123;  </div><div class="line">    <span class="keyword">return</span> (Looper)sThreadLocal.get();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法非常简单，就是从sThreadLocal对象中取出Looper。如果sThreadLocal中有Looper存在就返回Looper.</p>
+<p>这个Looper再哪设置呢?<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/深入理解ThreadLocal/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/10/20/Handler-postDelayed-的原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -648,7 +842,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -659,7 +853,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -670,7 +864,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

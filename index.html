@@ -432,6 +432,236 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2018/04/27/Java注解基础概念总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/27/Java注解基础概念总结/" itemprop="url">Java注解基础概念总结</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T15:38:00+08:00">
+                2018-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/27/Java注解基础概念总结/" class="leancloud_visitors" data-flag-title="Java注解基础概念总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  887
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Java注解基础概念总结"><a href="#Java注解基础概念总结" class="headerlink" title="Java注解基础概念总结"></a>Java注解基础概念总结</h1><blockquote>
+<p>注解（Annotation），也叫元数据（Metadata），是Java5的新特性，JDK5引入了Metadata很容易的就能够调用Annotations。注解与类、接口、枚举在同一个层次，并可以应用于包、类型、构造方法、方法、成员变量、参数、本地变量的声明中，用来对这些元素进行说明注释。</p>
+</blockquote>
+<p>#<strong>注解的语法与定义形式</strong></p>
+<ol>
+<li>以@interface关键字定义</li>
+<li>注解包含成员，成员以无参数的方法的形式被声明。其方法名和返回值定义了该成员的名字和类型。</li>
+<li>成员赋值是通过@Annotation(name=value)的形式。</li>
+<li>注解需要标明注解的生命周期，注解的修饰目标等信息，这些信息是通过元注解实现。</li>
+</ol>
+<p>以 java.lang.annotation 中定义的 Target 注解来说明</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Retention</span>(value = RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(value = &#123; ElementType.ANNOTATION_TYPE &#125; )  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target &#123;  </div><div class="line">    ElementType[] value();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>源码分析如下：</p>
+<ol>
+<li>元注解@Retention，成员value的值为RetentionPolicy.RUNTIME。</li>
+<li>元注解@Target，成员value是个数组，用{}形式赋值，值为ElementType.ANNOTATION_TYPE</li>
+<li>成员名称为value，类型为ElementType[]</li>
+<li>另外，需要注意一下，如果成员名称是value，在赋值过程中可以简写。如果成员类型为数组，但是只赋值一个元素，则也可以简写。如上面的简写形式为：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target &#123;  </div><div class="line">    ElementType[] value();  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>#注解的分类</p>
+<p>注解的分类有两种分法：</p>
+<p>##第一种分法</p>
+<ol>
+<li><p>基本内置注解，是指Java自带的几个Annotation，如@Override、Deprecated、@SuppressWarnings等；</p>
+</li>
+<li><p>元注解（meta-annotation），是指负责注解其他注解的注解，JDK 1.5及以后版本定义了4个标准的元注解类型，如下：</p>
+<blockquote>
+<p>@Target<br>@Retention<br>@Documented<br>@Inherited</p>
+</blockquote>
+</li>
+<li><p>自定义注解，根据需要可以自定义注解，自定义注解需要用到上面的meta-annotation</p>
+</li>
+</ol>
+<p>##第二种分法</p>
+<p>注解需要标明注解的生命周期，这些信息是通过元注解 @Retention 实现，注解的值是 enum 类型的 RetentionPolicy，包括以下几种情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RetentionPolicy &#123;  </div><div class="line">    <span class="comment">/** </span></div><div class="line"><span class="comment">     * 注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃. </span></div><div class="line"><span class="comment">     * 这意味着：Annotation仅存在于编译器处理期间，编译器处理完之后，该Annotation就没用了 </span></div><div class="line"><span class="comment">     */</span>  </div><div class="line">    SOURCE,  </div><div class="line">  </div><div class="line">    <span class="comment">/** </span></div><div class="line"><span class="comment">     * 注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期. </span></div><div class="line"><span class="comment">     */</span>  </div><div class="line">    CLASS,  </div><div class="line">  </div><div class="line">    <span class="comment">/** </span></div><div class="line"><span class="comment">     * 注解不仅被保存到class文件中，jvm加载class文件之后，仍然存在， </span></div><div class="line"><span class="comment">     * 保存到class对象中，可以通过反射来获取 </span></div><div class="line"><span class="comment">     */</span>  </div><div class="line">    RUNTIME  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>#元注解</p>
+<p>如上所介绍的Java定义了4个标准的元注解：</p>
+<p>@Documented：标记注解，用于描述其它类型的注解应该被作为被标注的程序成员的公共API，因此可以被例如javadoc此类的工具文档化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Documented</span>  </div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Documented &#123;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>@Inherited：标记注解，允许子类继承父类的注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Documented</span>  </div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Inherited &#123;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>@Retention：指Annotation被保留的时间长短，标明注解的生命周期，3种RetentionPolicy取值含义上面以说明</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Documented</span>  </div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Retention &#123;  </div><div class="line">    <span class="function">RetentionPolicy <span class="title">value</span><span class="params">()</span></span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>@Target：标明注解的修饰目标，共有</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">@Documented</span>  </div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)  </div><div class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)  </div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target &#123;  </div><div class="line">    ElementType[] value();  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line"><span class="comment">// ElementType取值  </span></div><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ElementType &#123;  </div><div class="line">    <span class="comment">/** 类、接口（包括注解类型）或枚举 */</span>  </div><div class="line">    TYPE,  </div><div class="line">    <span class="comment">/** field属性，也包括enum常量使用的注解 */</span>  </div><div class="line">    FIELD,  </div><div class="line">    <span class="comment">/** 方法 */</span>  </div><div class="line">    METHOD,  </div><div class="line">    <span class="comment">/** 参数 */</span>  </div><div class="line">    PARAMETER,  </div><div class="line">    <span class="comment">/** 构造函数 */</span>  </div><div class="line">    CONSTRUCTOR,  </div><div class="line">    <span class="comment">/** 局部变量 */</span>  </div><div class="line">    LOCAL_VARIABLE,  </div><div class="line">    <span class="comment">/** 注解上使用的元注解 */</span>  </div><div class="line">    ANNOTATION_TYPE,  </div><div class="line">    <span class="comment">/** 包 */</span>  </div><div class="line">    PACKAGE  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2018/01/11/Java执行顺序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1198,200 +1428,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.azhangbing.com/2017/12/18/深入理解-Android-消息机制原理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ace">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ace的技术客栈">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/18/深入理解-Android-消息机制原理/" itemprop="url">深入理解 Android 消息机制原理</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T02:15:00+08:00">
-                2017-12-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/12/18/深入理解-Android-消息机制原理/" class="leancloud_visitors" data-flag-title="深入理解 Android 消息机制原理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,960
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  8
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="深入理解-Android-消息机制原理"><a href="#深入理解-Android-消息机制原理" class="headerlink" title="深入理解 Android 消息机制原理"></a>深入理解 Android 消息机制原理</h1><p><strong>导语：</strong> 本文讲述的是Android的消息机制原理，从Java到Native代码进行了梳理，并结合其中使用到的Epoll模型予以介绍。</p>
-<p>Android的消息传递，是系统的核心功能，对于如何使用相信大家都已经相当熟悉了，这里简单提一句。我们可以粗糙的认为消息机制中关键的几个类的功能如下：</p>
-<p>Handler：消息处理者</p>
-<p>Looper：消息调度者</p>
-<p>MessageQueue：存放消息的地方</p>
-<p>使用过程：</p>
-<p>Looper.prepare &gt; #$%^^&amp; &gt; Looper.loop（死循环） — loop到一个消息 &gt; Handler处理</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/18/深入理解-Android-消息机制原理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1446,7 +1482,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1457,7 +1493,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1468,7 +1504,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
