@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://www.azhangbing.com/2018/07/17/Android%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%BB%E7%BA%BF%E7%A8%8B%E4%B8%8D%E4%BC%9A%E5%9B%A0%E4%B8%BALooper-loop-%E9%87%8C%E7%9A%84%E6%AD%BB%E5%BE%AA%E7%8E%AF%E5%8D%A1%E6%AD%BB%EF%BC%9F/</loc>
+    <lastmod>2018-07-17T07:20:04.138Z</lastmod>
+    <data>
+        <display>
+        <title>Android中为什么主线程不会因为Looper.loop()里的死循环卡死？</title>
+        <pubTime>2018-07-17T07:19:00.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="http://www.azhangbing.com/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.azhangbing.com/2018/05/18/Glide%E5%9F%BA%E6%9C%AC%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B%E5%8F%8A%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4%E8%AE%BE%E7%BD%AE/</loc>
     <lastmod>2018-05-18T04:32:46.149Z</lastmod>
     <data>
@@ -110,9 +130,9 @@
         
         <tag>Android</tag>
          
-        <tag>view</tag>
-         
         <tag>重学自定义view</tag>
+         
+        <tag>view</tag>
          
          
            
@@ -137,9 +157,9 @@
         
         <tag>Android</tag>
          
-        <tag>自定义view</tag>
-         
         <tag>view</tag>
+         
+        <tag>自定义view</tag>
          
          
            
