@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://www.azhangbing.com/2018/09/14/%E8%AF%A6%E8%A7%A3Activity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/</loc>
-    <lastmod>2018-09-14T04:25:39.137Z</lastmod>
+    <lastmod>2018-09-14T06:35:15.098Z</lastmod>
     <data>
         <display>
         <title>详解Activity生命周期</title>
@@ -19,6 +19,46 @@
            
              
               <breadCrumb title="Android" url="http://www.azhangbing.com/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.azhangbing.com/2018/09/14/Web-%E5%94%A4%E8%B5%B7-Android-app-%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2018-09-14T06:34:53.596Z</lastmod>
+    <data>
+        <display>
+        <title>Web 唤起 Android app 的实现及原理</title>
+        <pubTime>2018-09-14T06:32:00.000Z</pubTime>
+        
+        <tag>Android</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="http://www.azhangbing.com/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.azhangbing.com/2018/01/11/Java%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/</loc>
+    <lastmod>2018-09-14T06:34:35.726Z</lastmod>
+    <data>
+        <display>
+        <title>Java执行顺序</title>
+        <pubTime>2018-01-11T03:23:00.000Z</pubTime>
+        
+        <tag>Java</tag>
+         
+         
+           
+             
+              <breadCrumb title="Java" url="http://www.azhangbing.com/categories/Java/"/>
           
         </display>
     </data>
@@ -96,26 +136,6 @@
            
              
               <breadCrumb title="JAVA" url="http://www.azhangbing.com/categories/JAVA/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.azhangbing.com/2018/01/11/Java%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/</loc>
-    <lastmod>2018-01-11T03:24:28.000Z</lastmod>
-    <data>
-        <display>
-        <title>Java执行顺序</title>
-        <pubTime>2018-01-11T03:23:00.000Z</pubTime>
-        
-        <tag>Java</tag>
-         
-         
-           
-             
-              <breadCrumb title="Java" url="http://www.azhangbing.com/categories/Java/"/>
           
         </display>
     </data>
