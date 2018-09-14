@@ -96,7 +96,7 @@
 <meta property="og:site_name" content="Ace的技术客栈">
 <meta property="og:description" content="自定义注解之运行时注解(RetentionPolicy.RUNTIME)前面有提到注解按生命周期来划分可分为3类：  RetentionPolicy.SOURCE：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃； RetentionPolicy.CLASS：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期； RetentionPolic">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-27T07:58:02.000Z">
+<meta property="og:updated_time" content="2018-09-14T07:01:10.395Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自定义注解之运行时注解">
 <meta name="twitter:description" content="自定义注解之运行时注解(RetentionPolicy.RUNTIME)前面有提到注解按生命周期来划分可分为3类：  RetentionPolicy.SOURCE：注解只保留在源文件，当Java文件编译成class文件的时候，注解被遗弃； RetentionPolicy.CLASS：注解被保留到class文件，但jvm加载class文件时候被遗弃，这是默认的生命周期； RetentionPolic">
@@ -416,6 +416,7 @@
 </ol>
 <p>这3个生命周期分别对应于：<strong>Java源文件(.java文件) —&gt; .class文件 —&gt; 内存中的字节码</strong>。</p>
 <p>那怎么来选择合适的注解生命周期呢？</p>
+<a id="more"></a>
 <p>首先要明确生命周期长度 <strong>SOURCE &lt; CLASS &lt; RUNTIME </strong>，所以前者能作用的地方后者一定也能作用。一般如果需要在运行时去动态获取注解信息，那只能用 RUNTIME 注解；如果要在编译时进行一些预处理操作，比如生成一些辅助代码（如 <strong>ButterKnife</strong>），就用 CLASS注解；如果只是做一些检查性的操作，比如 @Override 和 @SuppressWarnings，则可选用 SOURCE 注解。</p>
 <p>下面来介绍下运行时注解的简单运用。</p>
 <p>###获取注解</p>

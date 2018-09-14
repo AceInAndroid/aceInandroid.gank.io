@@ -97,7 +97,7 @@
 <meta property="og:description" content="Android中为什么主线程不会因为Looper.loop()里的死循环卡死？要完全彻底理解这个问题，需要准备以下4方面的知识：Process/Thread，Android Binder IPC，Handler/Looper/MessageQueue消息机制，Linux pipe/epoll机制。  Android中为什么主线程不会因为Looper.loop()里的死循环卡死？  没看见哪里有相关">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oy261wvqm.bkt.clouddn.com/2018-07-17-7fb8728164975ac86a2b0b886de2b872_hd.jpg">
-<meta property="og:updated_time" content="2018-07-17T07:20:04.000Z">
+<meta property="og:updated_time" content="2018-09-14T06:59:56.705Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android中为什么主线程不会因为Looper.loop()里的死循环卡死？">
 <meta name="twitter:description" content="Android中为什么主线程不会因为Looper.loop()里的死循环卡死？要完全彻底理解这个问题，需要准备以下4方面的知识：Process/Thread，Android Binder IPC，Handler/Looper/MessageQueue消息机制，Linux pipe/epoll机制。  Android中为什么主线程不会因为Looper.loop()里的死循环卡死？  没看见哪里有相关">
@@ -419,6 +419,7 @@
 <li><p>Activity的生命周期这些方法这些都是在主线程里执行的吧，那这些生命周期方法是怎么实现在死循环体外能够执行起来的？</p>
 </li>
 </ol>
+<a id="more"></a>
 <h3 id="1-Android中为什么主线程不会因为Looper-loop-里的死循环卡死？"><a href="#1-Android中为什么主线程不会因为Looper-loop-里的死循环卡死？" class="headerlink" title="(1) Android中为什么主线程不会因为Looper.loop()里的死循环卡死？"></a>(1) Android中为什么主线程不会因为Looper.loop()里的死循环卡死？</h3><p> 这里涉及线程，先说说说<strong>进程/线程</strong>，</p>
 <ul>
 <li><p>进程：每个app运行时前首先创建一个进程，该进程是由<strong>Zygot</strong>e fork出来的，用于承载App上运行的各种<strong>Activity/Service等组件</strong>。进程对于上层应用来说是完全透明的，这也是google有意为之，让App程序都是运行在Android Runtime。大多数情况一个App就运行在一个进程中，除非在<strong>AndroidManifest.xml</strong>中配置<strong>Android:process</strong>属性，或通过<strong>native</strong>代码<strong>fork</strong>进程。</p>
