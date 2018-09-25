@@ -96,7 +96,7 @@
 <meta property="og:site_name" content="Ace的技术客栈">
 <meta property="og:description" content="Activity的启动模式任务栈一个application在启动的时候，能有很多个activity，我们在按下back键的时候，会回退到上一个activity，那么系统是如何来管理这些activity呢？答案是以栈(task)的形式，遵循先进后出的原则，默认情况下，一个app只有一个任务栈(task)，如果需要，我们可以指定多个任务栈(task)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-25T05:02:05.388Z">
+<meta property="og:updated_time" content="2018-09-25T06:59:31.652Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=" Activity的启动模式">
 <meta name="twitter:description" content="Activity的启动模式任务栈一个application在启动的时候，能有很多个activity，我们在按下back键的时候，会回退到上一个activity，那么系统是如何来管理这些activity呢？答案是以栈(task)的形式，遵循先进后出的原则，默认情况下，一个app只有一个任务栈(task)，如果需要，我们可以指定多个任务栈(task)">
@@ -371,7 +371,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,334
+                  3,989
                 </span>
               
 
@@ -387,7 +387,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  14
+                  17
                 </span>
               
             </div>
@@ -439,6 +439,12 @@
 <p>翻译:</p>
 <p>taskAffinity是activity的任务栈的相关性。拥有相同affinity的activity在概念上属于同一个task。一个task的affinity取决于这个task内的根activity的taskaffinity。taskaffinity属性能决定两件事：<br>①.当activity被re-parent时，他会被放到哪个任务栈中.<br>②.当此activity被添加 FLAG_ACTIVITY_NEW_TASK 标记启动的时候，会被放入哪个task中。<br>默认情况下，application中所有的activity拥有相同的affinity，你可以通过给taskaffinity属性设置不同的值把他们分组。甚至可以把多个application中的activity放到同一个task中。如果想明确这个activity不属于任何task，把这个属性设置为空字符即可。<br>如果这个属性没有被设置，那么此属性的值就继承自application的此属性的值（查看 application的taskaffinity属性）。默认的值为application的包名。</p>
 <p>1.taskAffinity属性能够给activity指定task，但必须使用FLAG_ACTIVITY_NEW_TASK 标记。<br>2.默认的taskAffinity的值是应用的包名。</p>
+<h3 id="通过TaskAffinity-设置新的任务栈"><a href="#通过TaskAffinity-设置新的任务栈" class="headerlink" title="通过TaskAffinity 设置新的任务栈"></a>通过TaskAffinity 设置新的任务栈</h3><p>taskAffinity，任务相关性。xml中的一个属性，标识了一个Activity所需要的任务栈的名字。默认是包名。如果设置了其他的名字如com.test.task1，那启动它的时候就会新建一个名为com.test.task1的任务栈。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;activity</div><div class="line">    android:name=&quot;com.test.task0.MainActivity&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:launchMode=&quot;standard&quot;&gt;</div><div class="line">    &lt;intent-filter&gt;</div><div class="line">        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</div><div class="line">        &lt;category andorid:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</div><div class="line">    &lt;/intent-filter&gt;</div><div class="line">&lt;/activity&gt;</div><div class="line"></div><div class="line">&lt;activity</div><div class="line">    andorid:name=&quot;com.test.SecondActivity&quot;</div><div class="line">    android:taskAffinity=&quot;com.test.task1&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:launchMode=&quot;singleTask&quot;/&gt;</div><div class="line"></div><div class="line">&lt;activity</div><div class="line">    andorid:name=&quot;com.test.ThirdActivity&quot;</div><div class="line">    android:taskAffinity=&quot;com.test.task1&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:launchMode=&quot;singleTask&quot;/&gt;</div></pre></td></tr></table></figure>
+<h4 id="栗子"><a href="#栗子" class="headerlink" title="栗子:"></a>栗子:</h4><p>如果从MainActivity启动SecondActivity，然后再启动ThirdActivity，那么任务栈如下：</p>
+<blockquote>
+<p>Blockquotes com.test.task0 MainActivity<br>Blockquotes com.test.task1 SecondActivity ThirdActivity<br>若再从ThirdActivity启动MainActivity，那么任务栈如下：<br>com.test.task0 MainActivity<br>com.test.task1 SecondActivity ThirdActivity MainActivity.<br>总结：通过设置 TaskAffinity 属性更改任务栈属性。</p>
+</blockquote>
 <h2 id="allowTaskReparenting属性"><a href="#allowTaskReparenting属性" class="headerlink" title="allowTaskReparenting属性"></a>allowTaskReparenting属性</h2><p>官方api这样解释的：</p>
 <blockquote>
 <p>Whether or not the activity can move from the task that started it to the task it has an affinity for when that task is next brought to the front — “true” if it can move, and “false” if it must remain with the task where it started.</p>
@@ -452,10 +458,11 @@
 <p><strong>FLAG_ACTIVITY_CLEAR_TOP</strong><br>顾名思义，<strong>FLAG_ACTIVITY_CLEAR_TOP</strong>的作用清除”包含Activity的task”中位于该Activity实例之上的其他Activity实例。FLAG_ACTIVITY_CLEAR_TOP和FLAG_ACTIVITY_NEW_TASK两者同时使用，就能达到和launchMode=”singleTask”一样的效果！</p>
 <p><strong>FLAG_ACTIVITY_CLEAR_TASK</strong><br><strong>FLAG_ACTIVITY_CLEAR_TASK</strong>的作用包含Activity的task。使用FLAG_ACTIVITY_CLEAR_TASK时，通常会包含FLAG_ACTIVITY_NEW_TASK。这样做的目的是启动Activity时，清除之前已经存在的Activity实例所在的task；这自然也就清除了之前存在的Activity实例！</p>
 <p><strong>注意：</strong>当同时使用launchMode和上面的FLAG_ACTIVITY_NEW_TASK等标签时，以FLAG_ACTIVITY_NEW_TASK为标准。也就是说，<strong>代码的优先级比manifest中配置文件的优先级更高</strong>！</p>
-<p>下面，通过几个实例加深对这几个标记的理解。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>下面，通过几个实例加深对这几个标记的理解。</p>
 <ol>
-<li>FLAG_ACTIVITY_NEW_TASK标签测试<br>1.1 FLAG_ACTIVITY_NEW_TASK示例一<br>点击查看：FLAG_ACTIVITY_NEW_TASK示例一的源码</li>
+<li>FLAG_ACTIVITY_NEW_TASK标签测试</li>
 </ol>
+<p>1.1 FLAG_ACTIVITY_NEW_TASK示例一<br>点击查看：FLAG_ACTIVITY_NEW_TASK示例一的源码</p>
 <p>在该实例中，有两个Activity：ActivityTest和SecondActivity。manifest定义如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;application android:label=&quot;@string/app_name&quot; android:icon=&quot;@drawable/ic_launcher&quot;&gt;</div><div class="line">    &lt;activity android:name=&quot;ActivityTest&quot;</div><div class="line">              android:label=&quot;@string/app_name&quot;&gt;</div><div class="line">        &lt;intent-filter&gt;</div><div class="line">            &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</div><div class="line">            &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</div><div class="line">        &lt;/intent-filter&gt;</div><div class="line">    &lt;/activity&gt;</div><div class="line"></div><div class="line">    &lt;activity android:name=&quot;SecondActivity&quot; /&gt;</div><div class="line">&lt;/application&gt;</div></pre></td></tr></table></figure>
 <p>说明：通过manifest可以看出，ActivityTest和SecondActivity在同一个APK中。这也就意味着它们的android:taskAffinity是一样的！</p>
@@ -496,6 +503,18 @@
 </ol>
 <p>点击查看：FLAG_ACTIVITY_SINGLE_TOP示例一的源码。该示例中，只有一个Activity示例，点击该Activity会跳转到它自身。</p>
 <p>点击查看：FLAG_ACTIVITY_SINGLE_TOP示例二的源码。该示例中，有两个Activity示例，两个Activity之间可以相互跳转。</p>
+<h2 id="通过通知进入Activity存在的问题-TaskStackBuilder使用方法"><a href="#通过通知进入Activity存在的问题-TaskStackBuilder使用方法" class="headerlink" title="通过通知进入Activity存在的问题,TaskStackBuilder使用方法"></a>通过通知进入Activity存在的问题,TaskStackBuilder使用方法</h2><p>默认情况下，从通知启动一个Activity，按返回键会回到主屏幕。但某些时候有按返回键仍然留在当前应用的需求。从通知打开的某个深层次Activity。在此Acitivity中点回退，若不做处理，将会直接返回到AndroidLaunch界面。这是因为在Notification中的PendingIntent会默认开启新的任务栈。当回退的时候此任务栈没有其他新的Activity，默认在PendingIntent 的Activity是任务栈中唯一的 Activity.</p>
+<p>举例： </p>
+<blockquote>
+<p>HomeActiy=&gt;Step1Activity=&gt;Step2Acitity<br>某个通知 默认在PendingIntent 指定了Step2Acitity。通过通知栏进入到Step2Acitity。点回退。正常的顺序为：<br>Step2Activity=&gt;Step1Acitivity=&gt;HomeActivity但是如果通过通知栏这样进入Step2Activity 点回退 会直接退回到Android 桌面。就是因为 PendingIntent会默认开启新的任务栈</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Android <span class="number">4.0</span>.3 及更早版本</div><div class="line">&lt;activity</div><div class="line">    android:name=<span class="string">".ResultActivity"</span>&gt;</div><div class="line">    &lt;meta-data</div><div class="line">        android:name=<span class="string">"android.support.PARENT_ACTIVITY"</span></div><div class="line">        android:value=<span class="string">".MainActivity"</span>/&gt;</div><div class="line">&lt;/activity&gt;</div><div class="line">Android <span class="number">4.1</span> 及更高版本</div><div class="line">&lt;activity</div><div class="line">    android:name=<span class="string">".ResultActivity"</span></div><div class="line">    android:parentActivityName=<span class="string">".MainActivity"</span>&gt;</div><div class="line">&lt;/activity&gt;</div></pre></td></tr></table></figure>
+<p>代码中做如下处理:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Intent intent = <span class="keyword">new</span> Intent(MainActivity.<span class="keyword">this</span>, ResultActivity.class);</div><div class="line">TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(<span class="keyword">this</span>);</div><div class="line">taskStackBuilder.addParentStack(ResultActivity.class);</div><div class="line">taskStackBuilder.addNextIntent(intent);</div><div class="line">PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(<span class="number">1</span>, PendingIntent.FLAG_UPDATE_CURRENT);</div><div class="line">NotificationCompat.Builder notificationBuilder = <span class="keyword">new</span> NotificationCompat.Builder(<span class="keyword">this</span>);</div><div class="line">notificationBuilder.setContentIntent(pendingIntent);</div></pre></td></tr></table></figure>
+<p>这样从Notification进入到指定的ResultActivity中。回退到正常的MainActivity中。</p>
+<h3 id="TaskStackBuilder-扩展应用"><a href="#TaskStackBuilder-扩展应用" class="headerlink" title="TaskStackBuilder 扩展应用"></a>TaskStackBuilder 扩展应用</h3><p>也可以单独使用TaskStackBuilder，让某个二级Acitivity启动的时候启动它的一级Acitity.<br>在 AndroidManifest.xml定义Acitivity从属关系。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;activity</div><div class="line">    android:name=&quot;com.example.app.ChildActivity</div><div class="line">    android:parentActivityName=&quot;com.example.app.ParentActivity&quot; &gt;</div><div class="line">    &lt;!-- 下面这段用来兼容API 16之前的版本 --&gt;</div><div class="line">    &lt;meta-data</div><div class="line">        android:name=&quot;android.support.PARENT_ACTIVITY&quot;</div><div class="line">        android:value=&quot;com.example.app.MainActivity&quot; /&gt;</div><div class="line">&lt;/activity&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//代码中声明如下</div><div class="line">Intent intent = new Intent(this, ChildActivity.class);</div><div class="line">TaskStackBuilder.create(this)</div><div class="line">                .addNextIntentWithParentStack(intent)</div><div class="line">                .startActivities();</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -704,7 +723,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity的启动模式"><span class="nav-number">1.</span> <span class="nav-text">Activity的启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#任务栈"><span class="nav-number">1.1.</span> <span class="nav-text">任务栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四个启动模式"><span class="nav-number">1.2.</span> <span class="nav-text">四个启动模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#taskAffinity属性详解"><span class="nav-number">2.</span> <span class="nav-text">taskAffinity属性详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#allowTaskReparenting属性"><span class="nav-number">3.</span> <span class="nav-text">allowTaskReparenting属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Intent与启动模式相关的Flag简介"><span class="nav-number">4.</span> <span class="nav-text">Intent与启动模式相关的Flag简介</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity的启动模式"><span class="nav-number">1.</span> <span class="nav-text">Activity的启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#任务栈"><span class="nav-number">1.1.</span> <span class="nav-text">任务栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四个启动模式"><span class="nav-number">1.2.</span> <span class="nav-text">四个启动模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#taskAffinity属性详解"><span class="nav-number">2.</span> <span class="nav-text">taskAffinity属性详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过TaskAffinity-设置新的任务栈"><span class="nav-number">2.1.</span> <span class="nav-text">通过TaskAffinity 设置新的任务栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#栗子"><span class="nav-number">2.1.1.</span> <span class="nav-text">栗子:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#allowTaskReparenting属性"><span class="nav-number">3.</span> <span class="nav-text">allowTaskReparenting属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Intent与启动模式相关的Flag简介"><span class="nav-number">4.</span> <span class="nav-text">Intent与启动模式相关的Flag简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">5.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过通知进入Activity存在的问题-TaskStackBuilder使用方法"><span class="nav-number">6.</span> <span class="nav-text">通过通知进入Activity存在的问题,TaskStackBuilder使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TaskStackBuilder-扩展应用"><span class="nav-number">6.1.</span> <span class="nav-text">TaskStackBuilder 扩展应用</span></a></li></ol></li></ol></div>
             
 
           </div>
