@@ -262,117 +262,24 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2017/10/20/Handler-postDelayed-的原理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ace">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ace的技术客栈">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
-        
-        
-          <h2 class="post-title" itemprop="name headline">Handler.postDelayed()的原理</h2>
-        
+	<h2 class="post-title" itemprop="name headline">Handler.postDelayed()的原理</h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-20T11:34:00+08:00">
-                2017-10-20
-              </time>
-            
 
-            
 
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  732
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
       
-
       
-        <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
+      <div class="post-body">
+        
+        
+          <h3 id="Handler-postDelayed-的原理"><a href="#Handler-postDelayed-的原理" class="headerlink" title="Handler.postDelayed()的原理"></a>Handler.postDelayed()的原理</h3><p>今天有人在群里问Handler.postDelayed()运行在主线程的Loop里为什么没有阻塞主线程.<br>Handler.postDelayed()是先delay一定的时间，然后再放入messageQueue中，还是先直接放入MessageQueue中，还是先等待,到时间再放入队列？</p>
 <a id="more"></a>
 <p>时序图:<br><img src="/images/pasted-1508470499959.png" alt="WX1"></p>
 <p>最后调用到MessageQueue的enqueueMessage方法,来看下这个方法</p>
@@ -387,85 +294,15 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">Message next() &#123;</div><div class="line">        ......</div><div class="line">        int pendingIdleHandlerCount = -1; </div><div class="line">        int nextPollTimeoutMillis = 0; //下个任务的执行时间</div><div class="line">        for (;;) &#123;</div><div class="line">            nativePollOnce(ptr, nextPollTimeoutMillis);</div><div class="line"></div><div class="line">            synchronized (this) &#123;</div><div class="line">                // Try to retrieve the next message.  Return if found.</div><div class="line">                final long now = SystemClock.uptimeMillis();</div><div class="line">                Message prevMsg = null;</div><div class="line">                Message msg = mMessages;</div><div class="line"></div><div class="line">                if (msg != null) &#123;</div><div class="line">                    if (now &lt; msg.when) &#123;</div><div class="line">                        // Next message is not ready.  Set a timeout to wake up when it is ready.</div><div class="line">                        nextPollTimeoutMillis = (int) Math.min(msg.when - now, Integer.MAX_VALUE);//更新下次任务时间</div><div class="line">                    &#125; else &#123;</div><div class="line">                        // 执行消息</div><div class="line">                        mBlocked = false;</div><div class="line">                        if (prevMsg != null) &#123;</div><div class="line">                            prevMsg.next = msg.next;</div><div class="line">                        &#125; else &#123;</div><div class="line">                            mMessages = msg.next;</div><div class="line">                        &#125;</div><div class="line">                        return msg;</div><div class="line">                    &#125;</div><div class="line">                &#125; else &#123;</div><div class="line">                    // No more messages.</div><div class="line">                    nextPollTimeoutMillis = -1;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                if (pendingIdleHandlerCount &lt;= 0) &#123;</div><div class="line">                    // No idle handlers to run.  Loop and wait some more.</div><div class="line">                    mBlocked = true;//true则进入阻塞等待任务</div><div class="line">                    continue;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <p>所以MessageQueue会根据postDelay的时间排序放入到链表中，链表头的时间小，尾部时间最大。因此能保证时间Delay最长的不会block住时间短的。当每次post message的时候会进入到MessageQueue的next()方法，会根据其delay时间和链表头的比较，如果更短则，放入链表头，并且看时间是否有delay，如果有，则block，等待时间到来唤醒执行，否则将唤醒立即执行。</p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    Ace
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="http://zhangbing.cc/2017/10/20/Handler-postDelayed-的原理/" title="Handler.postDelayed()的原理">http://zhangbing.cc/2017/10/20/Handler-postDelayed-的原理/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>
-    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-
+        
       </div>
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Android/" rel="tag"># Android</a>
-          
-        </div>
-      
-
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/10/19/Java-字符串相关/" rel="next" title="Java 字符串相关">
-                <i class="fa fa-chevron-left"></i> Java 字符串相关
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/21/深入理解ThreadLocal/" rel="prev" title="深入理解ThreadLocal">
-                深入理解ThreadLocal <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
       
     </div>
+    
+    
+    
   </div>
 
 

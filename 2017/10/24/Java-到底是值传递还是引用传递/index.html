@@ -263,139 +263,24 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2017/10/24/Java-到底是值传递还是引用传递/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ace">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ace的技术客栈">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
-        
-        
-          <h2 class="post-title" itemprop="name headline">Java 到底是值传递还是引用传递?</h2>
-        
+	<h2 class="post-title" itemprop="name headline">Java 到底是值传递还是引用传递?</h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-24T15:06:00+08:00">
-                2017-10-24
-              </time>
-            
 
-            
 
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  871
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  3
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
       
-
       
-        <p> Java 到底是值传递还是引用传递？不知道就进来看看吧~<br><a id="more"></a></p>
+      <div class="post-body">
+        
+        
+          <p> Java 到底是值传递还是引用传递？不知道就进来看看吧~<br><a id="more"></a></p>
 <ul>
 <li><strong>= 是赋值操作</strong>（任何包含=的如+=、-=、 /=等等，都内含了赋值操作）。不再是你以前理解的数学含义了，而+ - <em> /和 = 在java中更不是一个级别，换句话说， = 是一个动作，一个可以改变内存状态的操作，一个可以改变变量的符号，而+ - </em> /却不会。这里的赋值操作其实是包含了两个意思：</li>
 </ul>
@@ -427,85 +312,15 @@
 <h4 id="调用方法时发生了什么？参数传递基本上就是赋值操作。"><a href="#调用方法时发生了什么？参数传递基本上就是赋值操作。" class="headerlink" title="调用方法时发生了什么？参数传递基本上就是赋值操作。"></a>调用方法时发生了什么？参数传递基本上就是赋值操作。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">第一个例子：基本类型</div><div class="line">void change(int value) &#123;</div><div class="line">    value = 100;</div><div class="line">&#125;</div><div class="line">change(num); // num 没有被改变</div><div class="line"></div><div class="line">第二个例子：没有提供改变自身方法的引用类型</div><div class="line">void change(String text) &#123;</div><div class="line">    text = &quot;windows&quot;;</div><div class="line">&#125;</div><div class="line">change(str); // str 也没有被改变 同上面所说</div><div class="line"></div><div class="line">第三个例子：提供了改变自身方法的引用类型</div><div class="line">StringBuilder sb = new StringBuilder(&quot;iphone&quot;);</div><div class="line">void change(StringBuilder builder) &#123;</div><div class="line">    builder.append(&quot;8&quot;);</div><div class="line">&#125;</div><div class="line">change(sb); // sb 被改变了，内存地址变成了新的&quot;iphone8&quot;地址。赋值运算符只能让引用指向一个新的对象，而不会改变对象本身,所以iPhone地址还在</div><div class="line"></div><div class="line">第四个例子：提供了改变自身方法的引用类型，但是不使用，而是使用赋值运算符。</div><div class="line">StringBuilder sb = new StringBuilder(&quot;iphone&quot;);</div><div class="line">void change(StringBuilder builder) &#123;</div><div class="line">    builder = new StringBuilder(&quot;ipad&quot;);</div><div class="line">&#125;</div><div class="line">change(sb); // sb 没有被改变还是 内存地址还是指向了&quot;iphone&quot;所在,builder内存地址指向了&quot;ipad&quot;所在的内存。</div></pre></td></tr></table></figure>
 <p>注意对比3 ,4 append还是原来的对象,是new了一个新的对象</p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    Ace
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="http://zhangbing.cc/2017/10/24/Java-到底是值传递还是引用传递/" title="Java 到底是值传递还是引用传递?">http://zhangbing.cc/2017/10/24/Java-到底是值传递还是引用传递/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>
-    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-
+        
       </div>
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-        </div>
-      
-
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/10/24/1024快乐-如何成为一个程序员-程序员入门进阶书籍推荐/" rel="next" title="1024快乐,如何成为一个程序员,程序员入门进阶书籍推荐">
-                <i class="fa fa-chevron-left"></i> 1024快乐,如何成为一个程序员,程序员入门进阶书籍推荐
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/25/Cling介绍/" rel="prev" title="Android投屏,同屏库Cling源码使用和解析">
-                Android投屏,同屏库Cling源码使用和解析 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
       
     </div>
+    
+    
+    
   </div>
 
 

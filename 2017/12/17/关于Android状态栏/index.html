@@ -269,139 +269,24 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2017/12/17/关于Android状态栏/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ace">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ace的技术客栈">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
-        
-        
-          <h2 class="post-title" itemprop="name headline">关于Android状态栏</h2>
-        
+	<h2 class="post-title" itemprop="name headline">关于Android状态栏</h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-17T18:38:00+08:00">
-                2017-12-17
-              </time>
-            
 
-            
 
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,378
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  6
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
       
-
       
-        <h1 id="玩转Android状态栏"><a href="#玩转Android状态栏" class="headerlink" title="玩转Android状态栏"></a>玩转Android状态栏</h1><p>前言<br>前段时间，突然收到一个状态栏颜色优化设计的任务，将原本应用整体的黑色状态栏修改为根据标题栏颜色进行沉浸式设计，显示效果如下：</p>
+      <div class="post-body">
+        
+        
+          <h1 id="玩转Android状态栏"><a href="#玩转Android状态栏" class="headerlink" title="玩转Android状态栏"></a>玩转Android状态栏</h1><p>前言<br>前段时间，突然收到一个状态栏颜色优化设计的任务，将原本应用整体的黑色状态栏修改为根据标题栏颜色进行沉浸式设计，显示效果如下：</p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-12-17-WX20171217-181140@2x.png" alt="WX20171217-181140@2x"></p>
 <p>经过分析及踩过N多坑，终于完成了APP全局的修改。现将一些需要注意的问题及踩过的坑进行梳理总结，主要从系统版本区别、各大厂商的ROM区别及具体的设置进行分析，期间也参考了很多资料，会在文末附上对应的链接<br><a id="more"></a></p>
 <p><img src="http://oy261wvqm.bkt.clouddn.com/2017-12-17-WX20171217-183704@2x.png" alt="WX20171217-183704@2x"></p>
@@ -431,85 +316,15 @@
 <h3 id="状态栏一片白色"><a href="#状态栏一片白色" class="headerlink" title="状态栏一片白色"></a>状态栏一片白色</h3><p>上面已有分析，要注意如果状态栏为白色，需要设置状态栏的图标颜色。status-bar-compat中会把颜色转换成灰度值，然后自己控制状态栏图标颜色</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public static void setStatusBarColor(Activity activity, @ColorInt int color) &#123;</div><div class="line">      boolean isLightColor = toGrey(color) &gt; 225;</div><div class="line">      setStatusBarColor(activity, color, isLightColor);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  /**</div><div class="line">   * 把颜色转换成灰度值。</div><div class="line">   * 代码来自 Flyme 示例代码</div><div class="line">   */</div><div class="line">  public static int toGrey(@ColorInt int color) &#123;</div><div class="line">      int blue = Color.blue(color);</div><div class="line">      int green = Color.green(color);</div><div class="line">      int red = Color.red(color);</div><div class="line">      return (red * 38 + green * 75 + blue * 15) &gt;&gt; 7;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    Ace
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="http://zhangbing.cc/2017/12/17/关于Android状态栏/" title="关于Android状态栏">http://zhangbing.cc/2017/12/17/关于Android状态栏/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>
-    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-
+        
       </div>
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Android/" rel="tag"># Android</a>
-          
-        </div>
-      
-
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/12/01/重学自定义View系列教程01-常用工具介绍/" rel="next" title="重学自定义View系列教程01--常用工具介绍">
-                <i class="fa fa-chevron-left"></i> 重学自定义View系列教程01--常用工具介绍
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/17/全面理解CoordinatorLayout/" rel="prev" title="全面理解CoordinatorLayout">
-                全面理解CoordinatorLayout <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
       
     </div>
+    
+    
+    
   </div>
 
 

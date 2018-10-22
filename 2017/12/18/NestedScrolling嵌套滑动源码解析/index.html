@@ -263,139 +263,24 @@
 
   <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2017/12/18/NestedScrolling嵌套滑动源码解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ace">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ace的技术客栈">
-    </span>
-
     
+    
+    <div class="post-block page">
       <header class="post-header">
 
-        
-        
-          <h2 class="post-title" itemprop="name headline">NestedScrolling嵌套滑动源码解析</h2>
-        
+	<h2 class="post-title" itemprop="name headline">NestedScrolling嵌套滑动源码解析</h2>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T01:04:00+08:00">
-                2017-12-18
-              </time>
-            
 
-            
 
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,001
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  9
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+</header>
 
       
       
-
       
-        <h1 id="NestedScrolling嵌套滑动源码解析"><a href="#NestedScrolling嵌套滑动源码解析" class="headerlink" title="NestedScrolling嵌套滑动源码解析"></a>NestedScrolling嵌套滑动源码解析</h1><p>Android NestedScrolling嵌套滑动机制</p>
+      <div class="post-body">
+        
+        
+          <h1 id="NestedScrolling嵌套滑动源码解析"><a href="#NestedScrolling嵌套滑动源码解析" class="headerlink" title="NestedScrolling嵌套滑动源码解析"></a>NestedScrolling嵌套滑动源码解析</h1><p>Android NestedScrolling嵌套滑动机制</p>
 <p>Android在发布5.0之后加入了嵌套滑动机制NestedScrolling,为嵌套滑动提供了更方便的处理方案。在此对嵌套滑动机制进行详细的分析。<br>嵌套滑动的常见用法比如在滑动列表的时候隐藏相关的TopBar和BottomBar，增加列表的信息展示范围，让用户聚焦于App想展示的内容上等。官方出的Design包里也有很多支持该机制的炫酷控件，比如CoordinatorLayout，AppBarLayout等，在用户体验上有很大的进步。<br>说道嵌套滑动，离不开以下几个内容：</p>
 <p>NestedScrollingChild<br>NestedScrollingParent<br>NestedScrollingChildHelper<br>NestedScrollingParentHelper</p>
 <a id="more"></a>
@@ -436,87 +321,15 @@
 <p>步骤一：子View的ACTION_DOWN调用startNestedScroll—-&gt;父View的onStartNestedScroll判断是否要一起滑动，父ViewonNestedScrollAccepted同意协同滑动<br>步骤二：子View的ACTION_MOVE调用dispatchNestedPreScroll—-&gt;父View的onNestedPreScroll在子View滑动之前先进行滑动并消耗需要的距离—-&gt;父View完成该次滑动之后返回消耗的距离，子View在剩下的距离中再完成自己需要的滑动<br>步骤三：子View滑动完成之后调用dispatchNestedScroll—-&gt;父View的onNestedScroll处理父View和子View之前滑动剩余的距离<br>步骤四：子View的ACTION_UP调用stopNestedScroll—-&gt;父View的onStopNestedScroll完成滑动收尾工作</p>
 <p>这样，子View和父View的一系列嵌套滑动就完成了，可以看出来整个嵌套滑动还是靠子View来推动父View进行滑动的，这也解决了在传统的滑动事件中一旦事件被子View处理了就很难再分享给父View共同处理的问题，这也是嵌套滑动的一个特点。</p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    Ace
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="http://zhangbing.cc/2017/12/18/NestedScrolling嵌套滑动源码解析/" title="NestedScrolling嵌套滑动源码解析">http://zhangbing.cc/2017/12/18/NestedScrolling嵌套滑动源码解析/</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>
-    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
-
+        
       </div>
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Android/" rel="tag"># Android</a>
-          
-            <a href="/tags/嵌套滑动/" rel="tag"># 嵌套滑动</a>
-          
-        </div>
-      
-
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/12/17/全面理解CoordinatorLayout/" rel="next" title="全面理解CoordinatorLayout">
-                <i class="fa fa-chevron-left"></i> 全面理解CoordinatorLayout
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/18/深入理解-Android-消息机制原理/" rel="prev" title="深入理解 Android 消息机制原理">
-                深入理解 Android 消息机制原理 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
       
     </div>
+    
+    
+    
   </div>
 
 
