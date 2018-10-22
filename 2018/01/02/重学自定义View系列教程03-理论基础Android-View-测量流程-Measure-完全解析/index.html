@@ -262,24 +262,166 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2018/01/02/重学自定义View系列教程03-理论基础Android-View-测量流程-Measure-完全解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">重学自定义View系列教程03--理论基础Android View 测量流程(Measure)完全解析</h2>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h1 id="重学自定义View系列教程03–理论基础Android-View-测量流程-Measure-完全解析"><a href="#重学自定义View系列教程03–理论基础Android-View-测量流程-Measure-完全解析" class="headerlink" title="重学自定义View系列教程03–理论基础Android View 测量流程(Measure)完全解析"></a>重学自定义View系列教程03–理论基础Android View 测量流程(Measure)完全解析</h1><p>前言<br>上一篇文章，笔者主要讲述了DecorView以及ViewRootImpl相关的作用，这里回顾一下上一章所说的内容：DecorView是视图的顶级View，我们添加的布局文件是它的一个子布局，而ViewRootImpl则负责渲染视图，它调用了一个performTraveals方法使得ViewTree开始三大工作流程，然后使得View展现在我们面前。本篇文章主要内容是：详细讲述View的测量(Measure)流程，主要以源码的形式呈现，源码均取自Android API 21.</p>
+          <h2 class="post-title" itemprop="name headline">重学自定义View系列教程03--理论基础Android View 测量流程(Measure)完全解析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T15:32:00+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/自定义view/" itemprop="url" rel="index">
+                    <span itemprop="name">自定义view</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/自定义view/view/" itemprop="url" rel="index">
+                    <span itemprop="name">view</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/02/重学自定义View系列教程03-理论基础Android-View-测量流程-Measure-完全解析/" class="leancloud_visitors" data-flag-title="重学自定义View系列教程03--理论基础Android View 测量流程(Measure)完全解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,091
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  17
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="重学自定义View系列教程03–理论基础Android-View-测量流程-Measure-完全解析"><a href="#重学自定义View系列教程03–理论基础Android-View-测量流程-Measure-完全解析" class="headerlink" title="重学自定义View系列教程03–理论基础Android View 测量流程(Measure)完全解析"></a>重学自定义View系列教程03–理论基础Android View 测量流程(Measure)完全解析</h1><p>前言<br>上一篇文章，笔者主要讲述了DecorView以及ViewRootImpl相关的作用，这里回顾一下上一章所说的内容：DecorView是视图的顶级View，我们添加的布局文件是它的一个子布局，而ViewRootImpl则负责渲染视图，它调用了一个performTraveals方法使得ViewTree开始三大工作流程，然后使得View展现在我们面前。本篇文章主要内容是：详细讲述View的测量(Measure)流程，主要以源码的形式呈现，源码均取自Android API 21.</p>
 <a id="more"></a>
 <h2 id="从ViewRootImpl-PerformTraveals说起"><a href="#从ViewRootImpl-PerformTraveals说起" class="headerlink" title="从ViewRootImpl#PerformTraveals说起"></a>从ViewRootImpl#PerformTraveals说起</h2><p>我们直接从这个方法说起，因为它是整个工作流程的核心，我们看看它的源码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTraversals</span><span class="params">()</span> </span>&#123;</div><div class="line">            ...</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!mStopped) &#123;</div><div class="line">            <span class="keyword">int</span> childWidthMeasureSpec = getRootMeasureSpec(mWidth, lp.width);  <span class="comment">// 1</span></div><div class="line">            <span class="keyword">int</span> childHeightMeasureSpec = getRootMeasureSpec(mHeight, lp.height);</div><div class="line">            performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);       </div><div class="line">            &#125;</div><div class="line">        &#125; </div><div class="line"></div><div class="line">        <span class="keyword">if</span> (didLayout) &#123;</div><div class="line">            performLayout(lp, desiredWindowWidth, desiredWindowHeight);</div><div class="line">            ...</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!cancelDraw &amp;&amp; !newSurface) &#123;</div><div class="line">            <span class="keyword">if</span> (!skipDraw || mReportNextDraw) &#123;</div><div class="line">                <span class="keyword">if</span> (mPendingTransitions != <span class="keyword">null</span> &amp;&amp; mPendingTransitions.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mPendingTransitions.size(); ++i) &#123;</div><div class="line">                        mPendingTransitions.get(i).startChangingAnimations();</div><div class="line">                    &#125;</div><div class="line">                    mPendingTransitions.clear();</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                performDraw();</div><div class="line">            &#125;</div><div class="line">        &#125; </div><div class="line">        ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -351,15 +493,89 @@
 <p>总结<br>这里简单概括一下整个流程：测量始于DecorView，通过不断的遍历子View的measure方法，根据ViewGroup的MeasureSpec及子View的LayoutParams来决定子View的MeasureSpec，进一步获取子View的测量宽高，然后逐层返回，不断保存ViewGroup的测量宽高。</p>
 <p>从文章开始到现在，View的测量流程已经全部分析完毕，View的measure流程是三大流程中最复杂的一个流程，其中的MeasureSpec贯穿了整个测量流程，占有非常重要的地位，希望读者仔细体会这个流程，最后希望这篇文章能帮助你对View的测量流程有进一步的了解，谢谢阅读。</p>
 
-        
-      </div>
-      
-      
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Ace
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangbing.cc/2018/01/02/重学自定义View系列教程03-理论基础Android-View-测量流程-Measure-完全解析/" title="重学自定义View系列教程03--理论基础Android View 测量流程(Measure)完全解析">http://zhangbing.cc/2018/01/02/重学自定义View系列教程03-理论基础Android-View-测量流程-Measure-完全解析/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/view/" rel="tag"># view</a>
+          
+            <a href="/tags/重学自定义view/" rel="tag"># 重学自定义view</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/23/重学自定义View系列教程02-理论基础：浅谈DecorView与ViewRootImpl/" rel="next" title="#重学自定义View系列教程02--理论基础：浅谈DecorView与ViewRootImpl">
+                <i class="fa fa-chevron-left"></i> #重学自定义View系列教程02--理论基础：浅谈DecorView与ViewRootImpl
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/08/悬浮窗与控制Toast显示时长小结/" rel="prev" title="悬浮窗与控制Toast显示时长小结">
+                悬浮窗与控制Toast显示时长小结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 

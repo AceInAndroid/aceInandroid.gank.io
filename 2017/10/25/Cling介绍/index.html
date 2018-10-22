@@ -263,24 +263,133 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2017/10/25/Cling介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">Android投屏,同屏库Cling源码使用和解析</h2>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h2 id="1-简单使用"><a href="#1-简单使用" class="headerlink" title="1. 简单使用"></a>1. 简单使用</h2><p>为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的<a href="https://github.com/4thline/cling" target="_blank" rel="external">Cling</a>这个库.</p>
+          <h2 class="post-title" itemprop="name headline">Android投屏,同屏库Cling源码使用和解析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T14:41:51+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/10/25/Cling介绍/" class="leancloud_visitors" data-flag-title="Android投屏,同屏库Cling源码使用和解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,319
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  17
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-简单使用"><a href="#1-简单使用" class="headerlink" title="1. 简单使用"></a>1. 简单使用</h2><p>为了满足手机与TV端相互交互分享图片在TV上播放的需求,在了解了一番技术选型之后,选用了基于DLNA的UPnP协议的<a href="https://github.com/4thline/cling" target="_blank" rel="external">Cling</a>这个库.</p>
 <a id="more"></a>
 <p>(1) 定义自己的 UpnpService 类，继承自 AndroidUpnpServiceImpl<br>(2) 启动该 Service,同时启动jetty资源服务器<br>(3) 从 UpnpService 中获取 ControlPoint，并搜索设备</p>
 <p>搜索注册在同局域网的所有设备。</p>
@@ -392,15 +501,79 @@
 <h6 id="UDP单播的例子"><a href="#UDP单播的例子" class="headerlink" title="UDP单播的例子"></a>UDP单播的例子</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  </div><div class="line">// 客户端  </div><div class="line">public class ClientTest  </div><div class="line">&#123;  </div><div class="line">    private static final int MAXRECEIVED = 255;  </div><div class="line">  </div><div class="line">    public static void main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        byte[] msg = new String(&quot;connect test successfully!!!&quot;).getBytes();  </div><div class="line">  </div><div class="line">        DatagramSocket client = new DatagramSocket();  </div><div class="line">  </div><div class="line">        InetAddress inetAddr = InetAddress.getLocalHost();  </div><div class="line">        SocketAddress socketAddr = new InetSocketAddress(inetAddr, 8888);  </div><div class="line">  </div><div class="line">        DatagramPacket sendPacket = new DatagramPacket(msg, msg.length,  </div><div class="line">                socketAddr);  </div><div class="line">  </div><div class="line">        client.send(sendPacket);  </div><div class="line">  </div><div class="line">        client.close();  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">  </div><div class="line">//服务端  </div><div class="line">public class ServerTest  </div><div class="line">&#123;  </div><div class="line">    private static final int MAXREV = 255;  </div><div class="line">  </div><div class="line">    public static void main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        DatagramSocket server = new DatagramSocket(8888);  </div><div class="line">        DatagramPacket recvPacket = new DatagramPacket(new byte[MAXREV], MAXREV);  </div><div class="line">  </div><div class="line">        while (true)  </div><div class="line">        &#123;  </div><div class="line">            server.receive(recvPacket);  </div><div class="line">  </div><div class="line">            byte[] receiveMsg = Arrays.copyOfRange(recvPacket.getData(),  </div><div class="line">                    recvPacket.getOffset(),  </div><div class="line">                    recvPacket.getOffset() + recvPacket.getLength());  </div><div class="line">  </div><div class="line">            System.out.println(&quot;Handing at client &quot;  </div><div class="line">                    + recvPacket.getAddress().getHostName() + &quot; ip &quot;  </div><div class="line">                    + recvPacket.getAddress().getHostAddress());  </div><div class="line">  </div><div class="line">            System.out.println(&quot;Server Receive Data:&quot; + new String(receiveMsg));  </div><div class="line">  </div><div class="line">            server.send(recvPacket);  </div><div class="line">  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h6 id="UDP广播的例子"><a href="#UDP广播的例子" class="headerlink" title="UDP广播的例子"></a>UDP广播的例子</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">//客户端  </div><div class="line">public class BroadcastSender  </div><div class="line">&#123;  </div><div class="line">    public static void main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        byte[] msg = new String(&quot;connection successfully!!!&quot;).getBytes();  </div><div class="line">        /* </div><div class="line">         * 在Java UDP中单播与广播的代码是相同的,要实现具有广播功能的程序只需要使用广播地址即可, 例如：这里使用了本地的广播地址 </div><div class="line">         */  </div><div class="line">        InetAddress inetAddr = InetAddress.getByName(&quot;255.255.255.255&quot;);  </div><div class="line">        DatagramSocket client = new DatagramSocket();  </div><div class="line">  </div><div class="line">        DatagramPacket sendPack = new DatagramPacket(msg, msg.length, inetAddr,  </div><div class="line">                8888);  </div><div class="line">  </div><div class="line">        client.send(sendPack);  </div><div class="line">        System.out.println(&quot;Client send msg complete&quot;);  </div><div class="line">        client.close();  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">//服务端  </div><div class="line">public class BroadcastReceive  </div><div class="line">&#123;  </div><div class="line">    public static void main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">  </div><div class="line">        DatagramPacket receive = new DatagramPacket(new byte[1024], 1024);  </div><div class="line">        DatagramSocket server = new DatagramSocket(8888);  </div><div class="line">  </div><div class="line">        System.out.println(&quot;---------------------------------&quot;);  </div><div class="line">        System.out.println(&quot;Server current start......&quot;);  </div><div class="line">        System.out.println(&quot;---------------------------------&quot;);  </div><div class="line">  </div><div class="line">        while (true)  </div><div class="line">        &#123;  </div><div class="line">            server.receive(receive);  </div><div class="line">  </div><div class="line">            byte[] recvByte = Arrays.copyOfRange(receive.getData(), 0,  </div><div class="line">                    receive.getLength());  </div><div class="line">  </div><div class="line">            System.out.println(&quot;Server receive msg:&quot; + new String(recvByte));  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h6 id="UDP组播的例子"><a href="#UDP组播的例子" class="headerlink" title="UDP组播的例子"></a>UDP组播的例子</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">//客户端  </div><div class="line">public class MulticastSender  </div><div class="line">&#123;  </div><div class="line">    public static void main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        int port = 8888;  </div><div class="line">        byte[] msg = &quot;Connection successfully!!!&quot;.getBytes();  </div><div class="line">  </div><div class="line">        InetAddress inetRemoteAddr = InetAddress.getByName(&quot;224.0.0.5&quot;);  </div><div class="line">  </div><div class="line">        /* </div><div class="line">         * Java UDP组播应用程序主要通过MulticastSocket实例进行通信,它是DatagramSocket的是一个子类, </div><div class="line">         * 其中包含了一些额外的可以控制多播的属性. </div><div class="line">         *  </div><div class="line">         * 注意： </div><div class="line">         *  </div><div class="line">         * 多播数据报包实际上可以通过DatagramSocket发送,只需要简单地指定一个多播地址。 </div><div class="line">         * 我们这里使用MulticastSocket,是因为它具有DatagramSocket没有的能力 </div><div class="line">         */  </div><div class="line">        MulticastSocket client = new MulticastSocket();  </div><div class="line">  </div><div class="line">        DatagramPacket sendPack = new DatagramPacket(msg, msg.length,  </div><div class="line">                inetRemoteAddr, port);  </div><div class="line">  </div><div class="line">        client.send(sendPack);  </div><div class="line">  </div><div class="line">        System.out.println(&quot;Client send msg complete&quot;);  </div><div class="line">  </div><div class="line">        client.close();  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">  </div><div class="line">//服务端  </div><div class="line">public class MulticastReceive  </div><div class="line">&#123;  </div><div class="line">    public static void main(String[] args) throws IOException  </div><div class="line">    &#123;  </div><div class="line">        InetAddress inetRemoteAddr = InetAddress.getByName(&quot;224.0.0.5&quot;);  </div><div class="line">  </div><div class="line">        DatagramPacket recvPack = new DatagramPacket(new byte[1024], 1024);  </div><div class="line">  </div><div class="line">        MulticastSocket server = new MulticastSocket(8888);  </div><div class="line">  </div><div class="line">        /* </div><div class="line">         * 如果是发送数据报包,可以不加入多播组; 如果是接收数据报包,必须加入多播组; 这里是接收数据报包,所以必须加入多播组; </div><div class="line">         */  </div><div class="line">        server.joinGroup(inetRemoteAddr);  </div><div class="line">  </div><div class="line">        System.out.println(&quot;---------------------------------&quot;);  </div><div class="line">        System.out.println(&quot;Server current start......&quot;);  </div><div class="line">        System.out.println(&quot;---------------------------------&quot;);  </div><div class="line">  </div><div class="line">        while (true)  </div><div class="line">        &#123;  </div><div class="line">            server.receive(recvPack);  </div><div class="line">  </div><div class="line">            byte[] recvByte = Arrays.copyOfRange(recvPack.getData(), 0,  </div><div class="line">                    recvPack.getLength());  </div><div class="line">  </div><div class="line">            System.out.println(&quot;Server receive msg:&quot; + new String(recvByte));  </div><div class="line">        &#125;  </div><div class="line">  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-        
-      </div>
-      
-      
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Ace
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangbing.cc/2017/10/25/Cling介绍/" title="Android投屏,同屏库Cling源码使用和解析">http://zhangbing.cc/2017/10/25/Cling介绍/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/24/Java-到底是值传递还是引用传递/" rel="next" title="Java 到底是值传递还是引用传递?">
+                <i class="fa fa-chevron-left"></i> Java 到底是值传递还是引用传递?
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/06/Java虚拟机类加载机制/" rel="prev" title="Java虚拟机类加载机制">
+                Java虚拟机类加载机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
