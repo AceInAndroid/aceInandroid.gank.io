@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="XduhSicqEvrM2t-u9VmdvMz9IRuhPIUGL7siQFpADQg" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.png?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说说PendingIntent的内部机制概述在Android中，我们常常使用PendingIntent来表达一种“留待日后处理”的意思。从这个角度来说，PendingIntent可以被理解为一种特殊的异步处理机制。不过，单就命名而言，PendingIntent其实具有一定误导性，因为它既不继承于Intent，也不包含Intent，它的核心可以粗略地汇总成四个字——“异步激发”。 很明显，这种异步激">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="说说PendingIntent的内部机制">
+<meta property="og:url" content="http://zhangbing.cc/2018/10/22/说说PendingIntent的内部机制/index.html">
+<meta property="og:site_name" content="Ace的技术客栈">
+<meta property="og:description" content="说说PendingIntent的内部机制概述在Android中，我们常常使用PendingIntent来表达一种“留待日后处理”的意思。从这个角度来说，PendingIntent可以被理解为一种特殊的异步处理机制。不过，单就命名而言，PendingIntent其实具有一定误导性，因为它既不继承于Intent，也不包含Intent，它的核心可以粗略地汇总成四个字——“异步激发”。 很明显，这种异步激">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1fwcdwiohlgj30gb04v74y.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1fwgzmgr0srj30dd07xmy7.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1fwgzv1t8ryj30ko09uta7.jpg">
+<meta property="og:updated_time" content="2018-10-22T07:26:19.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="说说PendingIntent的内部机制">
+<meta name="twitter:description" content="说说PendingIntent的内部机制概述在Android中，我们常常使用PendingIntent来表达一种“留待日后处理”的意思。从这个角度来说，PendingIntent可以被理解为一种特殊的异步处理机制。不过，单就命名而言，PendingIntent其实具有一定误导性，因为它既不继承于Intent，也不包含Intent，它的核心可以粗略地汇总成四个字——“异步激发”。 很明显，这种异步激">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1fwcdwiohlgj30gb04v74y.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhangbing.cc/2018/10/22/说说PendingIntent的内部机制/"/>
+
+
+
+
+
+  <title>说说PendingIntent的内部机制 | Ace的技术客栈</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f4df925f5ecaae00a62621ca00acdaae";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ace的技术客栈</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">业精于勤荒于嬉 行成于思毁于随</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2018/10/22/说说PendingIntent的内部机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ace">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ace的技术客栈">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">说说PendingIntent的内部机制</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-22T15:26:00+08:00">
+                2018-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,762
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  19
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="说说PendingIntent的内部机制"><a href="#说说PendingIntent的内部机制" class="headerlink" title="说说PendingIntent的内部机制"></a>说说PendingIntent的内部机制</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在Android中，我们常常使用PendingIntent来表达一种“留待日后处理”的意思。从这个角度来说，PendingIntent可以被理解为一种特殊的异步处理机制。不过，单就命名而言，PendingIntent其实具有一定误导性，因为它既不继承于Intent，也不包含Intent，它的核心可以粗略地汇总成四个字——“异步激发”。</p>
+<p>很明显，这种异步激发常常是要跨进程执行的。比如说A进程作为发起端，它可以从系统“获取”一个PendingIntent，然后A进程可以将PendingIntent对象通过binder机制“传递”给B进程，再由B进程在未来某个合适时机，“回调”PendingIntent对象的send()动作，完成激发。</p>
+<p>在Android系统中，最适合做集中性管理的组件就是AMS（Activity Manager Service）啦，所以它义不容辞地承担起管理所有PendingIntent的职责。这样我们就可以画出如下示意图：  </p>
+<p><img src="https://ws1.sinaimg.cn/large/007lnl1egy1fwcdwiohlgj30gb04v74y.jpg" alt=""></p>
+<p>注意其中的第4步“递送相应的intent”。这一步递送的intent是从何而来的呢？简单地说，当发起端获取PendingIntent时，其实是需要同时提供若干intent的。这些intent和PendingIntent只是配套的关系，而不是聚合的关系，它们会被缓存在AMS中。日后，一旦处理端将PendingIntent的“激发”语义传递到AMS，AMS就会尝试找到与这个PendingIntent对应的若干intent，并递送出去。</p>
+<pre><code>当然，以上说的只是大概情况，实际的技术细节会更复杂一点儿。下面我们就来谈谈细节。
+</code></pre><h2 id="PendingIntent的技术细节"><a href="#PendingIntent的技术细节" class="headerlink" title="PendingIntent的技术细节"></a>PendingIntent的技术细节</h2><h3 id="发起端获取PendingIntent"><a href="#发起端获取PendingIntent" class="headerlink" title="发起端获取PendingIntent"></a>发起端获取PendingIntent</h3><pre><code>我们先要理解，所谓的“发起端获取PendingIntent”到底指的是什么。难道只是简单new一个PendingIntent对象吗？当然不是。此处的“获取”动作其实还含有向AMS“注册”intent的语义。
+</code></pre><p>在PendingIntent.java文件中，我们可以看到有如下几个比较常见的静态函数：</p>
+<ul>
+<li>public static PendingIntent <strong>getActivity</strong>(Context context, int requestCode, Intent intent, int flags)</li>
+<li>public static PendingIntent <strong>getBroadcast</strong>(Context context, int requestCode, Intent intent, int flags)</li>
+<li>public static PendingIntent <strong>getService</strong>(Context context, int requestCode, Intent intent, int flags)</li>
+<li>public static PendingIntent <strong>getActivities</strong>(Context context, int requestCode, Intent[] intents, int flags)</li>
+<li>public static PendingIntent <strong>getActivities</strong>(Context context, int requestCode, Intent[] intents, int flags, Bundle options)<br>它们就是我们常用的获取PendingIntent的动作了。</li>
+</ul>
+<p>坦白说，这几个函数的命名可真不怎么样，所以我们简单解释一下。上面的getActivity()的意思其实是，获取一个PendingIntent对象，而且该对象日后激发时所做的事情是启动一个新activity。也就是说，当它异步激发时，会执行类似Context.startActivity()那样的动作。相应地，getBroadcast()和getService()所获取的PendingIntent对象在激发时，会分别执行类似Context..sendBroadcast()和Context.startService()这样的动作。至于最后两个getActivities()，用得比较少，激发时可以启动几个activity。</p>
+<p>我们以getActivity()的代码来说明问题：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PendingIntent <span class="title">getActivity</span><span class="params">(Context context, <span class="keyword">int</span> requestCode,</span></span></div><div class="line"><span class="function"><span class="params">                                        Intent intent, <span class="keyword">int</span> flags, Bundle options)</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    String packageName = context.getPackageName();</div><div class="line">    String resolvedType = intent != <span class="keyword">null</span> ? </div><div class="line">                          intent.resolveTypeIfNeeded(context.getContentResolver()) : <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> </div><div class="line">    &#123;</div><div class="line">        intent.setAllowFds(<span class="keyword">false</span>);</div><div class="line">        IIntentSender target = ActivityManagerNative.getDefault().getIntentSender(</div><div class="line">                                    ActivityManager.INTENT_SENDER_ACTIVITY, packageName,</div><div class="line">                                    <span class="keyword">null</span>, <span class="keyword">null</span>, requestCode, <span class="keyword">new</span> Intent[] &#123; intent &#125;,</div><div class="line">                                    resolvedType != <span class="keyword">null</span> ? <span class="keyword">new</span> String[] &#123; resolvedType &#125; : <span class="keyword">null</span>,</div><div class="line">                                    flags, options);</div><div class="line">        <span class="keyword">return</span> target != <span class="keyword">null</span> ? <span class="keyword">new</span> PendingIntent(target) : <span class="keyword">null</span>;</div><div class="line">    &#125; </div><div class="line">    <span class="keyword">catch</span> (RemoteException e) </div><div class="line">    &#123; &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中那句<strong>new PendingIntent(target)</strong>创建了<strong>PendingIntent</strong>对象，其重要性自不待言。然而，这个对象的内部核心其实是由上面那个<strong>getIntentSender()</strong>函数得来的。而这个<strong>IIntentSender</strong>核心才是我们真正需要关心的东西。</p>
+<p>说穿了，此处的<strong>IIntentSender</strong>对象是个<strong>binder代理</strong>，它对应的<strong>binder实体</strong>是AMS中的<strong>PendingIntentRecord</strong>对象。PendingIntent对象构造之时，IIntentSender代理作为参数传进来，并记录在PendingIntent的mTarget域。日后，当PendingIntent执行异步激发时，其内部就是靠这个mTarget域向AMS传递语义的。</p>
+<p>我们前文说过，PendingIntent常常会经由binder机制，传递到另一个进程去。而binder机制可以保证，目标进程得到的PendingIntent的mTarget域也是合法的IIntentSender代理，而且和发起端的<strong>IIntentSender</strong>代理对应着同一个<strong>PendingIntentRecord</strong>实体。示意图如下：</p>
+<p><img src="https://ws1.sinaimg.cn/large/007lnl1egy1fwgzmgr0srj30dd07xmy7.jpg" alt=""></p>
+<h3 id="AMS里的PendingIntentRecord"><a href="#AMS里的PendingIntentRecord" class="headerlink" title="AMS里的PendingIntentRecord"></a>AMS里的PendingIntentRecord</h3><p>  那么PendingIntentRecord里又有什么信息呢？它的定义截选如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PendingIntentRecord</span> <span class="keyword">extends</span> <span class="title">IIntentSender</span>.<span class="title">Stub</span> </span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">final</span> ActivityManagerService owner;</div><div class="line">    <span class="keyword">final</span> Key key;  <span class="comment">// 最关键的key域</span></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> uid;</div><div class="line">    <span class="keyword">final</span> WeakReference&lt;PendingIntentRecord&gt; ref;</div><div class="line">    <span class="keyword">boolean</span> sent = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">boolean</span> canceled = <span class="keyword">false</span>;</div><div class="line">    String stringName;</div><div class="line">    . . . . . .</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>请注意其中那个key域。这里的Key是个PendingIntentRecord的内嵌类，其定义截选如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Key</span> </span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> type;</div><div class="line">    <span class="keyword">final</span> String packageName;</div><div class="line">    <span class="keyword">final</span> ActivityRecord activity;</div><div class="line">    <span class="keyword">final</span> String who;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> requestCode;</div><div class="line">    <span class="keyword">final</span> Intent requestIntent;        <span class="comment">// 注意！</span></div><div class="line">    <span class="keyword">final</span> String requestResolvedType;</div><div class="line">    <span class="keyword">final</span> Bundle options;</div><div class="line">    Intent[] allIntents;    <span class="comment">// 注意！记录了当初获取PendingIntent时，用户所指定的所有intent</span></div><div class="line">    String[] allResolvedTypes;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> flags;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hashCode;</div><div class="line">    . . . . . .</div><div class="line">    . . . . . .</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>请注意其中的<strong>allIntents[]数组域</strong>以及<strong>requestIntent</strong>域。前者记录了当初获取PendingIntent时，用户所指定的所有intent（虽然一般情况下只会指定一个intent，但类似getActivities()这样的函数还是可以指定多个intent的），而后者可以粗浅地理解为用户所指定的那个intent数组中的最后一个intent。现在大家应该清楚异步激发时用到的intent都存在哪里了吧。</p>
+<p>Key的构造函数截选如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">Key(<span class="keyword">int</span> _t, String _p, ActivityRecord _a, String _w,</div><div class="line">    <span class="keyword">int</span> _r, Intent[] _i, String[] _it, <span class="keyword">int</span> _f, Bundle _o) </div><div class="line">&#123;</div><div class="line">    type = _t;</div><div class="line">    packageName = _p;</div><div class="line">    activity = _a;</div><div class="line">    who = _w;</div><div class="line">    requestCode = _r;</div><div class="line">    requestIntent = _i != <span class="keyword">null</span> ? _i[_i.length-<span class="number">1</span>] : <span class="keyword">null</span>;    <span class="comment">// intent数组中的最后一个</span></div><div class="line">    requestResolvedType = _it != <span class="keyword">null</span> ? _it[_it.length-<span class="number">1</span>] : <span class="keyword">null</span>;</div><div class="line">    allIntents = _i;    <span class="comment">// 所有intent</span></div><div class="line">    allResolvedTypes = _it;</div><div class="line">    flags = _f;</div><div class="line">    options = _o;</div><div class="line">    . . . . . .</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Key不光承担着记录信息的作用，它还承担<strong>“键值”</strong>的作用。</p>
+<h3 id="AMS中的PendingIntentRecord总表"><a href="#AMS中的PendingIntentRecord总表" class="headerlink" title="AMS中的PendingIntentRecord总表"></a>AMS中的PendingIntentRecord总表</h3><p>在AMS中，管理着系统中所有的PendingIntentRecord节点，所以需要把这些节点组织成一张表：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> HashMap&lt;PendingIntentRecord.Key, WeakReference&lt;PendingIntentRecord&gt;&gt; </div><div class="line">                                                         mIntentSenderRecords</div></pre></td></tr></table></figure>
+<p>这张哈希映射表的键值类型就是刚才所说的<strong>PendingIntentRecord.Key</strong>。</p>
+<p>以后每当我们要获取<strong>PendingIntent</strong>对象时，<strong>PendingIntent</strong>里的<strong>mTarget</strong>是这样得到的：AMS会先查<strong>mIntentSenderRecords</strong>表，如果能找到符合的<strong>PendingIntentRecord</strong>节点，则返回之。如果找不到，就<strong>创建</strong>一个新的PendingIntentRecord节点。因为PendingIntentRecord是个binder实体，所以经过binder机制传递后，客户进程拿到的就是个合法的binder代理。如此一来，前文的示意图可以进一步修改成下图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/007lnl1egy1fwgzv1t8ryj30ko09uta7.jpg" alt=""></p>
+<h3 id="AMS里的getIntentSender-函数"><a href="#AMS里的getIntentSender-函数" class="headerlink" title="AMS里的getIntentSender()函数"></a>AMS里的getIntentSender()函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PendingIntent <span class="title">getActivity</span><span class="params">(Context context, <span class="keyword">int</span> requestCode,</span></span></div><div class="line"><span class="function"><span class="params">                                        Intent intent, <span class="keyword">int</span> flags, Bundle options)</span></span></div></pre></td></tr></table></figure>
+<ul>
+<li>context参数是调用方的上下文。</li>
+<li>requestCode是个简单的整数，起区分作用。</li>
+<li>intent是异步激发时将发出的intent。</li>
+<li>flags可以包含一些既有的标识，比如FLAG_ONE_SHOT、FLAG_NO_CREATE、FLAG_CANCEL_CURRENT、FLAG_UPDATE_CURRENT等等。不少同学对这个域不是很清楚，我们后文会细说。</li>
+<li>options可以携带一些额外的数据。</li>
+</ul>
+<p>  getActivity()的代码很简单，其参数基本上都传给了getIntentSender()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">IIntentSender target = ActivityManagerNative.getDefault().getIntentSender(. . . . . .)</div></pre></td></tr></table></figure>
+<p>getIntentSender()的原型大体是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> IIntentSender <span class="title">getIntentSender</span><span class="params">(<span class="keyword">int</span> type,</span></span></div><div class="line"><span class="function"><span class="params">            String packageName, IBinder token, String resultWho,</span></span></div><div class="line"><span class="function"><span class="params">            <span class="keyword">int</span> requestCode, Intent[] intents, String[] resolvedTypes,</span></span></div><div class="line"><span class="function"><span class="params">            <span class="keyword">int</span> flags, Bundle options)</span> <span class="keyword">throws</span> RemoteException</span>;</div></pre></td></tr></table></figure>
+<p>其参数比getActivity()要多一些，我们逐个说明。</p>
+<ul>
+<li><p>type参数表明<strong>PendingIntent的类型</strong>。getActivity()和getActivities()动作里指定的类型值是<strong>INTENT_SENDER_ACTIVITY</strong>，getBroadcast()和getService()和动作里指定的类型值分别是<strong>INTENT_SENDER_BROADCAST</strong>和<strong>INTENT_SENDER_SERVICE</strong>。另外，在Activity.java文件中，我们还看到一个createPendingResult()函数，这个函数表达了发起方的activity日后希望得到result回馈的意思，所以其内部调用getIntentSender()时指定的类型值为<strong>INTENT_SENDER_ACTIVITY_RESULT</strong>。</p>
+</li>
+<li><p><strong>packageName</strong>参数表示发起端所属的<em>包名</em>。</p>
+</li>
+<li><p><strong>token</strong>参数是个指代回馈目标方的代理。这是什么意思呢？我们常用的getActivity()、getBroadcast()和getService()中，只是把这个参数简单地指定为null，表示这个PendingIntent激发时，是不需要发回什么回馈的。不过当我们希望获取类型为INTENT_SENDER_ACTIVITY_RESULT的PendingIntent时，就需要指定token参数了。具体可参考createPendingResult()的代码：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> PendingIntent <span class="title">createPendingResult</span><span class="params">(<span class="keyword">int</span> requestCode, Intent data, <span class="keyword">int</span> flags)</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    String packageName = getPackageName();</div><div class="line">    <span class="keyword">try</span> </div><div class="line">    &#123;</div><div class="line">        data.setAllowFds(<span class="keyword">false</span>);</div><div class="line">        IIntentSender target = ActivityManagerNative.getDefault().getIntentSender(</div><div class="line">                                    ActivityManager.INTENT_SENDER_ACTIVITY_RESULT, </div><div class="line">                                    packageName,</div><div class="line">                                    mParent == <span class="keyword">null</span> ? mToken : mParent.mToken,</div><div class="line">                                    mEmbeddedID, requestCode, <span class="keyword">new</span> Intent[] &#123; data &#125;, </div><div class="line">                                    <span class="keyword">null</span>, flags, <span class="keyword">null</span>);</div><div class="line">        <span class="keyword">return</span> target != <span class="keyword">null</span> ? <span class="keyword">new</span> PendingIntent(target) : <span class="keyword">null</span>;</div><div class="line">    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">        <span class="comment">// Empty</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看到了吗？传入的token为Activity的mToken或者其mParent.mToken。说得简单点儿，<strong>AMS内部可以根据这个token找到其对应的ActivityRecord</strong>，日后当PendingIntent激发时，AMS可以根据这个<strong>ActivityRecord</strong>确定出该向哪个目标进程的哪个<strong>Activity</strong>发出<strong>result</strong>语义。</p>
+<ul>
+<li><p><strong>resultWho</strong>参数和token参数息息相关，一般也是null啦。在createPendingResult()中，其值为Activity的mEmbeddedID字符串。</p>
+</li>
+<li><p><strong>requestCode</strong>参数是个简单的整数，可以在获取PendingIntent时由用户指定，它可以起区分的作用。</p>
+</li>
+<li><p><strong>intents</strong>数组参数是异步激发时希望发出的intent。对于getActivity()、getBroadcast()和getService()来说，都只会指定一个intent而已。只有getActivities()会尝试一次传入若干intent。</p>
+</li>
+<li><p><strong>resolvedTypes</strong>参数基本上和intent是相关的。一般是这样得到的：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String resolvedType = intent != <span class="keyword">null</span> ? intent.resolveTypeIfNeeded(</div><div class="line">                context.getContentResolver()) : <span class="keyword">null</span>;</div></pre></td></tr></table></figure>
+<p>这个值常常和intent内部的mData URI有关系，比如最终的值可能是URI对应的MIME类型。</p>
+<p>flags参数可以指定PendingIntent的一些行为特点。它的取值是一些既有的比特标识的组合。目前可用的标识有：FLAG_ONE_SHOT、FLAG_NO_CREATE、FLAG_CANCEL_CURRENT、FLAG_UPDATE_CURRENT等等。有时候，flags中还可以附带若干FILL_IN_XXX标识。我们把常见的标识定义列举如下：</p>
+<p><strong>【PendingIntent中】</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_ONE_SHOT = <span class="number">1</span>&lt;&lt;<span class="number">30</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_NO_CREATE = <span class="number">1</span>&lt;&lt;<span class="number">29</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_CANCEL_CURRENT = <span class="number">1</span>&lt;&lt;<span class="number">28</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FLAG_UPDATE_CURRENT = <span class="number">1</span>&lt;&lt;<span class="number">27</span>;</div></pre></td></tr></table></figure>
+<p><strong>【Intent中】</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_ACTION = <span class="number">1</span>&lt;&lt;<span class="number">0</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_DATA = <span class="number">1</span>&lt;&lt;<span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_CATEGORIES = <span class="number">1</span>&lt;&lt;<span class="number">2</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_COMPONENT = <span class="number">1</span>&lt;&lt;<span class="number">3</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_PACKAGE = <span class="number">1</span>&lt;&lt;<span class="number">4</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_SOURCE_BOUNDS = <span class="number">1</span>&lt;&lt;<span class="number">5</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_SELECTOR = <span class="number">1</span>&lt;&lt;<span class="number">6</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FILL_IN_CLIP_DATA = <span class="number">1</span>&lt;&lt;<span class="number">7</span>;</div></pre></td></tr></table></figure>
+<p>这些以FILL<em>IN</em>打头的标志位，主要是在intent对象的fillIn()函数里起作用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">fillIn</span><span class="params">(Intent other, <span class="keyword">int</span> flags)</span></span></div></pre></td></tr></table></figure>
+<p>我们以<strong>FILL_IN_ACTION</strong>为例来说明，当我们执行类似<strong>srcIntent.fillIn(otherIntent, …)</strong>的句子时，如果otherIntent的mAction域不是null值，那么fillIn()会在以下两种情况下，用otherIntent的mAction域值为srcIntent的mAction域赋值：</p>
+<ol>
+<li>当srcIntent的mAction域值为null时； </li>
+<li>如果fillIn的flags参数里携带了<strong>FILL_IN_ACTION</strong>标志位，那么即便srcIntent的mAction已经有值了，此时也会用otherIntent的mAction域值强行替换掉srcIntent的mAction域值。</li>
+</ol>
+<p>其他FILL<em>IN</em>标志位和FILL_IN_ACTION的处理方式类似，我们不再赘述。</p>
+<p>options参数可以携带一些额外数据。</p>
+<h4 id="getIntentSender-函数"><a href="#getIntentSender-函数" class="headerlink" title="getIntentSender()函数"></a>getIntentSender()函数</h4><p>getIntentSender()函数摘录如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> IIntentSender <span class="title">getIntentSender</span><span class="params">(<span class="keyword">int</span> type, String packageName, </span></span></div><div class="line"><span class="function"><span class="params">                                     IBinder token, String resultWho,</span></span></div><div class="line"><span class="function"><span class="params">                                     <span class="keyword">int</span> requestCode, Intent[] intents, </span></span></div><div class="line"><span class="function"><span class="params">                                     String[] resolvedTypes,</span></span></div><div class="line"><span class="function"><span class="params">                                     <span class="keyword">int</span> flags, Bundle options)</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    . . . . . .    </div><div class="line">    <span class="comment">// 先判断intents数组，可以用伪代码checkIntents(intents)来表示</span></div><div class="line">    <span class="comment">// checkIntents(intents);</span></div><div class="line">    . . . . . .    </div><div class="line">    <span class="keyword">int</span> callingUid = Binder.getCallingUid();</div><div class="line">    . . . . . .</div><div class="line">    <span class="keyword">if</span> (callingUid != <span class="number">0</span> &amp;&amp; callingUid != Process.SYSTEM_UID) </div><div class="line">    &#123;</div><div class="line">        <span class="keyword">int</span> uid = AppGlobals.getPackageManager().getPackageUid(packageName, </div><div class="line">                                                               UserId.getUserId(callingUid));</div><div class="line">        <span class="keyword">if</span> (!UserId.isSameApp(callingUid, uid)) </div><div class="line">        &#123;</div><div class="line">            . . . . . .</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> SecurityException(msg);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    . . . . . .</div><div class="line">    <span class="keyword">return</span> getIntentSenderLocked(type, packageName, Binder.getOrigCallingUid(),</div><div class="line">            token, resultWho, requestCode, intents, resolvedTypes, flags, options);</div><div class="line">    . . . . . .</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>getIntentSender()函数中有一段逐条判断intents[]的代码，我用伪代码<strong>checkIntents(intents)</strong>来表示，这部分对应的实际代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;intents.length; i++) </div><div class="line">&#123;</div><div class="line">    Intent intent = intents[i];</div><div class="line">    <span class="keyword">if</span> (intent != <span class="keyword">null</span>) </div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (intent.hasFileDescriptors()) </div><div class="line">        &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"File descriptors passed in Intent"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (type == ActivityManager.INTENT_SENDER_BROADCAST &amp;&amp;</div><div class="line">            (intent.getFlags()&amp;Intent.FLAG_RECEIVER_BOOT_UPGRADE) != <span class="number">0</span>) </div><div class="line">        &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Can't use FLAG_RECEIVER_BOOT_UPGRADE here"</span>);</div><div class="line">        &#125;</div><div class="line">        intents[i] = <span class="keyword">new</span> Intent(intent);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码说明在获取PendingIntent对象时，intent中是不能携带文件描述符的。而且如果这个PendingIntent是那种要发出广播的PendingIntent，那么intent中也不能携带FLAG_RECEIVER_BOOT_UPGRADE标识符。“BOOT_UPGRADE”应该是“启动并升级”的意思，它不能使用PendingIntent。</p>
+<p>getIntentSender()中最核心的一句应该是调用<strong>getIntentSenderLocked()</strong>的那句。</p>
+<h4 id="getIntentSenderLocked-函数"><a href="#getIntentSenderLocked-函数" class="headerlink" title="getIntentSenderLocked()函数"></a>getIntentSenderLocked()函数</h4><p>   getIntentSenderLocked()的代码截选如下：</p>
+<p>【frameworks/base/services/java/com/android/server/am/ActivityManagerService.java】</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="function">IIntentSender <span class="title">getIntentSenderLocked</span><span class="params">(<span class="keyword">int</span> type, String packageName, <span class="keyword">int</span> callingUid, </span></span></div><div class="line"><span class="function"><span class="params">                                    IBinder token, String resultWho,</span></span></div><div class="line"><span class="function"><span class="params">                                    <span class="keyword">int</span> requestCode, Intent[] intents, </span></span></div><div class="line"><span class="function"><span class="params">                                    String[] resolvedTypes, <span class="keyword">int</span> flags,</span></span></div><div class="line"><span class="function"><span class="params">                                    Bundle options)</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    . . . . . .</div><div class="line">    <span class="comment">// 如果是INTENT_SENDER_ACTIVITY_RESULT类型，那么要判断token所</span></div><div class="line">    <span class="comment">// 代表的activity是否还在activity栈中</span></div><div class="line">    </div><div class="line">    . . . . . .</div><div class="line">    <span class="comment">// 整理flags中的信息</span></div><div class="line">    </div><div class="line">    . . . . . .</div><div class="line">    PendingIntentRecord.Key key = <span class="keyword">new</span> PendingIntentRecord.Key(type, packageName, </div><div class="line">                                                              activity, resultWho,</div><div class="line">                                                              requestCode, intents, </div><div class="line">                                                              resolvedTypes, flags, options);</div><div class="line">    <span class="comment">// 尽力从哈希映射表中查找key对应的PendingIntentRecord，如果找不到就创建一个新的节点。</span></div><div class="line">    WeakReference&lt;PendingIntentRecord&gt; ref;</div><div class="line">    ref = mIntentSenderRecords.get(key);    </div><div class="line">    PendingIntentRecord rec = ref != <span class="keyword">null</span> ? ref.get() : <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">if</span> (rec != <span class="keyword">null</span>) </div><div class="line">    &#123;</div><div class="line">        <span class="comment">// 找到了匹配的PendingIntent，现在考虑要不要更新它，或者取消它。</span></div><div class="line">        <span class="keyword">if</span> (!cancelCurrent) </div><div class="line">        &#123;</div><div class="line">            <span class="keyword">if</span> (updateCurrent) </div><div class="line">            &#123;</div><div class="line">                <span class="comment">// 如果明确指定了FLAG_UPDATE_CURRENT，那么更新找到的节点</span></div><div class="line">                <span class="keyword">if</span> (rec.key.requestIntent != <span class="keyword">null</span>) &#123;</div><div class="line">                    rec.key.requestIntent.replaceExtras(intents != <span class="keyword">null</span> ?</div><div class="line">                            intents[intents.length - <span class="number">1</span>] : <span class="keyword">null</span>);</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (intents != <span class="keyword">null</span>) &#123;</div><div class="line">                    intents[intents.length-<span class="number">1</span>] = rec.key.requestIntent;</div><div class="line">                    rec.key.allIntents = intents;</div><div class="line">                    rec.key.allResolvedTypes = resolvedTypes;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    rec.key.allIntents = <span class="keyword">null</span>;</div><div class="line">                    rec.key.allResolvedTypes = <span class="keyword">null</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 凡是能找到对应的节点，而且又不取消该节点的，那么就return这个节点</span></div><div class="line">            <span class="keyword">return</span> rec;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 如果PendingIntent的标志中带有FLAG_CANCEL_CURRENT，则从哈希映射表中删除之</span></div><div class="line">        rec.canceled = <span class="keyword">true</span>;</div><div class="line">        mIntentSenderRecords.remove(key);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (noCreate) </div><div class="line">    &#123;</div><div class="line">        <span class="comment">// 如果明确表示了不创建新节点，也就是说标志中带有FLAG_NO_CREATE，</span></div><div class="line">        <span class="comment">// 那么不管是不是Cancel了PendingIntent，此时一概直接返回。</span></div><div class="line">        <span class="keyword">return</span> rec;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 从哈希映射表中找不到，而且又没有写明FLAG_NO_CREATE，此时创建一个新节点</span></div><div class="line">    rec = <span class="keyword">new</span> PendingIntentRecord(<span class="keyword">this</span>, key, callingUid);</div><div class="line">    mIntentSenderRecords.put(key, rec.ref);</div><div class="line">    <span class="keyword">if</span> (type == ActivityManager.INTENT_SENDER_ACTIVITY_RESULT) </div><div class="line">    &#123;</div><div class="line">        <span class="comment">// 如果intent需要返回结果，那么修改token对应的ActivityRecord</span></div><div class="line">        <span class="comment">// 的pendingResults域。</span></div><div class="line">        <span class="keyword">if</span> (activity.pendingResults == <span class="keyword">null</span>) </div><div class="line">        &#123;</div><div class="line">            activity.pendingResults = <span class="keyword">new</span> HashSet&lt;WeakReference&lt;PendingIntentRecord&gt;&gt;();</div><div class="line">        &#125;</div><div class="line">        activity.pendingResults.add(rec.ref);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> rec;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面这段代码主要做的事情有：</p>
+<ol>
+<li>将传进来的多个参数信息整理成一个<strong>PendingIntentRecord.Key</strong>对象（key）； </li>
+<li>尝试从<strong>mIntentSenderRecords</strong>总表中查找和key相符的<strong>PendingIntentRecord</strong>节点； </li>
+<li>根据flags参数所含有的意义，对得到的<strong>PendingIntentRecord</strong>进行加工。有时候修改之，有时候删除之。 </li>
+<li>如果在总表中没有找到对应的PendingIntentRecord节点，或者根据flags的语义删除了刚找到的节点，那么此时的默认行为是创建一个新的PendingIntentRecord节点，并插入总表。除非flags中明确指定了FLAG_NO_CREATE，此时不会创建新节点。</li>
+</ol>
+<h4 id="说说flags"><a href="#说说flags" class="headerlink" title="说说flags"></a>说说flags</h4><p> 从getIntentSenderLocked()的代码中，我们终于搞明白了flags中那些特定比特值的意义了。我们现在总结一下。</p>
+<p> 应该说这些flags比特值基本上都是在围绕着mIntentSenderRecords总表说事的。其中，FLAG_CANCEL_CURRENT的意思是，当我们获取PendingIntent时，如果可以从总表中查到一个相符的已存在的PendingIntentRecord节点的话，那么需要把这个节点从总表中清理出去。而在没有指定FLAG_CANCEL_CURRENT的大前提下，如果用户指定了FLAG_UPDATE_CURRENT标识，那么会用新的intents参数替掉刚查到的PendingIntentRecord中的旧intents。</p>
+<p>而不管是刚清理了已存在的PendingIntentRecord，还是压根儿就没有找到符合的PendingIntentRecord，只要用户没有明确指定FLAG_NO_CREATE标识，系统就会尽力创建一个新的PendingIntentRecord节点，并插入总表。</p>
+<p>至于FLAG_ONE_SHOT标识嘛，它并没有在getIntentSenderLocked()中露脸儿。它的名字是“FLAG_ONE_SHOT”，也就是“只打一枪”的意思，那么很明显，这个标识起作用的地方应该是在“激发”函数里。在最终的激发函数（sendInner()）里，我们可以看到下面的代码：</p>
+<p>【frameworks/base/services/java/com/android/server/am/PendingIntentRecord.java】</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">sendInner</span><span class="params">(<span class="keyword">int</span> code, Intent intent, String resolvedType,</span></span></div><div class="line"><span class="function"><span class="params">        IIntentReceiver finishedReceiver, String requiredPermission,</span></span></div><div class="line"><span class="function"><span class="params">        IBinder resultTo, String resultWho, <span class="keyword">int</span> requestCode,</span></span></div><div class="line"><span class="function"><span class="params">        <span class="keyword">int</span> flagsMask, <span class="keyword">int</span> flagsValues, Bundle options)</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">synchronized</span>(owner) &#123;</div><div class="line">        <span class="keyword">if</span> (!canceled) </div><div class="line">        &#123;</div><div class="line">            sent = <span class="keyword">true</span>;</div><div class="line">            <span class="keyword">if</span> ((key.flags &amp; PendingIntent.FLAG_ONE_SHOT) != <span class="number">0</span>) &#123;</div><div class="line">                owner.cancelIntentSenderLocked(<span class="keyword">this</span>, <span class="keyword">true</span>);</div><div class="line">                canceled = <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">            . . . . . .</div><div class="line">            . . . . . .</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> ActivityManager.START_CANCELED;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>意思很简单，一进行激发就把相应的PendingIntentRecord节点从总表中清理出去，而且把PendingIntentRecord的canceled域设为true。这样，以后即便外界再调用send()动作都没用了，因为再也无法进入if (!canceled)判断了。</p>
+<h4 id="将PendingIntentRecord节点插入总表"><a href="#将PendingIntentRecord节点插入总表" class="headerlink" title="将PendingIntentRecord节点插入总表"></a>将PendingIntentRecord节点插入总表</h4><p>   接下来getIntentSenderLocked()函数new了一个PendingIntentRecord节点，并将之插入mIntentSenderRecords总表中。</p>
+<h3 id="PendingIntent的激发动作"><a href="#PendingIntent的激发动作" class="headerlink" title="PendingIntent的激发动作"></a>PendingIntent的激发动作</h3><p>   下面我们来看PendingIntent的激发动作。在前文我们已经说过，当需要激发PendingIntent之时，主要是通过调用PendingIntent的send()函数来完成激发动作的。PendingIntent提供了多个形式的send()函数，然而这些函数的内部其实调用的是同一个send()，其函数原型如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Context context, <span class="keyword">int</span> code, Intent intent,</span></span></div><div class="line"><span class="function"><span class="params">                    OnFinished onFinished, Handler handler, String requiredPermission)</span> </span></div><div class="line"><span class="function">                    <span class="keyword">throws</span> CanceledException</span></div></pre></td></tr></table></figure>
+<p>该函数内部最关键的一句是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> res = mTarget.send(code, intent, resolvedType,</div><div class="line">                    onFinished != <span class="keyword">null</span> ? <span class="keyword">new</span> FinishedDispatcher(<span class="keyword">this</span>, onFinished, handler) : <span class="keyword">null</span>,</div><div class="line">                    requiredPermission);</div></pre></td></tr></table></figure>
+<p>我们前文已经介绍过这个mTarget域了，它对应着AMS中的某个PendingIntentRecord。</p>
+<p>所以我们要看一下PendingIntentRecord一侧的send()函数，其代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">send</span><span class="params">(<span class="keyword">int</span> code, Intent intent, String resolvedType,</span></span></div><div class="line"><span class="function"><span class="params">                   IIntentReceiver finishedReceiver, String requiredPermission)</span> </span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">return</span> sendInner(code, intent, resolvedType, finishedReceiver,</div><div class="line">                requiredPermission, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中sendInner()才是真正做激发动作的函数。</p>
+<pre><code>sendInner()完成的主要逻辑动作有：
+</code></pre><ol>
+<li><p>如果当前PendingIntentRecord节点已经处于canceled域为true的状态，那么说明这个节点已经被取消掉了，此时sendInner()不会做任何实质上的激发动作，只是简单地return ActivityManager.START_CANCELED而已。 </p>
+</li>
+<li><p>如果当初在创建这个节点时，使用者已经指定了FLAG_ONE_SHOT标志位的话，那么此时sendInner()会把这个PendingIntentRecord节点从AMS中的总表中摘除，并且把canceled域设为true。而后的操作和普通激发时的动作是一致的，也就是说也会走下面的第3）步。 </p>
+</li>
+<li><p>关于普通激发时应执行的逻辑动作是，根据当初创建PendingIntentRecord节点时，用户指定的type类型，进行不同的处理。这个type其实就是我们前文所说的INTENT_SENDER_ACTIVITY、INTENT_SENDER_BROADCAST、INTENT_SENDER_SERVICE等类型啦，大家如有兴趣，可自己参考本文一开始所说的getActivity()、getBroadcast()、getService()等函数的实现代码。</p>
+</li>
+</ol>
+<p>现在还有一个问题是，既然我们在当初获取PendingIntent时，已经指定了日后激发时需要递送的intent（或intent数组），那么为什么send()动作里还有一个intent参数呢？它们的关系又是什么呢？我猜想，PendingIntent机制的设计者是希望给激发端一个修改“待激发的intent”的机会。比如当初我们获取PendingIntent对象时，如果在flags里设置了FILL_IN_ACTION标志位，那么就说明我们允许日后在某个激发点，用新的intent的mAction域值，替换掉我们最初给的intent的mAction域值。如果一开始没有设置FILL_IN_ACTION标志位，而且在最初的intent里已经有了非空的mAction域值的话，那么即使在激发端又传入了新intent，它也不可能修改用新intent的mAction域值替换旧intent的mAction域值。</p>
+<p>细心的读者一定记得，当初获取PendingIntent对象时，我们可是向AMS端传递了一个intent数组噢，虽然一般情况下这个数组里只有一个intent元素，但有时候我们也是有可能一次性传递多个intent的。比如getActivities()函数就可以一次传递多个intent。可是现在激发动作send()却只能传递一个intent参数，这该如何处理呢？答案很简单，所传入的intent只能影响已有的intent数组的最后一个intent元素。大家可以看看sendInner里allIntents[allIntents.length-1] = finalIntent;一句。</p>
+<p>Ok，intent说完了，下面就该做具体的激发了。我们以简单的INTENT_SENDER_BROADCAST型PendingIntentRecord来说明，此时的激发动作就是发送一个广播：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">owner.broadcastIntentInPackage(key.packageName, uid, finalIntent, resolvedType,</div><div class="line">                               finishedReceiver, code, <span class="keyword">null</span>, <span class="keyword">null</span>,</div><div class="line">                               requiredPermission, (finishedReceiver != <span class="keyword">null</span>),</div><div class="line">                               <span class="keyword">false</span>, UserId.getUserId(uid));</div></pre></td></tr></table></figure>
+<p>至于其他类型的PendingIntentRecord的激发动作，大家可以自行查阅代码，它们的基本代码格局都是差不多的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Ace
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangbing.cc/2018/10/22/说说PendingIntent的内部机制/" title="说说PendingIntent的内部机制">http://zhangbing.cc/2018/10/22/说说PendingIntent的内部机制/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/28/git-命令大全/" rel="next" title="git 命令大全">
+                <i class="fa fa-chevron-left"></i> git 命令大全
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="Ace" />
+            
+              <p class="site-author-name" itemprop="name">Ace</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:psel1991@gmail.com" target="_blank" title="E-Mail">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#说说PendingIntent的内部机制"><span class="nav-number">1.</span> <span class="nav-text">说说PendingIntent的内部机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PendingIntent的技术细节"><span class="nav-number">1.2.</span> <span class="nav-text">PendingIntent的技术细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#发起端获取PendingIntent"><span class="nav-number">1.2.1.</span> <span class="nav-text">发起端获取PendingIntent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AMS里的PendingIntentRecord"><span class="nav-number">1.2.2.</span> <span class="nav-text">AMS里的PendingIntentRecord</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AMS中的PendingIntentRecord总表"><span class="nav-number">1.2.3.</span> <span class="nav-text">AMS中的PendingIntentRecord总表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AMS里的getIntentSender-函数"><span class="nav-number">1.2.4.</span> <span class="nav-text">AMS里的getIntentSender()函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#getIntentSender-函数"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">getIntentSender()函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getIntentSenderLocked-函数"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">getIntentSenderLocked()函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#说说flags"><span class="nav-number">1.2.4.3.</span> <span class="nav-text">说说flags</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#将PendingIntentRecord节点插入总表"><span class="nav-number">1.2.4.4.</span> <span class="nav-text">将PendingIntentRecord节点插入总表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PendingIntent的激发动作"><span class="nav-number">1.2.5.</span> <span class="nav-text">PendingIntent的激发动作</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ace</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
