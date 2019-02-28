@@ -79,16 +79,17 @@
 
 
 
-<meta name="description" content="Remember what should be remembered, and forget what should be forgotten.Alter what is changeable, and accept what is mutable">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Zhangbing&#39;s Blog">
-<meta property="og:url" content="http://zhangbing.cc/index.html">
+<meta name="description" content="Android 源码分析之 AsyncTask 源码分析1、AsyncTask的使用使用 AsyncTask 可以更加简单地实现任务的异步执行，以及任务执行完毕之后与主线程的交互。它被设计用来执行耗时比较短的任务，通常是几秒种的那种，如果要执行耗时比较长的任务，那么就应该使用 JUC 包中的框架，比如 ThreadPoolExecutor 和 FutureTask等。AsyncTask 用来在后台">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 源码分析之 AsyncTask 源码分析">
+<meta property="og:url" content="http://zhangbing.cc/2019/02/28/AsyncTask20190228155539/index.html">
 <meta property="og:site_name" content="Zhangbing&#39;s Blog">
-<meta property="og:description" content="Remember what should be remembered, and forget what should be forgotten.Alter what is changeable, and accept what is mutable">
+<meta property="og:description" content="Android 源码分析之 AsyncTask 源码分析1、AsyncTask的使用使用 AsyncTask 可以更加简单地实现任务的异步执行，以及任务执行完毕之后与主线程的交互。它被设计用来执行耗时比较短的任务，通常是几秒种的那种，如果要执行耗时比较长的任务，那么就应该使用 JUC 包中的框架，比如 ThreadPoolExecutor 和 FutureTask等。AsyncTask 用来在后台">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-28T07:55:22.918Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zhangbing&#39;s Blog">
-<meta name="twitter:description" content="Remember what should be remembered, and forget what should be forgotten.Alter what is changeable, and accept what is mutable">
+<meta name="twitter:title" content="Android 源码分析之 AsyncTask 源码分析">
+<meta name="twitter:description" content="Android 源码分析之 AsyncTask 源码分析1、AsyncTask的使用使用 AsyncTask 可以更加简单地实现任务的异步执行，以及任务执行完毕之后与主线程的交互。它被设计用来执行耗时比较短的任务，通常是几秒种的那种，如果要执行耗时比较长的任务，那么就应该使用 JUC 包中的框架，比如 ThreadPoolExecutor 和 FutureTask等。AsyncTask 用来在后台">
 
 
 
@@ -118,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://zhangbing.cc/">
+  <link rel="canonical" href="http://zhangbing.cc/2019/02/28/AsyncTask20190228155539/">
 
 
 
 
 
-  <title>Zhangbing's Blog</title>
+  <title>Android 源码分析之 AsyncTask 源码分析 | Zhangbing's Blog</title>
   
 
 
@@ -143,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -237,9 +237,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -269,9 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/02/28/AsyncTask20190228155539/" itemprop="url">Android 源码分析之 AsyncTask 源码分析</a></h1>
+          <h1 class="post-title" itemprop="name headline">Android 源码分析之 AsyncTask 源码分析</h1>
         
 
         <div class="post-meta">
@@ -321,9 +319,7 @@
       
 
       
-        
-          
-            <h1 id="Android-源码分析之-AsyncTask-源码分析"><a href="#Android-源码分析之-AsyncTask-源码分析" class="headerlink" title="Android 源码分析之 AsyncTask 源码分析"></a>Android 源码分析之 AsyncTask 源码分析</h1><h2 id="1、AsyncTask的使用"><a href="#1、AsyncTask的使用" class="headerlink" title="1、AsyncTask的使用"></a>1、AsyncTask的使用</h2><p>使用 <strong>AsyncTask</strong> 可以更加简单地实现任务的异步执行，以及任务执行完毕之后与主线程的交互。它被设计用来执行耗时比较短的任务，通常是几秒种的那种，如果要执行耗时比较长的任务，那么就应该使用 JUC 包中的框架，比如 <strong>ThreadPoolExecutor</strong> 和 <strong>FutureTask</strong>等。<br>AsyncTask 用来在后台线程中执行任务，当任务执行完毕之后将结果发送到主线程当中。它有三个重要的泛类型参数，分别是 <strong>Params</strong>、<strong>Progress</strong> 和 <strong>Result</strong>，分别用来指定参数、进度和结果的值的类型。<br>以及四个重要的方法，分别是 <strong>onPreExecute()</strong>, <strong>doInBackground()</strong>, <strong>onProgressUpdate()</strong> 和 <strong>onPostExecute()</strong>。<br>这四个方法中，除了 <strong>doInBackground()</strong>，其他三个都是运行在<strong>UI线程</strong>的，分别用来处理在任务开始之前、任务进度改变的时候以及任务执行完毕之后的逻辑，而 <strong>doInBackground()</strong> 运行在后台线程中，用来执行耗时的任务。<br>一种典型的使用方法如下：</p>
+        <h1 id="Android-源码分析之-AsyncTask-源码分析"><a href="#Android-源码分析之-AsyncTask-源码分析" class="headerlink" title="Android 源码分析之 AsyncTask 源码分析"></a>Android 源码分析之 AsyncTask 源码分析</h1><h2 id="1、AsyncTask的使用"><a href="#1、AsyncTask的使用" class="headerlink" title="1、AsyncTask的使用"></a>1、AsyncTask的使用</h2><p>使用 <strong>AsyncTask</strong> 可以更加简单地实现任务的异步执行，以及任务执行完毕之后与主线程的交互。它被设计用来执行耗时比较短的任务，通常是几秒种的那种，如果要执行耗时比较长的任务，那么就应该使用 JUC 包中的框架，比如 <strong>ThreadPoolExecutor</strong> 和 <strong>FutureTask</strong>等。<br>AsyncTask 用来在后台线程中执行任务，当任务执行完毕之后将结果发送到主线程当中。它有三个重要的泛类型参数，分别是 <strong>Params</strong>、<strong>Progress</strong> 和 <strong>Result</strong>，分别用来指定参数、进度和结果的值的类型。<br>以及四个重要的方法，分别是 <strong>onPreExecute()</strong>, <strong>doInBackground()</strong>, <strong>onProgressUpdate()</strong> 和 <strong>onPostExecute()</strong>。<br>这四个方法中，除了 <strong>doInBackground()</strong>，其他三个都是运行在<strong>UI线程</strong>的，分别用来处理在任务开始之前、任务进度改变的时候以及任务执行完毕之后的逻辑，而 <strong>doInBackground()</strong> 运行在后台线程中，用来执行耗时的任务。<br>一种典型的使用方法如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">DownloadFilesTask</span> <span class="keyword">extends</span> <span class="title">AsyncTask</span>&lt;<span class="title">URL</span>, <span class="title">Integer</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Long <span class="title">doInBackground</span><span class="params">(URL... urls)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> count = urls.length;</span><br><span class="line">        <span class="keyword">long</span> totalSize = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">            totalSize += Downloader.downloadFile(urls[i]);</span><br><span class="line">            publishProgress((<span class="keyword">int</span>) ((i / (<span class="keyword">float</span>) count) * <span class="number">100</span>));</span><br><span class="line">            <span class="keyword">if</span> (isCancelled()) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> totalSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onProgressUpdate</span><span class="params">(Integer... progress)</span> </span>&#123;</span><br><span class="line">        setProgressPercent(progress[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(Long result)</span> </span>&#123;</span><br><span class="line">        showDialog(<span class="string">"Downloaded "</span> + result + <span class="string">" bytes"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面说 <strong>AsyncTask</strong> 有4个重要的方法，这里我们覆写了3个。<strong>doInBackground()</strong>运行在线程当中，耗时的任务可以放在这里进行；<strong>onProgressUpdate()</strong> 用来处理当任务的进度发生变化时候的逻辑；<strong>onPostExecute()</strong> 用来处理当任务执行完毕之后的逻辑。另外，这里我们还用到了 <strong>publishProgress()</strong> 和 <strong>isCancelled()</strong> 两个方法，分别用来发布任务进度和判断任务是否被取消。<br>然后，我们可以用下面的方式来使用它：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> DownloadFilesTask().execute(url1, url2, url3);</span><br></pre></td></tr></table></figure>
@@ -359,8 +355,6 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Handler mHandler;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AsyncTask</span><span class="params">(@Nullable Looper callbackLooper)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据传入的参数创建Handler对象</span></span><br><span class="line">    mHandler = callbackLooper == <span class="keyword">null</span> || callbackLooper == Looper.getMainLooper() </span><br><span class="line">        ? getMainHandler() : <span class="keyword">new</span> Handler(callbackLooper);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Handler <span class="title">getMainHandler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (AsyncTask.class) &#123;</span><br><span class="line">        <span class="keyword">if</span> (sHandler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 使用 InternalHandler 创建对象</span></span><br><span class="line">            sHandler = <span class="keyword">new</span> InternalHandler(Looper.getMainLooper());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sHandler;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// AsyncTask 内部定义 的Handler 类型</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InternalHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">InternalHandler</span><span class="params">(Looper looper)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(looper);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        AsyncTaskResult&lt;?&gt; result = (AsyncTaskResult&lt;?&gt;) msg.obj;</span><br><span class="line">        <span class="comment">// 根据传入的消息类型进行处理</span></span><br><span class="line">        <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">            <span class="keyword">case</span> MESSAGE_POST_RESULT: result.mTask.finish(result.mData[<span class="number">0</span>]); <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MESSAGE_POST_PROGRESS: result.mTask.onProgressUpdate(result.mData); <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="3、总结"><a href="#3、总结" class="headerlink" title="3、总结"></a>3、总结</h2><p>上面我们梳理了 AsyncTask 的大致过程，我们来梳理下：<br>每当我们实例化一个 AsyncTask 的时候都会在内部封装成一个 Runnable 对象，该对象可以直接放在线程池中执行。这里存在两个线程池，一个是 SerialExecutor 一个是 THREAD_POOL_EXECUTOR，前者主要用来进行任务调度，即把交给线程的任务放在队列中进行排队执行，而时机上所有的任务都是在后者中执行完成的。这个两个线程池都是静态的字段，所以它们对应于整个类的。也就是说，当使用默认的线程池的时候，实例化的 AsyncTask 会一个个地，按照加入到队列中的顺序依次执行。</p>
 
-          
-        
       
     </div>
     
@@ -377,132 +371,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://zhangbing.cc/2018/12/18/hello-world/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Zhangbing">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Zhangbing's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/18/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-18T09:59:04+08:00">
-                2018-12-18
-              </time>
+              <a href="/2018/12/18/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>换硬盘博客都丢了,就从头再来吧!</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -512,10 +402,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -523,6 +414,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -543,8 +438,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -586,6 +490,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-源码分析之-AsyncTask-源码分析"><span class="nav-number">1.</span> <span class="nav-text">Android 源码分析之 AsyncTask 源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、AsyncTask的使用"><span class="nav-number">1.1.</span> <span class="nav-text">1、AsyncTask的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、AsyncTask源码分析"><span class="nav-number">1.2.</span> <span class="nav-text">2、AsyncTask源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-AsyncTask-的初始化过程"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 AsyncTask 的初始化过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-AsyncTask-中任务的串行执行过程"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 AsyncTask 中任务的串行执行过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-将任务执行的结果发送到其他线程"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 将任务执行的结果发送到其他线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、总结"><span class="nav-number">1.3.</span> <span class="nav-text">3、总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -726,6 +646,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
