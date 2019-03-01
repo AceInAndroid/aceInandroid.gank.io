@@ -25,7 +25,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0ncjal5w5j30ia07x0te.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0nck94sjfj30j405qjsc.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0nclv8eauj30jn09ywg2.jpg">
-<meta property="og:updated_time" content="2019-03-01T08:00:38.076Z">
+<meta property="og:updated_time" content="2019-03-01T08:09:24.608Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Android 消息机制：Handler、MessageQueue 和 Looper">
 <meta name="twitter:description" content="Android 消息机制：Handler、MessageQueue 和 Looper在这篇文章中，我们将会讨论 Android 的消息机制。提到 Handler，有过一些 Android 开发经验的都应该很清楚它的作用，通常我们使用它来通知主线程更新 UI。但是 Handler 需要底层的 MessageQueue 和 Looper 来支持才能运作。这篇文章中，我们将会讨论它们三个之间的关系以及实">
@@ -300,6 +300,7 @@
       
           
         <h1 id="Android-消息机制：Handler、MessageQueue-和-Looper"><a href="#Android-消息机制：Handler、MessageQueue-和-Looper" class="headerlink" title="Android 消息机制：Handler、MessageQueue 和 Looper"></a>Android 消息机制：Handler、MessageQueue 和 Looper</h1><p>在这篇文章中，我们将会讨论 Android 的消息机制。提到 Handler，有过一些 Android 开发经验的都应该很清楚它的作用，通常我们使用它来通知主线程更新 UI。但是 Handler 需要底层的 MessageQueue 和 Looper 来支持才能运作。这篇文章中，我们将会讨论它们三个之间的关系以及实现原理。<br>在这篇文章中，因为涉及线程方面的东西，所以就避不开 ThreadLocal。笔者在之前的文章中有分析过该 API 的作用，你可以参考笔者的这篇文章来学习下它的作用和原理，本文中我们就不再专门讲解：</p>
+<a id="more"></a>
 <h2 id="1、Handler-的作用"><a href="#1、Handler-的作用" class="headerlink" title="1、Handler 的作用"></a>1、Handler 的作用</h2><p>通常，当我们在非主线程当中做了异步的操作之后使用 <code>Handler</code> 来在主线程当中更新 UI。之所以这么设计无非就是因为 <code>Android</code> 中的 <code>View</code> 不是线程安全的。之所以将 <code>View</code> 设计成非线程安全的，是因为：</p>
 <blockquote>
 <p>1).对 <code>View</code> 进行加锁之后会增加控件使用的复杂度；<br>2).加锁之后会降低控件执行的效率。但 Handler 并非只能用来在主线程当中更新 UI，</p>
@@ -406,7 +407,7 @@
         <p><span>本文标题:</span><a href="/2019/03/01/HandlerMessagequeueLooper-1551427172528/">深入理解Android 消息机制：Handler、MessageQueue 和 Looper</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Zhangbing</a></p>
         <p><span>发布时间:</span>2019-03-01, 15:59:32</p>
-        <p><span>最后更新:</span>2019-03-01, 16:00:38</p>
+        <p><span>最后更新:</span>2019-03-01, 16:09:24</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/03/01/HandlerMessagequeueLooper-1551427172528/" title="深入理解Android 消息机制：Handler、MessageQueue 和 Looper">http://zhangbing.cc/2019/03/01/HandlerMessagequeueLooper-1551427172528/</a>
             <span class="copy-path" data-clipboard-text="原文: http://zhangbing.cc/2019/03/01/HandlerMessagequeueLooper-1551427172528/　　作者: Zhangbing" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
