@@ -20,8 +20,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="">
+    <meta name="keywords" content="Activity 启动流程分析">
     <meta name="description" content="Android App/Activity 启动流程分析首先我们带着问题来看:  点击了图标之后系统道理做了哪些工作呢？ 应用进程是怎么被启动的呢？ Activity 的生命周期是什么时候被谁调用的呢？  本文将继续基于 Android Nougat 的 Frameworks 层源码的解答这些问题。 阅读建议：如果你是首次阅读这个过程的源码，建议你忽略一些细枝末节的代码，先抓主干代码，从整体上理解代">
+<meta name="keywords" content="Activity 启动流程分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android App&#x2F;Activity 启动流程分析">
 <meta property="og:url" content="http://zhangbing.cc/2019/03/07/activitystartstep-1551942246673/index.html">
@@ -33,7 +34,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0u80ukv7ej30q30ivmzb.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0u8r1k48wj30t30qo43w.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0u8shvqsuj30qo0k0gt0.jpg">
-<meta property="og:updated_time" content="2019-03-07T07:05:11.266Z">
+<meta property="og:updated_time" content="2019-03-08T09:26:29.286Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android App&#x2F;Activity 启动流程分析">
 <meta name="twitter:description" content="Android App/Activity 启动流程分析首先我们带着问题来看:  点击了图标之后系统道理做了哪些工作呢？ 应用进程是怎么被启动的呢？ Activity 的生命周期是什么时候被谁调用的呢？  本文将继续基于 Android Nougat 的 Frameworks 层源码的解答这些问题。 阅读建议：如果你是首次阅读这个过程的源码，建议你忽略一些细枝末节的代码，先抓主干代码，从整体上理解代">
@@ -138,7 +139,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -161,6 +162,8 @@
   2019-03-07
 </time>
 
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
 
             
         </h5>
@@ -190,6 +193,8 @@
             <time class="post-time" title="2019-03-07 15:04:06" datetime="2019-03-07T07:04:06.000Z" itemprop="datePublished">2019-03-07</time>
 
             
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
 
 
             
@@ -344,7 +349,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2019-03-07T07:05:11.266Z" itemprop="dateUpdated">2019-03-07 15:05:11</time>
+    最終更新：<time datetime="2019-03-08T09:26:29.286Z" itemprop="dateUpdated">2019-03-08 17:26:29</time>
 </span><br>
 
 
@@ -366,6 +371,8 @@
 
         <div class="post-footer">
             
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activity-启动流程分析/">Activity 启动流程分析</a></li></ul>
+
 
             
 <div class="page-share-wrap">
@@ -485,7 +492,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
         </p>
     </div>
     <div class="bottom">
