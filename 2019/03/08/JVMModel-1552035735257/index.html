@@ -14,29 +14,32 @@
     
     
     
-    <title>JVM内存结构 | Zhangbing&#39;s Blog</title>
+    <title>JVM内存结构、 Java内存模型 以及 Java对象模型 | Zhangbing&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
     <meta name="keywords" content="">
-    <meta name="description" content="JVM内存结构JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。 可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。 这篇主要讲JVM内存结构 一、JVM内存结构我们都知道，Java代码是要运行在虚拟机上的，Java代码是运行在Java虚拟机之">
+    <meta name="description" content="JVM内存结构、 Java内存模型 以及 Java对象模型JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。 可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。 一、JVM内存结构我们都知道，Java代码是要运行在虚拟机上的，Java代码是运行">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JVM内存结构">
+<meta property="og:title" content="JVM内存结构、 Java内存模型 以及 Java对象模型">
 <meta property="og:url" content="http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/index.html">
 <meta property="og:site_name" content="Zhangbing&#39;s Blog">
-<meta property="og:description" content="JVM内存结构JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。 可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。 这篇主要讲JVM内存结构 一、JVM内存结构我们都知道，Java代码是要运行在虚拟机上的，Java代码是运行在Java虚拟机之">
+<meta property="og:description" content="JVM内存结构、 Java内存模型 以及 Java对象模型JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。 可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。 一、JVM内存结构我们都知道，Java代码是要运行在虚拟机上的，Java代码是运行">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vfh1rwz7j30m90dr3za.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vfplp5bxj30m70bwwfw.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vhnbzfssj30gs0hiaau.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vhzrutg4j30g40afwjb.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vhquz4ngj30kv0aqq3g.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vhv2qwdfj30xa100whk.jpg">
-<meta property="og:updated_time" content="2019-03-08T09:04:54.293Z">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vi2ulxltj30br0ahwes.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vi3zdxbxj31840jsn8r.jpg">
+<meta property="og:updated_time" content="2019-03-08T09:17:15.754Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JVM内存结构">
-<meta name="twitter:description" content="JVM内存结构JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。 可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。 这篇主要讲JVM内存结构 一、JVM内存结构我们都知道，Java代码是要运行在虚拟机上的，Java代码是运行在Java虚拟机之">
+<meta name="twitter:title" content="JVM内存结构、 Java内存模型 以及 Java对象模型">
+<meta name="twitter:description" content="JVM内存结构、 Java内存模型 以及 Java对象模型JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。 可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。 一、JVM内存结构我们都知道，Java代码是要运行在虚拟机上的，Java代码是运行">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/007lnl1egy1g0vfh1rwz7j30m90dr3za.jpg">
     
         <link rel="alternate" type="application/atom+xml" title="Zhangbing&#39;s Blog" href="/atom.xml">
@@ -132,13 +135,13 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">JVM内存结构</div>
+        <div class="flex-col header-title ellipsis">JVM内存结构、 Java内存模型 以及 Java对象模型</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -154,7 +157,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">JVM内存结构</h1>
+        <h1 class="title">JVM内存结构、 Java内存模型 以及 Java对象模型</h1>
         <h5 class="subtitle">
             
                 <time datetime="2019-03-08T09:02:15.000Z" itemprop="datePublished" class="page-time">
@@ -177,7 +180,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JVM内存结构"><span class="post-toc-number">1.</span> <span class="post-toc-text">JVM内存结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、JVM内存结构"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、JVM内存结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-JVM简介"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1.JVM简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1线程私有区："><span class="post-toc-number">1.1.1.1.</span> <span class="post-toc-text">1.1线程私有区：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2线程共享区："><span class="post-toc-number">1.1.1.2.</span> <span class="post-toc-text">1.2线程共享区：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-JVM结构详解"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">2. JVM结构详解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-程序计数器PC"><span class="post-toc-number">1.1.2.1.</span> <span class="post-toc-text">2.1 程序计数器PC</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-2-虚拟机栈"><span class="post-toc-number">1.1.2.2.</span> <span class="post-toc-text">2.2 虚拟机栈</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-2-1-栈帧-Stack-Frame-结构"><span class="post-toc-number">1.1.2.2.1.</span> <span class="post-toc-text">2.2.1 栈帧(Stack Frame)结构</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-2-2-异常-Exception"><span class="post-toc-number">1.1.2.2.2.</span> <span class="post-toc-text">2.2.2 异常(Exception)</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-3-本地方法栈"><span class="post-toc-number">1.1.2.3.</span> <span class="post-toc-text">2.3 本地方法栈</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-Java堆"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">2.4 Java堆</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-5-方法区"><span class="post-toc-number">1.1.3.1.</span> <span class="post-toc-text">2.5 方法区</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-6-运行时常量池"><span class="post-toc-number">1.1.3.2.</span> <span class="post-toc-text">2.6 运行时常量池</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">总结</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JVM内存结构、-Java内存模型-以及-Java对象模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">JVM内存结构、 Java内存模型 以及 Java对象模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一、JVM内存结构"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">一、JVM内存结构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-JVM简介"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1.JVM简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1线程私有区："><span class="post-toc-number">1.1.1.1.</span> <span class="post-toc-text">1.1线程私有区：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2线程共享区："><span class="post-toc-number">1.1.1.2.</span> <span class="post-toc-text">1.2线程共享区：</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-JVM结构详解"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">2. JVM结构详解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-1-程序计数器PC"><span class="post-toc-number">1.1.2.1.</span> <span class="post-toc-text">2.1 程序计数器PC</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-2-虚拟机栈"><span class="post-toc-number">1.1.2.2.</span> <span class="post-toc-text">2.2 虚拟机栈</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-2-1-栈帧-Stack-Frame-结构"><span class="post-toc-number">1.1.2.2.1.</span> <span class="post-toc-text">2.2.1 栈帧(Stack Frame)结构</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2-2-2-异常-Exception"><span class="post-toc-number">1.1.2.2.2.</span> <span class="post-toc-text">2.2.2 异常(Exception)</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-3-本地方法栈"><span class="post-toc-number">1.1.2.3.</span> <span class="post-toc-text">2.3 本地方法栈</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-Java堆"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">2.4 Java堆</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-5-方法区"><span class="post-toc-number">1.1.3.1.</span> <span class="post-toc-text">2.5 方法区</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-6-运行时常量池"><span class="post-toc-number">1.1.3.2.</span> <span class="post-toc-text">2.6 运行时常量池</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-JVM总结"><span class="post-toc-number">1.1.4.</span> <span class="post-toc-text">3. JVM总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Java内存模型"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Java内存模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Java对象模型"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Java对象模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">总结</span></a></li></ol></li></ol>
         </nav>
     </aside>
 
@@ -185,7 +188,7 @@
 <article id="post-JVMModel-1552035735257" class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">JVM内存结构</h1>
+        <h1 class="post-card-title">JVM内存结构、 Java内存模型 以及 Java对象模型</h1>
         <div class="post-meta">
             <time class="post-time" title="2019-03-08 17:02:15" datetime="2019-03-08T09:02:15.000Z" itemprop="datePublished">2019-03-08</time>
 
@@ -200,9 +203,8 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="JVM内存结构"><a href="#JVM内存结构" class="headerlink" title="JVM内存结构"></a>JVM内存结构</h1><p>JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。</p>
+            <h1 id="JVM内存结构、-Java内存模型-以及-Java对象模型"><a href="#JVM内存结构、-Java内存模型-以及-Java对象模型" class="headerlink" title="JVM内存结构、 Java内存模型 以及 Java对象模型"></a>JVM内存结构、 Java内存模型 以及 Java对象模型</h1><p>JVM内存结构、Java内存模型和Java对象模型，这就是三个截然不同的概念，但是很多人容易弄混。</p>
 <p>可以这样说，很多高级开发甚至都搞不不清楚JVM内存结构、Java内存模型和Java对象模型这三者的概念及其间的区别。甚至我见过有些面试官自己也搞的不是太清楚。</p>
-<p>这篇主要讲JVM内存结构</p>
 <h2 id="一、JVM内存结构"><a href="#一、JVM内存结构" class="headerlink" title="一、JVM内存结构"></a>一、JVM内存结构</h2><p>我们都知道，Java代码是要运行在虚拟机上的，<br><strong>Java代码是运行在Java虚拟机之上的，由Java虚拟机通过解释执行(解释器)或编译执行(即时编译器)来完成，故Java运行时内存结构，也就是指Java虚拟机的运行时内存结构。</strong>而虚拟机在执行Java程序的过程中会把所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途。其中有些区域随着虚拟机进程的启动而存在，而有些区域则依赖用户线程的启动和结束而建立和销毁。在<a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4" target="_blank" rel="noopener">《Java虚拟机规范（Java SE 8）》</a>中描述了JVM运行时内存区域结构如下：<br><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -257,9 +259,17 @@
 </li>
 <li>额外附加信息，虚拟机规范没有明确规定，由具体虚拟机实现。</li>
 </ol>
+<p>栈帧工作流程:</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://ws1.sinaimg.cn/large/007lnl1egy1g0vhzrutg4j30g40afwjb.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
 <p>当Java应用程序调用函数调用时，会在调用堆栈上分配<strong>栈帧</strong>。<strong>栈帧</strong>包含调用<strong>方法的参数</strong>，其本地参数以及<strong>方法的返回地址</strong>。返回地址表示执行点，程序执行将在调用方法返回后继续执行。如果没有新栈帧的空间，则由Java虚拟机（JVM）抛出StackOverflowError。</p>
 <p>可能耗尽Java应用程序堆栈的最常见情况是递归。在递归中，方法在执行期间调用自身。递归被认为是一种强大的通用编程技术，但必须谨慎使用，以避免StackOverflowError。</p>
-<p>投掷a的示例StackOverflowError如下所示：</p>
+<p>示例StackOverflowError：</p>
 <p>StackOverflowErrorExample.java：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackOverflowErrorExample</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">recursivePrint</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Number: "</span> + num);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(num == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            recursivePrint(++num);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        StackOverflowErrorExample.recursivePrint(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>在这个例子中，我们定义了一个递归方法，调用<code>recursivePrint</code>它打印一个整数，然后调用自身，下一个连续的整数作为参数。</p>
 <p>使用-Xss1M指定线程堆栈大小等于1MB 的标志的示例执行如下所示：</p>
@@ -301,7 +311,7 @@
 <li>字段的名称和描述符</li>
 <li>方法的名称和描述符<br>但是该区域不会抛出<strong>OutOfMemoryError</strong>异常。</li>
 </ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一张图总结一下</p>
+<h3 id="3-JVM总结"><a href="#3-JVM总结" class="headerlink" title="3. JVM总结"></a>3. JVM总结</h3><p>一张图总结一下JVM</p>
 <figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
@@ -309,6 +319,31 @@
                 </div>
                 <div class="image-caption"></div>
             </figure>
+<h2 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h2><p><strong>Java内存模型看上去和Java内存结构（JVM内存结构）差不多，很多人会误以为两者是一回事儿，这也就导致面试过程中经常答非所问。</strong></p>
+<p>在前面的关于JVM的内存结构的图中，我们可以看到，其中Java堆和方法区的区域是多个线程共享的数据区域。也就是说，多个线程可能可以操作保存在堆或者方法区中的同一个数据。这也就是我们常说的“<strong>Java的线程间通过共享内存进行通信</strong>”。</p>
+<p>Java内存模型是根据英文<strong>Java Memory Model（JMM）</strong>翻译过来的。<strong>其实JMM并不像JVM内存结构一样是真实存在的,他只是一个抽象的概念</strong>。<a href="http://www.cs.umd.edu/~pugh/java/memoryModel/jsr133.pdf" target="_blank" rel="noopener">JSR-133: Java Memory Model and Thread Specification</a>中描述了，<strong>JMM是和多线程相关的，他描述了一组规则或规范，这个规范定义了一个线程对共享变量的写入时对另一个线程是可见的。</strong></p>
+<p>那么，简单总结下，<strong>Java的多线程之间是通过共享内存进行通信的</strong>，而由于采用共享内存进行通信，在通信过程中会存在一系列如<strong>可见性、原子性、顺序性</strong>等问题，而JMM就是围绕着多线程通信以及与其相关的一系列特性而建立的模型。<strong>JMM定义了一些语法集，这些语法集映射到Java语言中就是<code>volatile</code>、<br><code>synchronized</code>等关键字。</strong><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://ws1.sinaimg.cn/large/007lnl1egy1g0vi2ulxltj30br0ahwes.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>在Java中，JMM是一个非常重要的概念，正是由于有了JMM，Java的并发编程才能避免很多问题。这里就不对Java内存模型做更加详细的介绍了，想了解更多的朋友可以参考《Java并发编程的艺术》。</p>
+<h2 id="Java对象模型"><a href="#Java对象模型" class="headerlink" title="Java对象模型"></a>Java对象模型</h2><p>Java是一种面向对象的语言，而Java对象在JVM中的存储也是有一定的结构的。而这个关于Java对象自身的存储模型称之为Java对象模型。</p>
+<p><code>HotSpot</code>虚拟机中，设计了一个<code>OOP-Klass Model</code>。<br><code>OOP（Ordinary Object Pointer）</code>指的是普通对象指针，而Klass用来描述对象实例的具体类型。</p>
+<p>每一个Java类，在被JVM加载的时候，JVM会给这个类创建一个<br><code>instanceKlass</code>，保存在方法区，用来在JVM层表示该Java类。当我们在Java代码中，使用new创建一个对象的时候，JVM会创建一个<code>instanceOopDesc</code>对象，这个对象中包含了对象头以及实例数据。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://ws1.sinaimg.cn/large/007lnl1egy1g0vi3zdxbxj31840jsn8r.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这就是一个简单的Java对象的<code>OOP-Klass</code>模型，即Java对象模型</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们再来区分下JVM内存结构、 Java内存模型 以及 Java对象模型 三个概念。</p>
+<p>JVM内存结构，和Java虚拟机的运行时区域有关。 Java内存模型，和Java的并发编程有关。 Java对象模型，和Java对象在虚拟机中的表现形式有关。</p>
+
         </div>
 
         <blockquote class="post-copyright">
@@ -316,7 +351,7 @@
     <div class="content">
         
 <span class="post-time">
-    最終更新：<time datetime="2019-03-08T09:04:54.293Z" itemprop="dateUpdated">2019-03-08 17:04:54</time>
+    Last updated: <time datetime="2019-03-08T09:17:15.754Z" itemprop="dateUpdated">2019-03-08 17:17:15</time>
 </span><br>
 
 
@@ -346,7 +381,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构》 — Zhangbing's Blog&pic=http://zhangbing.cc/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构、 Java内存模型 以及 Java对象模型》 — Zhangbing's Blog&pic=http://zhangbing.cc/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -356,7 +391,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构》 — Zhangbing's Blog&source=Remember what should be remembered, and forget what should be forgotten.Alter..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构、 Java内存模型 以及 Java对象模型》 — Zhangbing's Blog&source=Remember what should be remembered, and forget what should be forgotten.Alter..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -366,7 +401,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JVM内存结构》 — Zhangbing's Blog&url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&via=http://zhangbing.cc" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JVM内存结构、 Java内存模型 以及 Java对象模型》 — Zhangbing's Blog&url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&via=http://zhangbing.cc" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
@@ -450,7 +485,7 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>このブログの内容物は<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
         </p>
     </div>
     <div class="bottom">
@@ -472,7 +507,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构》 — Zhangbing's Blog&pic=http://zhangbing.cc/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构、 Java内存模型 以及 Java对象模型》 — Zhangbing's Blog&pic=http://zhangbing.cc/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -482,7 +517,7 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构》 — Zhangbing's Blog&source=Remember what should be remembered, and forget what should be forgotten.Alter..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&title=《JVM内存结构、 Java内存模型 以及 Java对象模型》 — Zhangbing's Blog&source=Remember what should be remembered, and forget what should be forgotten.Alter..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -492,7 +527,7 @@
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JVM内存结构》 — Zhangbing's Blog&url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&via=http://zhangbing.cc" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JVM内存结构、 Java内存模型 以及 Java对象模型》 — Zhangbing's Blog&url=http://zhangbing.cc/2019/03/08/JVMModel-1552035735257/&via=http://zhangbing.cc" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
