@@ -14,7 +14,7 @@
     
     
     
-    <title>Archives: 2018/12 | Zhangbing&#39;s Blog</title>
+    <title>Tags: 单例模式 | Zhangbing&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
@@ -24,7 +24,7 @@
     <meta name="description" content="Remember what should be remembered, and forget what should be forgotten.Alter what is changeable, and accept what is mutable">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Zhangbing&#39;s Blog">
-<meta property="og:url" content="http://zhangbing.cc/archives/2018/12/index.html">
+<meta property="og:url" content="http://zhangbing.cc/tags/单例模式/index.html">
 <meta property="og:site_name" content="Zhangbing&#39;s Blog">
 <meta property="og:description" content="Remember what should be remembered, and forget what should be forgotten.Alter what is changeable, and accept what is mutable">
 <meta property="og:locale" content="zh-Hans">
@@ -72,14 +72,14 @@
               </a>
             </li>
         
-            <li class="waves-block waves-effect active">
+            <li class="waves-block waves-effect">
               <a href="/archives">
                 <i class="icon icon-lg icon-archives"></i>
                 Archives
               </a>
             </li>
         
-            <li class="waves-block waves-effect">
+            <li class="waves-block waves-effect active">
               <a href="/tags">
                 <i class="icon icon-lg icon-tags"></i>
                 Tags
@@ -125,7 +125,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Archives</div>
+        <div class="flex-col header-title ellipsis">Tags: 单例模式</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -144,35 +144,121 @@
         
     </div>
 </header>
-<header class="content-header archives-header">
+<header class="content-header tags-header">
 
     <div class="container fade-scale">
-        <h1 class="title">Archives</h1>
+        <h1 class="title">Tags: 单例模式</h1>
         <h5 class="subtitle">
             
         </h5>
     </div>
 
     
+<div class="tabs-bar container">
+    <nav class="tags-list">
+        <a href="/tags" style="-webkit-order:-1;order:-1" class="tags-list-item waves-effect waves-button waves-light
+            ">All</a>
+        
+
+            <a href="/tags/JVM内存结构/" style="-webkit-order:2;order:2" class="tags-list-item waves-effect waves-button waves-light">JVM内存结构</a>
+
+        
+
+            <a href="/tags/Java内存模型/" style="-webkit-order:3;order:3" class="tags-list-item waves-effect waves-button waves-light">Java内存模型</a>
+
+        
+
+            <a href="/tags/Java对象模型/" style="-webkit-order:4;order:4" class="tags-list-item waves-effect waves-button waves-light">Java对象模型</a>
+
+        
+
+            <a href="/tags/AsyncTask/" style="-webkit-order:5;order:5" class="tags-list-item waves-effect waves-button waves-light">AsyncTask</a>
+
+        
+
+            <a href="/tags/ThreadLocal/" style="-webkit-order:6;order:6" class="tags-list-item waves-effect waves-button waves-light">ThreadLocal</a>
+
+        
+
+            <a href="/tags/Handler/" style="-webkit-order:7;order:7" class="tags-list-item waves-effect waves-button waves-light">Handler</a>
+
+        
+
+            <a href="/tags/MessageQueue/" style="-webkit-order:8;order:8" class="tags-list-item waves-effect waves-button waves-light">MessageQueue</a>
+
+        
+
+            <a href="/tags/Looper/" style="-webkit-order:9;order:9" class="tags-list-item waves-effect waves-button waves-light">Looper</a>
+
+        
+
+            <a href="/tags/Android-消息机制/" style="-webkit-order:10;order:10" class="tags-list-item waves-effect waves-button waves-light">Android 消息机制</a>
+
+        
+
+            <a href="/tags/Activity-启动流程分析/" style="-webkit-order:11;order:11" class="tags-list-item waves-effect waves-button waves-light">Activity 启动流程分析</a>
+
+        
+
+            <a href="/tags/Android源码解析/" style="-webkit-order:12;order:12" class="tags-list-item waves-effect waves-button waves-light">Android源码解析</a>
+
+        
+
+            <a href="/tags/DecorView/" style="-webkit-order:13;order:13" class="tags-list-item waves-effect waves-button waves-light">DecorView</a>
+
+        
+
+            <a href="/tags/ViewRootImpl/" style="-webkit-order:14;order:14" class="tags-list-item waves-effect waves-button waves-light">ViewRootImpl</a>
+
+        
+
+            <a href="/tags/Java/" style="-webkit-order:15;order:15" class="tags-list-item waves-effect waves-button waves-light">Java</a>
+
+        
+
+            <a href="/tags/ConcurrentHashMap/" style="-webkit-order:16;order:16" class="tags-list-item waves-effect waves-button waves-light">ConcurrentHashMap</a>
+
+        
+
+            <a href="/tags/HashMap/" style="-webkit-order:17;order:17" class="tags-list-item waves-effect waves-button waves-light">HashMap</a>
+
+        
+
+            <a href="/tags/concurrent/" style="-webkit-order:18;order:18" class="tags-list-item waves-effect waves-button waves-light">concurrent</a>
+
+        
+
+            <a href="/tags/设计模式/" style="-webkit-order:0;order:0" class="tags-list-item waves-effect waves-button waves-light">设计模式</a>
+
+        
+
+            <a href="/tags/单例模式/" style="-webkit-order:1;order:1" class="tags-list-item waves-effect waves-button waves-light active">单例模式</a>
+
+        
+    </nav>
+    <!-- PC show more-->
+    <div class="tags-list-more">
+        <a href="javascript:;" onclick="BLOG.tabBar(this)" class="action tags-list-item waves-effect waves-circle waves-light"><i class="icon icon-ellipsis-h"></i></a>
+    </div>
+</div>
+
 
 
 </header>
 
 <div class="container body-wrap fade">
     
-
-    
-            
-            <h3 class="archive-separator">December, 2018</h3>
             <div class="waterfall">
-    
+          
 
-        <div class="waterfall-item">
+            <div class="waterfall-item">
   <article class="article-card archive-article">
     <div class="post-meta">
-      <time class="post-time" title="2018-12-18 09:59:04" datetime="2018-12-18T01:59:04.000Z" itemprop="datePublished">2018-12-18</time>
+      <time class="post-time" title="2019-03-15 17:05:20" datetime="2019-03-15T09:05:20.000Z" itemprop="datePublished">2019-03-15</time>
 
       
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/设计模式/">设计模式</a></li></ul>
+
 
 
     </div>
@@ -181,21 +267,28 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2018/12/18/hello-world/">Hello World</a>
+      <a class="post-title-link" href="/2019/03/15/designpattern-sigleton-1552640720991/">设计模式（二）——单例模式</a>
     </h3>
   
 
 
 
     
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单例模式/">单例模式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+    </div>
+    
   </article>
 </div>
 
-    
-    </div>
-
+        
+            </div>
+        
     
 </div>
+
 
         <footer class="footer">
     <div class="top">
@@ -236,7 +329,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhangbing.cc/archives/2018/12/&title=Zhangbing's Blog&pic=http://zhangbing.cc/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://zhangbing.cc/tags/单例模式/&title=Zhangbing's Blog&pic=http://zhangbing.cc/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -246,22 +339,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhangbing.cc/archives/2018/12/&title=Zhangbing's Blog&source=Remember what should be remembered, and forget what should be forgotten.Alter..." data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://zhangbing.cc/tags/单例模式/&title=Zhangbing's Blog&source=Remember what should be remembered, and forget what should be forgotten.Alter..." data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://zhangbing.cc/archives/2018/12/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://zhangbing.cc/tags/单例模式/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Zhangbing's Blog&url=http://zhangbing.cc/archives/2018/12/&via=http://zhangbing.cc" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=Zhangbing's Blog&url=http://zhangbing.cc/tags/单例模式/&via=http://zhangbing.cc" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://zhangbing.cc/archives/2018/12/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://zhangbing.cc/tags/单例模式/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -272,7 +365,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwklEQVR42u3awa7DIAwEwP7/T+dJ71o1WRviptJw6iGCoQcL1rxe8Tj+R/7l+1iZszxwcXGXucfpeJ86QazMebFVXFzcQe55ockXrs6TG3BxcZ/J/fR9fqDJ58TFxf0V7qcl8+NOQsfFxX0ONznEnBesO77HxcX9FrcamN7x+8Z8FxcXt8g9iiO/8OTHmsLquLi4I9zzmGNXUJJHJFGZw8XFvZnba3/msWnvzHVRwnBxcUe4yQOLpNj1NlNYCxcXd5C70ghJHl70/pSLuouLi3sbtxpc9kKNlcZJFIvg4uJu5a4Epr24ZKUpi4uLO8OtPp3MF0iKYzNAwcXFHeHmoF4hyxu0hc3j4uLexq0GFr32SS94xcXF/S63d1hZab72/hRcXNwZ7q5nE3nouXJBwsXFneFWw46VoOT8yhSVNlxc3EFuNVTdFaaUc1FcXNxB7q6HFHn7trkxXFzcEW61oFRL264gtdmCxcXFXeD2ilcvQs1bqhcPs3BxcUe4yaOKaszR+ybKd3FxcR/DrS7fa+JeXIpwcXEfzO3drpLnFxc2XFzcQW4ebu4tYeXQBBcXd4S7HpgmG8tbJr0nXLi4uJu4f9G7bMNFpIpIAAAAAElFTkSuQmCC" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABuUlEQVR42u3aQWrEMAwF0Ln/pVPoqqWM58uynVCeV8MQkueNsPX1esXr+l4/f//9J3ny3TsXL1xc3Db3Gq4xqModv39swMXFPc/Ni9eYPn4+KYUfbLi4uA/j5kecMREXF/c/cfNDT17mcHFxn8xNCk1SnlZdihbc1XBxcRvcuYbp2t/b+7u4uLiLUom8qOUF6GosXFzcM9wkGulfk/IAJipzuLi4R7jVQLTa8ujPV+Di4p7k7hiiygtWHqv8OpHh4uJu5ubN0M7nO/HMh/4uLi7uBm71+FK9GiWUwggXLi7uEW7ysTwIybn5BsonKVxc3A3cuWZHdRuFbg0uLu5N3GTcalVYMoZGjRJcXNzj3H68uip8xcXFvYtbLWGFclMMcaMt4eLiHuHOxSGd+0hh9CoJVHBxcTdwO7FovqVq9PK2tOHi4h7kzjU6c+JkBxcXF/dWbr52tEELm8HFxT3CrRaU/jOdZisuLu5J7qoWxhwxKXC4uLh3cecuMPln5o4yuLi4z+dWP1AeukouRbi4uI/krhreyum4uLh3cfsHlOqWkvGvVlsEFxe3we20M5LXzY1r4OLi3sT9Aj8zOL/IEawOAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 
