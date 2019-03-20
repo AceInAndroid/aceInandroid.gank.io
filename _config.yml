@@ -84,6 +84,12 @@ admin:
     # cors: http://localhost:3000
 
 
+# 自动生成sitemap
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
