@@ -165,6 +165,52 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-AsyncTask20190228155539" class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2019-02-28 15:54:26" datetime="2019-02-28T07:54:26.000Z" itemprop="datePublished">2019-02-28</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2019/02/28/AsyncTask20190228155539/">Android 源码分析之 AsyncTask 源码分析</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        Android 源码分析之 AsyncTask 源码分析1、AsyncTask的使用使用 AsyncTask 可以更加简单地实现任务的异步执行，以及任务执行完毕之后与主线程的交互。它被设计用来执行耗时比较短的任务，通常是几秒种的那种，如果要执行耗时比较长的任务，那么就应该使用 JUC 包中的框架，比如 ThreadPoolExecutor 和 FutureTask等。AsyncTask 用来在后台线程中执行任务，当任务执行完毕之后将结果发送到主线程当中。它有三个重要的泛类型参数，分别是 Params、Progress 和 Result，分别用来指定参数、进度和结果的值的类型。以及四个重要的方法，分别是 onPreExecute(), doInBackground(), onProgressUpdate() 和 onPostExecute()。这四个方法中，除了 doInBackground()，其他三个都是运行在UI线程的，分别用来处理在任务开始之前、任务进度改变的时候以及任务执行完毕之后的逻辑，而 doInBackground() 运行在后台线程中，用来执行耗时的任务。
+    
+
+        <a href="/2019/02/28/AsyncTask20190228155539/" class="post-more waves-effect waves-button">
+            Continue reading...
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AsyncTask/">AsyncTask</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-hello-world" class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
